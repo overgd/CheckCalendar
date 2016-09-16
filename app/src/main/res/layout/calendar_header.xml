@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:paddingRight="8dp"
+    android:paddingLeft="8dp"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryBack"
+    >
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:layout_gravity="top"
+        android:background="@drawable/empty"
+        android:id="@+id/prevgoalview_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="top"
+        android:layout_weight="10"
+        android:id="@+id/month.textview"
+        android:text="MONTH"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textStyle="bold"/>
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:layout_gravity="top"
+        android:background="@drawable/empty"
+        android:id="@+id/nextgoalview_button" />
+
+</LinearLayout>

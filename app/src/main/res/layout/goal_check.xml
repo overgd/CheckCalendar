@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center|bottom"
+    android:layout_alignParentBottom="true"
+    android:background="@color/colorPrimaryBack"
+    android:id="@+id/goal_check"
+
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GOAL"
+        android:textSize="24sp"
+        android:layout_marginTop="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="subtext"
+        android:textSize="14sp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingRight="8dp"
+        android:paddingLeft="24dp"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@drawable/empty"
+            android:minWidth="64dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="Check"
+            android:textSize="14sp"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@drawable/empty"
+            android:minWidth="64dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="Fail"
+            android:textSize="14sp"
+            />
+    </LinearLayout>
+
+</LinearLayout>

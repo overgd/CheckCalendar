@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:minHeight="100dp"
+
+    android:id="@+id/calendar_column">
+
+    <TextView
+        android:layout_width="@dimen/week_columnsize"
+        android:layout_height="@dimen/week_columnsize"
+        android:id="@+id/calendar_column_day"
+        android:textColor="@color/fontColorPrimary"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:gravity="center"
+        android:paddingBottom="1dp"
+
+        android:text="NO_DAY"
+        android:textSize="10sp"
+
+        />
+
+    <TextView
+        android:layout_width="@dimen/dayevent_columnsize"
+        android:layout_height="@dimen/dayevent_height"
+        android:gravity="center_vertical"
+        android:id="@+id/calendar_column_event_1"
+        android:textColor="@color/fontColorPrimary"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
+        android:text="NO_EVENT"
+        android:textSize="10sp"
+        />
+
+    <TextView
+        android:layout_width="@dimen/dayevent_columnsize"
+        android:layout_height="@dimen/dayevent_height"
+        android:id="@+id/calendar_column_event_2"
+        android:textColor="@color/fontColorPrimary"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
+        android:text="NO_EVENT"
+        android:textSize="10sp"
+        />
+
+    <TextView
+        android:layout_width="@dimen/dayevent_columnsize"
+        android:layout_height="@dimen/dayevent_height"
+        android:id="@+id/calendar_column_event_3"
+        android:textColor="@color/fontColorPrimary"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
+        android:text="NO_EVENT"
+        android:textSize="10sp"
+        />
+
+</LinearLayout>
