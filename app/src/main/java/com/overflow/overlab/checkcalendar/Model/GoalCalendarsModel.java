@@ -3,10 +3,12 @@ package com.overflow.overlab.checkcalendar.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by over on 9/16/2016.
  */
-public class CalendarsModel {
+public class GoalCalendarsModel {
 
     @SerializedName("summary")
     @Expose
@@ -14,7 +16,7 @@ public class CalendarsModel {
 
     @SerializedName("description")
     @Expose
-    private String description;
+    private List<GoalDescriptionModel> description;
 
     @SerializedName("timeZone")
     @Expose
@@ -32,11 +34,11 @@ public class CalendarsModel {
         this.summary = summary;
     }
 
-    public String getDescription() {
+    public List<GoalDescriptionModel> getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(List<GoalDescriptionModel> description) {
         this.description = description;
     }
 

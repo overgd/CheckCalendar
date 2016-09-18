@@ -87,7 +87,7 @@ class GoogleCalendarMakeRequestTask extends AsyncTask<java.util.Calendar, Void, 
             return loadGsonString;
 
         } catch (Exception e) {
-            Log.d("Error", e.toString());
+            Log.d("Error doinbackground", e.toString());
             mLastError = e;
             cancel(true);
         }
@@ -250,7 +250,7 @@ class GoogleCalendarMakeRequestTask extends AsyncTask<java.util.Calendar, Void, 
 //            Log.d("savedfile getstring", savedString);
 
         } catch (Exception e) {
-            Log.d("Error", e.toString());
+            Log.d("Error savedfile", e.toString());
             mLastError = e;
             cancel(true);
         }
@@ -445,7 +445,7 @@ class GoogleCalendarMakeRequestTask extends AsyncTask<java.util.Calendar, Void, 
             }
 
         } catch (Exception e) {
-            Log.d("Error", e.toString());
+            Log.d("Error setEvents", e.toString());
             mLastError = e;
             cancel(true);
         }
@@ -458,7 +458,7 @@ class GoogleCalendarMakeRequestTask extends AsyncTask<java.util.Calendar, Void, 
 
         Log.d("Cancel", "complete");
         if (mLastError != null) {
-            Log.d("Error", mLastError.toString());
+            Log.d("Error cancelled", mLastError.toString());
         }
 
     }

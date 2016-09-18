@@ -3,16 +3,15 @@ package com.overflow.overlab.checkcalendar.Goal;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.api.client.util.DateTime;
 import com.google.gson.Gson;
 import com.overflow.overlab.checkcalendar.CheckCalendarApplication;
-import com.overflow.overlab.checkcalendar.Model.CalendarsModel;
+import com.overflow.overlab.checkcalendar.Model.GoalCalendarsModel;
 import com.overflow.overlab.checkcalendar.Model.GoalDescriptionModel;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by over on 9/1/2016.
@@ -24,6 +23,10 @@ public class GoalSetup {
 
     private CheckCalendarApplication applicationClass;
     private File goalDataFile;
+
+    static final String CALENDAR_NAME = "CheckCalendar";
+    static final String EMPTY = "EMPTY";
+    static final String ERROR_STRING = "ERROR_";
 
     public GoalSetup(Context context) {
         applicationClass = (CheckCalendarApplication) context.getApplicationContext();
@@ -38,128 +41,82 @@ public class GoalSetup {
      * 구글캘린더와 동기화
      *
      */
-    public String initGoalSetup() {
+    public List<String> initGoalSetup() {
 
-        String result = "NULL";
+        List<String> result = new ArrayList<>();
         File goalListFile = applicationClass.goalListFile();
 
         try {
 
-            if (isFile(goalListFile)) { //goal list file exist
-                FileInputStream fis = applicationClass.fileInputStream(goalListFile);
-                byte[] buffer = new byte[fis.available()];
+            if (GoalUtils.isFile(goalListFile)) { //goal list file exist
+
                 String loadGoalList;
-                fis.read(buffer);
-                loadGoalList = new String(buffer);
 
-                if(loadGoalList.isEmpty()) { //list is empty
-                    result = "체크캘린더";
-                    return result;
-                } else { //list is available
+//                FileInputStream fis = applicationClass.fileInputStream(goalListFile);
+//                byte[] buffer = new byte[fis.available()];
+//                fis.read(buffer);
+//                loadGoalList = new String(buffer);
 
+                loadGoalList = new GoalUtils(applicationClass.getApplicationContext())
+                        .getGoalListGsonStringFile();
+
+                if(loadGoalList.isEmpty()) { //goal list empty
+                    Log.d("goal", "new file");
+                    FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
+                    String gson = initGoalCalendar();
+                    Log.d("goal newgson", gson);
+                    fos.write(gson.getBytes());
+                    fos.close();
                 }
 
+                Log.d("goal loadgson", loadGoalList);
+                GoalCalendarsModel calendarsModel =
+                        new Gson().fromJson(loadGoalList, GoalCalendarsModel.class);
+
+                if(EMPTY.equals(calendarsModel.getDescription().get(0).getSummary())) {
+                    result.add(0, EMPTY);
+                } else {
+                    result.add(0, calendarsModel.getDescription().get(0).getSummary());
+                }
+
+                return result;
+
             } else { //goal list file not exist
+                Log.d("goal", "new file");
                 goalListFile.createNewFile();
                 FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
-                fos.write(Byte.parseByte(""));
+                String gson = initGoalCalendar();
+                Log.d("goal newgson", gson);
+                fos.write(gson.getBytes());
                 fos.close();
-                result = "Check Calendar";
+                result.add(0, CALENDAR_NAME);
                 return result;
             }
 
         } catch (Exception e) {
-            Log.d("Error", e.toString());
-            result = "ERROR_LOADED_LIST";
+            Log.d("Error initgoal", e.toString());
+            result.add(0, ERROR_STRING+"INIT");
             return result;
         }
 
-        result = "Fail Load Goal List";
+    }
+
+    public String initGoalCalendar() {
+
+        String result;
+
+        GoalCalendarsModel goalCalendarsModel = new GoalCalendarsModel();
+        List<GoalDescriptionModel> gdmList = new ArrayList<>();
+        GoalDescriptionModel goalDescriptionModel = new GoalDescriptionModel();
+        goalDescriptionModel.setSummary(EMPTY);
+        gdmList.add(goalDescriptionModel);
+
+        goalCalendarsModel.setSummary(CALENDAR_NAME);
+        goalCalendarsModel.setDescription(gdmList);
+
+        result = new Gson().toJson(goalCalendarsModel);
+
         return result;
     }
 
-    public String saveGoalListGsonFile(String gsonListString) {
-
-        FileOutputStream fos = applicationClass.fileOutputStream(
-                applicationClass.goalListFile()
-        );
-        try {
-            fos.write(Byte.parseByte(gsonListString));
-            fos.close();
-            return "Confirm";
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("Error savegoallist", e.toString());
-            return "Error";
-        }
-
-    }
-
-    public String loadGoalListGsonFile() {
-
-        FileInputStream fis = applicationClass.fileInputStream(
-                applicationClass.goalListFile()
-        );
-
-        try {
-            byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            return new String(buffer);
-
-        } catch (Exception e) {
-            Log.d("Error loadgoallist", e.toString());
-            return "Error";
-        }
-
-    }
-
-    /**
-     * Add 'Check Calendar'
-     * @return (Gson) CalendarsModel
-     */
-    public String addCheckCalendar() {
-
-        CalendarsModel goalCalendarsModel = new CalendarsModel();
-        GoalDescriptionModel goalDescriptionModel = new GoalDescriptionModel();
-
-        goalCalendarsModel.setSummary("Check Calendar");
-        goalCalendarsModel.setDescription(
-                new Gson().toJson(goalDescriptionModel)
-        );
-
-        return new Gson().toJson(goalCalendarsModel);
-
-    }
-
-    public void addGoal(GoalDescriptionModel goalDescriptionModel) {
-
-        CalendarsModel goalCalendarsModel = new CalendarsModel();
-        GoalDescriptionModel mGoalDescriptionModel = goalDescriptionModel;
-
-        goalCalendarsModel.setDescription(
-                new Gson().toJson(mGoalDescriptionModel)
-        );
-
-    }
-
-    public GoalDescriptionModel setGoalDescriptionModel(
-            String summary, String description,
-            DateTime startDate, DateTime endDate) {
-
-        GoalDescriptionModel goalDescriptionModel = new GoalDescriptionModel();
-
-        goalDescriptionModel.setSummary(summary);
-        goalDescriptionModel.setDescription(description);
-        goalDescriptionModel.setStartDate(startDate);
-        goalDescriptionModel.setEndDate(endDate);
-
-        return goalDescriptionModel;
-    }
-
-    /**
-     * is file exist?
-     */
-    public boolean isFile(File file) {
-        return file.exists();
-    }
 }

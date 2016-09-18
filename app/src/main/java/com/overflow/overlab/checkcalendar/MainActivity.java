@@ -122,9 +122,9 @@ GoogleApiClient.OnConnectionFailedListener {
         applicationClass.setCalendarService(applicationClass.mCredential);
 
         initMainUi();
-        setCalendarColors();
-        addCalendarView();
         getResultsFromApi();
+        addCalendarView();
+        setCalendarColors();
         initGoalFab();
 
         super.onCreate(savedInstanceState);
@@ -139,9 +139,8 @@ GoogleApiClient.OnConnectionFailedListener {
      */
     private void initGoalFab() {
 
-        getSupportActionBar().setTitle(
-                new GoalSetup(getApplicationContext()).initGoalSetup()
-        );
+        List<String> goalSummaryList = new GoalSetup(getApplicationContext()).initGoalSetup();
+        getSupportActionBar().setTitle(goalSummaryList.get(0));
 
     }
 
@@ -365,7 +364,9 @@ GoogleApiClient.OnConnectionFailedListener {
                 SharedPreferences settings =
                         getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
+                if(!acct.getPhotoUrl().toString().isEmpty()) {
                 editor.putString(PREF_ACCOUNT_IMGURI, acct.getPhotoUrl().toString());
+                }
                 editor.apply();
 
                 break;
