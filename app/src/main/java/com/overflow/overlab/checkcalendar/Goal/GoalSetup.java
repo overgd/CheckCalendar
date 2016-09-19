@@ -51,14 +51,31 @@ public class GoalSetup {
             if (GoalUtils.isFile(goalListFile)) { //goal list file exist
 
                 String loadGoalList;
+                GoalCalendarsModel goalCalendarsModel;
 
 //                FileInputStream fis = applicationClass.fileInputStream(goalListFile);
 //                byte[] buffer = new byte[fis.available()];
 //                fis.read(buffer);
 //                loadGoalList = new String(buffer);
 
+                goalCalendarsModel = new GoalUtils(applicationClass.getApplicationContext())
+                        .getGoalListGCMfromFile();
+
                 loadGoalList = new GoalUtils(applicationClass.getApplicationContext())
                         .getGoalListGsonStringFile();
+
+                /**
+                 * String으로 되어있는 부분 GoalCalendarsModel로 대체하기.
+                 *
+                 */
+                if(new Gson().toJson(goalCalendarsModel).isEmpty()) {
+                    Log.d("goal", "list empty, create new file");
+                    FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
+                    String gson = initGoalCalendar();
+                    Log.d("goal newgson", gson);
+                    fos.write(gson.getBytes());
+                    fos.close();
+                }
 
                 if(loadGoalList.isEmpty()) { //goal list empty
                     Log.d("goal", "new file");
@@ -101,9 +118,15 @@ public class GoalSetup {
 
     }
 
+    /**
+     * Intialize Goal Calendar
+     * Calendar Name - 'Check Calencar'
+     * Description - Gson Format
+     * @return Gson Format String
+     */
     public String initGoalCalendar() {
 
-        String result;
+        String gsonCalendarsModel;
 
         GoalCalendarsModel goalCalendarsModel = new GoalCalendarsModel();
         List<GoalDescriptionModel> gdmList = new ArrayList<>();
@@ -114,9 +137,9 @@ public class GoalSetup {
         goalCalendarsModel.setSummary(CALENDAR_NAME);
         goalCalendarsModel.setDescription(gdmList);
 
-        result = new Gson().toJson(goalCalendarsModel);
+        gsonCalendarsModel = new Gson().toJson(goalCalendarsModel);
 
-        return result;
+        return gsonCalendarsModel;
     }
 
 }
