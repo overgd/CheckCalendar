@@ -82,8 +82,9 @@
 
                     <RelativeLayout
                         android:id="@+id/goal_fab.add_layout"
-                        android:layout_width="240dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minWidth="240dp"
                         android:background="@color/colorAccent"
                         android:paddingBottom="8dp"
                         android:paddingLeft="16dp"
@@ -112,7 +113,7 @@
 
                         <TextView
                             android:id="@+id/goal_fab.addtext"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="16dp"

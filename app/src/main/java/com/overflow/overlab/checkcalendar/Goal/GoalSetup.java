@@ -26,6 +26,7 @@ public class GoalSetup {
 
     static final String CALENDAR_NAME = "CheckCalendar";
     static final String EMPTY = "EMPTY";
+    static final String NULL = "null";
     static final String ERROR_STRING = "ERROR_";
 
     public GoalSetup(Context context) {
@@ -45,23 +46,17 @@ public class GoalSetup {
 
         List<String> result = new ArrayList<>();
         File goalListFile = applicationClass.goalListFile();
+        GoalCalendarsModel goalCalendarsModel;
+
+        goalCalendarsModel = new GoalUtils(applicationClass.getApplicationContext())
+                .getGoalListGCMfromFile();
 
         try {
 
             if (GoalUtils.isFile(goalListFile)) { //goal list file exist
 
-                GoalCalendarsModel goalCalendarsModel;
-
-                goalCalendarsModel = new GoalUtils(applicationClass.getApplicationContext())
-                        .getGoalListGCMfromFile();
-
                 if(new Gson().toJson(goalCalendarsModel).isEmpty()) { //Goal List Empty
-                    Log.d("goal", "list empty, create new file");
-                    FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
-                    String gson = initGoalCalendar();
-                    Log.d("goal newgson", gson);
-                    fos.write(gson.getBytes());
-                    fos.close();
+                    initGoalCalendar(goalListFile);
                 }
 
                 Log.d("goal loadgson", new Gson().toJson(goalCalendarsModel));
@@ -78,19 +73,21 @@ public class GoalSetup {
                 return result;
 
             } else { //goal list file not exist
-                Log.d("goal", "new file");
+                Log.d("goal", "create new file");
                 goalListFile.createNewFile();
-                FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
-                String gson = initGoalCalendar();
-                Log.d("goal newgson", gson);
-                fos.write(gson.getBytes());
-                result.add(0, EMPTY);
-                fos.close();
+
+                result.add(0, initGoalCalendar(goalListFile));
                 return result;
             }
 
         } catch (Exception e) {
             Log.d("Error initgoal", e.toString());
+
+            if (goalCalendarsModel == null) { //GoalCalendarsModel is null
+                result.add(0, initGoalCalendar(goalListFile));
+                return result;
+            }
+
             result.add(0, ERROR_STRING+"INIT");
             return result;
         }
@@ -103,7 +100,7 @@ public class GoalSetup {
      * Description - Gson Format
      * @return Gson Format String
      */
-    public String initGoalCalendar() {
+    public String setEmptyGoalCalendar() {
 
         String gsonCalendarsModel;
 
@@ -119,6 +116,23 @@ public class GoalSetup {
         gsonCalendarsModel = new Gson().toJson(goalCalendarsModel);
 
         return gsonCalendarsModel;
+    }
+
+    public String initGoalCalendar(File goalListFile) {
+
+        try {
+            Log.d("goal", "create new goal calendar");
+            FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
+            String gson = setEmptyGoalCalendar();
+            Log.d("goal new gson", gson);
+            fos.write(gson.getBytes());
+            fos.close();
+            return EMPTY;
+        } catch (Exception e) {
+            Log.d("Error initgoal", e.toString());
+            return ERROR_STRING+"FAIL_NEW_GOALCALENDAR";
+        }
+
     }
 
     public void initGoalFabSheetMenu() {

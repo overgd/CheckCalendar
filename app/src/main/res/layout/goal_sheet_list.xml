@@ -5,4 +5,7 @@
     android:id="@+id/goal_fab.sheet_list.layout"
     android:orientation="vertical">
 
+    <include layout="@layout/goal_sheet"/>
+    <include layout="@layout/goal_sheet"/>
+
 </LinearLayout>

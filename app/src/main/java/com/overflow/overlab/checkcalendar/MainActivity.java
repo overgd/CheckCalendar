@@ -20,12 +20,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.goal_fab) FloatingActionButton goal_fab;
     @BindView(R.id.goal_overlay) View goal_overlay;
     @BindView(R.id.goal_fab_sheet) View goal_fab_sheet;
-    private LinearLayout goal_fab_sheet_list_layout;
+    private ViewGroup goal_fab_sheet_list_layout;
     private List<String> goal_subjectList;
 
     /**
@@ -147,11 +147,13 @@ public class MainActivity extends AppCompatActivity
 
         getSupportActionBar().setTitle(goal_subjectList.get(0));
 
-        goal_fab_sheet_list_layout = (LinearLayout) findViewById(R.id.goal_fab_sheet_list_layout);
-        RelativeLayout goal_sheet = (RelativeLayout) findViewById(R.id.goal_fab_sheet_layout);
+        goal_fab_sheet_list_layout =
+                (ViewGroup) findViewById(R.id.goal_fab_sheet_list_layout);
+
+        View goal_sheet = LayoutInflater.from(this).inflate(R.layout.goal_sheet, null);
 
         goal_fab_sheet_list_layout.addView(goal_sheet);
-
+        ////목록이 안뜬다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     /**
