@@ -63,7 +63,7 @@
             android:layout_alignParentRight="true">
 
             <android.support.v7.widget.CardView
-                android:id="@+id/goal_sheet"
+                android:id="@+id/goal_fab.sheet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -71,17 +71,18 @@
                 app:cardElevation="2dp">
 
                 <LinearLayout
-                    android:layout_width="240dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minWidth="240dp"
                     android:orientation="vertical">
 
                     <include
-                        android:id="@+id/goal_sheet_1"
+                        android:id="@+id/goal_fab.sheet_list"
                         layout="@layout/goal_sheet_list" />
 
                     <RelativeLayout
-                        android:id="@+id/goal_sheet_add"
-                        android:layout_width="match_parent"
+                        android:id="@+id/goal_fab.add_layout"
+                        android:layout_width="240dp"
                         android:layout_height="wrap_content"
                         android:background="@color/colorAccent"
                         android:paddingBottom="8dp"
@@ -90,13 +91,13 @@
                         android:paddingTop="8dp">
 
                         <RelativeLayout
-                            android:id="@+id/addicon_layout"
+                            android:id="@+id/goal_fab.addicon_layout"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_centerVertical="true">
 
                             <com.mikhaellopez.circularimageview.CircularImageView
-                                android:id="@+id/img_add"
+                                android:id="@+id/goal_fab.addicon_layout.addicon"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_add_white_24dp"
@@ -110,12 +111,12 @@
 
 
                         <TextView
-                            android:id="@+id/txt_title"
+                            android:id="@+id/goal_fab.addtext"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="16dp"
-                            android:layout_toRightOf="@id/addicon_layout"
+                            android:layout_toRightOf="@id/goal_fab.addicon_layout"
                             android:textColor="@color/colorWhite"
                             android:text="Add Goal" />
 

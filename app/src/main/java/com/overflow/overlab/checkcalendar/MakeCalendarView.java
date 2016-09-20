@@ -416,7 +416,7 @@ public class MakeCalendarView implements View.OnClickListener {
         eventViewList.add(calendarDayEventTextView_2);
         eventViewList.add(calendarDayEventTextView_3);
 
-        new GoogleCalendarMakeRequestTask(context, eventViewList).execute(calendar);
+//        new GoogleCalendarMakeRequestTask(context, eventViewList).execute(calendar);
 
     }
 

@@ -24,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -52,7 +54,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends AppCompatActivity
         implements EasyPermissions.PermissionCallbacks,
         NavigationView.OnNavigationItemSelectedListener,
-GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener {
 
     CheckCalendarApplication applicationClass;
 
@@ -80,7 +82,9 @@ GoogleApiClient.OnConnectionFailedListener {
      **/
     @BindView(R.id.goal_fab) FloatingActionButton goal_fab;
     @BindView(R.id.goal_overlay) View goal_overlay;
-    @BindView(R.id.goal_sheet) View goal_sheet;
+    @BindView(R.id.goal_fab_sheet) View goal_fab_sheet;
+    private LinearLayout goal_fab_sheet_list_layout;
+    private List<String> goal_subjectList;
 
     /**
      * Calendar UI Variables
@@ -123,8 +127,8 @@ GoogleApiClient.OnConnectionFailedListener {
 
         initMainUi();
         getResultsFromApi();
+//        setCalendarColors();
         addCalendarView();
-        setCalendarColors();
         initGoalFab();
 
         super.onCreate(savedInstanceState);
@@ -139,8 +143,14 @@ GoogleApiClient.OnConnectionFailedListener {
      */
     private void initGoalFab() {
 
-        List<String> goalSummaryList = new GoalSetup(getApplicationContext()).initGoalSetup();
-        getSupportActionBar().setTitle(goalSummaryList.get(0));
+        goal_subjectList = new GoalSetup(getApplicationContext()).initGoalSetup();
+
+        getSupportActionBar().setTitle(goal_subjectList.get(0));
+
+        goal_fab_sheet_list_layout = (LinearLayout) findViewById(R.id.goal_fab_sheet_list_layout);
+        RelativeLayout goal_sheet = (RelativeLayout) findViewById(R.id.goal_fab_sheet_layout);
+
+        goal_fab_sheet_list_layout.addView(goal_sheet);
 
     }
 
@@ -196,7 +206,7 @@ GoogleApiClient.OnConnectionFailedListener {
             FabTransformation.with(goal_fab)
                     .duration(250)
                     .setOverlay(goal_overlay)
-                    .transformFrom(goal_sheet);
+                    .transformFrom(goal_fab_sheet);
         }
     }
     @OnClick(R.id.goal_fab)
@@ -205,7 +215,7 @@ GoogleApiClient.OnConnectionFailedListener {
             FabTransformation.with(goal_fab)
                     .duration(250)
                     .setOverlay(goal_overlay)
-                    .transformTo(goal_sheet);
+                    .transformTo(goal_fab_sheet);
         }
     }
 
@@ -220,7 +230,7 @@ GoogleApiClient.OnConnectionFailedListener {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (goal_fab.getVisibility() != View.VISIBLE) {
-            FabTransformation.with(goal_fab).setOverlay(goal_overlay).transformFrom(goal_sheet);
+            FabTransformation.with(goal_fab).setOverlay(goal_overlay).transformFrom(goal_fab_sheet);
             return;
         } else {
             super.onBackPressed();

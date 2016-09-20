@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by over on 9/16/2016.
  */
-public class GoalDescriptionModel {
+public class GoalCalendarsDescriptionModel {
 
     @SerializedName("summary")
     @Expose
@@ -21,6 +21,9 @@ public class GoalDescriptionModel {
     @SerializedName("endDate")
     @Expose
     private DateTime endDate;
+    @SerializedName("colorId")
+    @Expose
+    private String colorId;
 
     public String getSummary() {
         return summary;
@@ -52,5 +55,13 @@ public class GoalDescriptionModel {
 
     public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public String getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(String colorId) {
+        this.colorId = colorId;
     }
 }

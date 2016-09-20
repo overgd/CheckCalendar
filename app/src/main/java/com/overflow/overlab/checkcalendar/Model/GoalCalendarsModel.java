@@ -16,7 +16,7 @@ public class GoalCalendarsModel {
 
     @SerializedName("description")
     @Expose
-    private List<GoalDescriptionModel> description;
+    private List<GoalCalendarsDescriptionModel> description;
 
     @SerializedName("timeZone")
     @Expose
@@ -34,11 +34,11 @@ public class GoalCalendarsModel {
         this.summary = summary;
     }
 
-    public List<GoalDescriptionModel> getDescription() {
+    public List<GoalCalendarsDescriptionModel> getDescription() {
         return description;
     }
 
-    public void setDescription(List<GoalDescriptionModel> description) {
+    public void setDescription(List<GoalCalendarsDescriptionModel> description) {
         this.description = description;
     }
 

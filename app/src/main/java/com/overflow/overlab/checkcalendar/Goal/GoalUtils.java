@@ -5,10 +5,9 @@ import android.util.Log;
 
 import com.google.api.client.util.DateTime;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.overflow.overlab.checkcalendar.CheckCalendarApplication;
+import com.overflow.overlab.checkcalendar.Model.GoalCalendarsDescriptionModel;
 import com.overflow.overlab.checkcalendar.Model.GoalCalendarsModel;
-import com.overflow.overlab.checkcalendar.Model.GoalDescriptionModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -96,71 +95,71 @@ public class GoalUtils {
     }
 
     /**
-     * Add GoalDescriptionModel into GoalCalendarsModel
+     * Add GoalCalendarsDescriptionModel into GoalCalendarsModel
      * @param goalCalendarsModel 목표 캘린더 모델
-     * @param goalDescriptionModel 목표 설명 모델
+     * @param goalCalendarsDescriptionModel 목표 설명 모델
      * @return GoalCalendarsModel 목표 캘린더 모델
      */
     public GoalCalendarsModel addGDMintoGCM(
-            GoalCalendarsModel goalCalendarsModel, GoalDescriptionModel goalDescriptionModel) {
+            GoalCalendarsModel goalCalendarsModel, GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
 
-        List<GoalDescriptionModel> mGoalDescriptionModel = goalCalendarsModel.getDescription();
+        List<GoalCalendarsDescriptionModel> mGoalCalendarsDescriptionModel = goalCalendarsModel.getDescription();
 
-        for(int i = 0; i < mGoalDescriptionModel.size(); i++) { //If same summary exist, return null
-            if(mGoalDescriptionModel.get(i).getSummary() == goalDescriptionModel.getSummary()) {
+        for(int i = 0; i < mGoalCalendarsDescriptionModel.size(); i++) { //If same summary exist, return null
+            if(mGoalCalendarsDescriptionModel.get(i).getSummary() == goalCalendarsDescriptionModel.getSummary()) {
                 return null;
             }
-            removeEmptyGoalDescription(mGoalDescriptionModel, i);
+            removeEmptyGoalDescription(mGoalCalendarsDescriptionModel, i);
         }
 
-        mGoalDescriptionModel.add(goalDescriptionModel);
+        mGoalCalendarsDescriptionModel.add(goalCalendarsDescriptionModel);
 
-        goalCalendarsModel.setDescription(mGoalDescriptionModel);
+        goalCalendarsModel.setDescription(mGoalCalendarsDescriptionModel);
 
         return goalCalendarsModel;
     }
 
     /**
-     * Set summary, description, startDate, endDate into GoalDescriptionModel
+     * Set summary, description, startDate, endDate into GoalCalendarsDescriptionModel
      * @param summary 목표 제목
      * @param description 목표 내용
      * @param startDate 시작 날짜
      * @param endDate 종료 날짜
-     * @return GoalDescriptionModel
+     * @return GoalCalendarsDescriptionModel
      */
-    public GoalDescriptionModel setGoalDescriptionModel (
+    public GoalCalendarsDescriptionModel setGoalDescriptionModel (
             String summary, String description,
             DateTime startDate, DateTime endDate) {
 
-        GoalDescriptionModel goalDescriptionModel = new GoalDescriptionModel();
+        GoalCalendarsDescriptionModel goalCalendarsDescriptionModel = new GoalCalendarsDescriptionModel();
 
-        goalDescriptionModel.setSummary(summary);
-        goalDescriptionModel.setDescription(description);
-        goalDescriptionModel.setStartDate(startDate);
-        goalDescriptionModel.setEndDate(endDate);
+        goalCalendarsDescriptionModel.setSummary(summary);
+        goalCalendarsDescriptionModel.setDescription(description);
+        goalCalendarsDescriptionModel.setStartDate(startDate);
+        goalCalendarsDescriptionModel.setEndDate(endDate);
 
-        return goalDescriptionModel;
+        return goalCalendarsDescriptionModel;
     }
 
     /**
      * Update GoalSelectedGoal
      * @param goalCalendarsModel GoalCalendarsModel
-     * @param inputGDM GoalDescriptionModel
+     * @param inputGDM GoalCalendarsDescriptionModel
      * @return Updated GoalCalendarsModel
      */
     public GoalCalendarsModel updateSelectedGoal (
-            GoalCalendarsModel goalCalendarsModel, GoalDescriptionModel inputGDM) {
+            GoalCalendarsModel goalCalendarsModel, GoalCalendarsDescriptionModel inputGDM) {
 
-        List<GoalDescriptionModel> goalDescriptionModelList = goalCalendarsModel.getDescription();
+        List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList = goalCalendarsModel.getDescription();
 
-        for(int i = 0; i < goalDescriptionModelList.size(); i++) {
+        for(int i = 0; i < goalCalendarsDescriptionModelList.size(); i++) {
 
-            GoalDescriptionModel mGoalDescriptionModel = goalDescriptionModelList.get(i);
+            GoalCalendarsDescriptionModel mGoalCalendarsDescriptionModel = goalCalendarsDescriptionModelList.get(i);
 
-            if(inputGDM.getSummary() == mGoalDescriptionModel.getSummary()) {
-                goalDescriptionModelList.remove(i);
-                goalDescriptionModelList.add(i, inputGDM);
-                goalCalendarsModel.setDescription(goalDescriptionModelList);
+            if(inputGDM.getSummary() == mGoalCalendarsDescriptionModel.getSummary()) {
+                goalCalendarsDescriptionModelList.remove(i);
+                goalCalendarsDescriptionModelList.add(i, inputGDM);
+                goalCalendarsModel.setDescription(goalCalendarsDescriptionModelList);
                 return goalCalendarsModel;
             }
         }
@@ -168,28 +167,29 @@ public class GoalUtils {
     }
 
     /**
-     * Update GoalDescriptionModel
-     * @param goalDescriptionModelList 원본 모델 리스트
+     * Update GoalCalendarsDescriptionModel
+     * @param goalCalendarsDescriptionModelList 원본 모델 리스트
      * @param summary 목표 제목
      * @param description 목표 내용
      * @param startDate 시작 날짜
      * @param endDate 종료 날짜
      * @return goalDescriptionModel 수정된 모델
      */
-    public List<GoalDescriptionModel> updateGoalDescriptionModel (
-            List<GoalDescriptionModel> goalDescriptionModelList,
-            String summary, String description, DateTime startDate, DateTime endDate) {
+    public List<GoalCalendarsDescriptionModel> updateGoalDescriptionModel (
+            List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList,
+            String summary, String description, DateTime startDate, DateTime endDate, String colorId) {
 
-        for(int i = 0; i < goalDescriptionModelList.size(); i++) {
-            GoalDescriptionModel mGoalDescriptionModel = goalDescriptionModelList.get(i);
-            if(goalDescriptionModelList.get(i).getSummary() == summary) {
-                mGoalDescriptionModel.setSummary(summary);
-                mGoalDescriptionModel.setDescription(description);
-                mGoalDescriptionModel.setStartDate(startDate);
-                mGoalDescriptionModel.setEndDate(endDate);
+        for(int i = 0; i < goalCalendarsDescriptionModelList.size(); i++) {
+            GoalCalendarsDescriptionModel mGoalCalendarsDescriptionModel = goalCalendarsDescriptionModelList.get(i);
+            if(goalCalendarsDescriptionModelList.get(i).getSummary() == summary) {
+                mGoalCalendarsDescriptionModel.setSummary(summary);
+                mGoalCalendarsDescriptionModel.setDescription(description);
+                mGoalCalendarsDescriptionModel.setStartDate(startDate);
+                mGoalCalendarsDescriptionModel.setEndDate(endDate);
+                mGoalCalendarsDescriptionModel.setColorId(colorId);
 
-                goalDescriptionModelList.set(i, mGoalDescriptionModel);
-                return goalDescriptionModelList;
+                goalCalendarsDescriptionModelList.set(i, mGoalCalendarsDescriptionModel);
+                return goalCalendarsDescriptionModelList;
             }
         }
         return null;
@@ -204,17 +204,17 @@ public class GoalUtils {
     public GoalCalendarsModel removeSelectedGoal
             (GoalCalendarsModel goalCalendarsModel, String goalSummary) {
 
-        List<GoalDescriptionModel> goalDescriptionModelList = goalCalendarsModel.getDescription();
+        List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList = goalCalendarsModel.getDescription();
 
-        for(int i = 0; i < goalDescriptionModelList.size(); i++) {
-            if(goalDescriptionModelList.get(i).getSummary() == goalSummary) {
-                goalDescriptionModelList.remove(i);
-                if (goalDescriptionModelList.size() == 0) {
-                    GoalDescriptionModel emptyGDM = new GoalDescriptionModel();
+        for(int i = 0; i < goalCalendarsDescriptionModelList.size(); i++) {
+            if(goalCalendarsDescriptionModelList.get(i).getSummary() == goalSummary) {
+                goalCalendarsDescriptionModelList.remove(i);
+                if (goalCalendarsDescriptionModelList.size() == 0) {
+                    GoalCalendarsDescriptionModel emptyGDM = new GoalCalendarsDescriptionModel();
                     emptyGDM.setSummary(EMPTY);
-                    goalDescriptionModelList.add(emptyGDM);
+                    goalCalendarsDescriptionModelList.add(emptyGDM);
                 }
-                goalCalendarsModel.setDescription(goalDescriptionModelList);
+                goalCalendarsModel.setDescription(goalCalendarsDescriptionModelList);
                 return goalCalendarsModel;
             }
         }
@@ -223,14 +223,14 @@ public class GoalUtils {
 
     /**
      * Remove EMPTY Goal Description
-     * @param goalDescriptionModelList
+     * @param goalCalendarsDescriptionModelList
      * @return goalCalendarsModel
      */
-    public List<GoalDescriptionModel> removeEmptyGoalDescription(List<GoalDescriptionModel> goalDescriptionModelList, int index) {
-        if (goalDescriptionModelList.get(index).getSummary() == EMPTY) {
-            goalDescriptionModelList.remove(index);
+    public List<GoalCalendarsDescriptionModel> removeEmptyGoalDescription(List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList, int index) {
+        if (goalCalendarsDescriptionModelList.get(index).getSummary() == EMPTY) {
+            goalCalendarsDescriptionModelList.remove(index);
         }
-        return goalDescriptionModelList;
+        return goalCalendarsDescriptionModelList;
     }
 
     /**

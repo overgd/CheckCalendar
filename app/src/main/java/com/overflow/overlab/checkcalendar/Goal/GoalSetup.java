@@ -5,8 +5,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.overflow.overlab.checkcalendar.CheckCalendarApplication;
+import com.overflow.overlab.checkcalendar.Model.GoalCalendarsDescriptionModel;
 import com.overflow.overlab.checkcalendar.Model.GoalCalendarsModel;
-import com.overflow.overlab.checkcalendar.Model.GoalDescriptionModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,25 +50,12 @@ public class GoalSetup {
 
             if (GoalUtils.isFile(goalListFile)) { //goal list file exist
 
-                String loadGoalList;
                 GoalCalendarsModel goalCalendarsModel;
-
-//                FileInputStream fis = applicationClass.fileInputStream(goalListFile);
-//                byte[] buffer = new byte[fis.available()];
-//                fis.read(buffer);
-//                loadGoalList = new String(buffer);
 
                 goalCalendarsModel = new GoalUtils(applicationClass.getApplicationContext())
                         .getGoalListGCMfromFile();
 
-                loadGoalList = new GoalUtils(applicationClass.getApplicationContext())
-                        .getGoalListGsonStringFile();
-
-                /**
-                 * String으로 되어있는 부분 GoalCalendarsModel로 대체하기.
-                 *
-                 */
-                if(new Gson().toJson(goalCalendarsModel).isEmpty()) {
+                if(new Gson().toJson(goalCalendarsModel).isEmpty()) { //Goal List Empty
                     Log.d("goal", "list empty, create new file");
                     FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
                     String gson = initGoalCalendar();
@@ -77,23 +64,15 @@ public class GoalSetup {
                     fos.close();
                 }
 
-                if(loadGoalList.isEmpty()) { //goal list empty
-                    Log.d("goal", "new file");
-                    FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
-                    String gson = initGoalCalendar();
-                    Log.d("goal newgson", gson);
-                    fos.write(gson.getBytes());
-                    fos.close();
-                }
+                Log.d("goal loadgson", new Gson().toJson(goalCalendarsModel));
 
-                Log.d("goal loadgson", loadGoalList);
-                GoalCalendarsModel calendarsModel =
-                        new Gson().fromJson(loadGoalList, GoalCalendarsModel.class);
-
-                if(EMPTY.equals(calendarsModel.getDescription().get(0).getSummary())) {
-                    result.add(0, EMPTY);
-                } else {
-                    result.add(0, calendarsModel.getDescription().get(0).getSummary());
+                for (int i = 0; i < goalCalendarsModel.getDescription().size(); i++) {
+                    if (! EMPTY.equals(goalCalendarsModel.getDescription().get(i))) {
+                        result.add(goalCalendarsModel.getDescription().get(i).getSummary());
+                    } else {
+                        result.add(EMPTY);
+                        return result;
+                    }
                 }
 
                 return result;
@@ -105,8 +84,8 @@ public class GoalSetup {
                 String gson = initGoalCalendar();
                 Log.d("goal newgson", gson);
                 fos.write(gson.getBytes());
+                result.add(0, EMPTY);
                 fos.close();
-                result.add(0, CALENDAR_NAME);
                 return result;
             }
 
@@ -129,10 +108,10 @@ public class GoalSetup {
         String gsonCalendarsModel;
 
         GoalCalendarsModel goalCalendarsModel = new GoalCalendarsModel();
-        List<GoalDescriptionModel> gdmList = new ArrayList<>();
-        GoalDescriptionModel goalDescriptionModel = new GoalDescriptionModel();
-        goalDescriptionModel.setSummary(EMPTY);
-        gdmList.add(goalDescriptionModel);
+        List<GoalCalendarsDescriptionModel> gdmList = new ArrayList<>();
+        GoalCalendarsDescriptionModel goalCalendarsDescriptionModel = new GoalCalendarsDescriptionModel();
+        goalCalendarsDescriptionModel.setSummary(EMPTY);
+        gdmList.add(goalCalendarsDescriptionModel);
 
         goalCalendarsModel.setSummary(CALENDAR_NAME);
         goalCalendarsModel.setDescription(gdmList);
@@ -140,6 +119,10 @@ public class GoalSetup {
         gsonCalendarsModel = new Gson().toJson(goalCalendarsModel);
 
         return gsonCalendarsModel;
+    }
+
+    public void initGoalFabSheetMenu() {
+
     }
 
 }

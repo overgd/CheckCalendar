@@ -5,5 +5,37 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:clickable="true"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/img_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/bg_pattern_1"
+                android:layout_centerVertical="true"
+                app:civ_border="false"
+                app:civ_shadow="true"
+                app:civ_shadow_radius="10"
+                app:civ_shadow_color="#929c86"
+                />
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@id/img_icon"
+                android:text="NO_DATA" />
+
+        </RelativeLayout>
+    </item>
 </menu>
