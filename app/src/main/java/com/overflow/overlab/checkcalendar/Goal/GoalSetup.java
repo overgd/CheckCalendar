@@ -135,8 +135,4 @@ public class GoalSetup {
 
     }
 
-    public void initGoalFabSheetMenu() {
-
-    }
-
 }

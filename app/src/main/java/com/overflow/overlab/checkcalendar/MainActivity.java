@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.goal_fab) FloatingActionButton goal_fab;
     @BindView(R.id.goal_overlay) View goal_overlay;
     @BindView(R.id.goal_fab_sheet) View goal_fab_sheet;
-    private ViewGroup goal_fab_sheet_list_layout;
+    @BindView(R.id.goal_fab_sheet_list_layout) ViewGroup goal_fab_sheet_list_layout;
     private List<String> goal_subjectList;
 
     /**
@@ -147,13 +147,14 @@ public class MainActivity extends AppCompatActivity
 
         getSupportActionBar().setTitle(goal_subjectList.get(0));
 
-        goal_fab_sheet_list_layout =
-                (ViewGroup) findViewById(R.id.goal_fab_sheet_list_layout);
+        for(int i = 0; i < goal_subjectList.size(); i++) {
+            View goal_sheet = LayoutInflater.from(this).inflate(R.layout.goal_sheet, null);
+            TextView goal_sheet_text =
+                    (TextView) goal_sheet.findViewById(R.id.goal_fab_sheet_list_text);
+            goal_sheet_text.setText(goal_subjectList.get(i));
+            goal_fab_sheet_list_layout.addView(goal_sheet);
+        }
 
-        View goal_sheet = LayoutInflater.from(this).inflate(R.layout.goal_sheet, null);
-
-        goal_fab_sheet_list_layout.addView(goal_sheet);
-        ////목록이 안뜬다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     /**
@@ -219,6 +220,10 @@ public class MainActivity extends AppCompatActivity
                     .setOverlay(goal_overlay)
                     .transformTo(goal_fab_sheet);
         }
+    }
+    @OnClick(R.id.goal_fab_add_layout)
+    void onClickGoalFabSheetAdd() {
+        Log.d("goal add", "click");
     }
 
     /**
