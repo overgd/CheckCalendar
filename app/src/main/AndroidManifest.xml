@@ -24,6 +24,8 @@
 
         <activity android:name=".DayActivity" android:theme="@style/AppTheme.Day"/>
 
+        <activity android:name=".Goal.GoalActivity"/>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

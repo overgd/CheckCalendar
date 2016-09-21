@@ -38,6 +38,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.api.services.calendar.model.ColorDefinition;
 import com.google.api.services.calendar.model.Colors;
 import com.konifar.fab_transformation.FabTransformation;
+import com.overflow.overlab.checkcalendar.Goal.GoalActivity;
 import com.overflow.overlab.checkcalendar.Goal.GoalSetup;
 import com.squareup.picasso.Picasso;
 
@@ -224,6 +225,8 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.goal_fab_add_layout)
     void onClickGoalFabSheetAdd() {
         Log.d("goal add", "click");
+        Intent activityGoalIntent = new Intent(getApplicationContext(), GoalActivity.class);
+        getApplicationContext().startActivity(activityGoalIntent);
     }
 
     /**
