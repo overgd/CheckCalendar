@@ -225,8 +225,9 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.goal_fab_add_layout)
     void onClickGoalFabSheetAdd() {
         Log.d("goal add", "click");
-        Intent activityGoalIntent = new Intent(getApplicationContext(), GoalActivity.class);
-        getApplicationContext().startActivity(activityGoalIntent);
+        Intent activityGoalIntent = new Intent(this, GoalActivity.class);
+        startActivity(activityGoalIntent);
+
     }
 
     /**
