@@ -228,6 +228,7 @@ public class MainActivity extends AppCompatActivity
         Intent activityGoalIntent = new Intent(this, GoalActivity.class);
         startActivity(activityGoalIntent);
 
+
     }
 
     /**
