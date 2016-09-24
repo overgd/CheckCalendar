@@ -18,6 +18,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -492,6 +494,20 @@ public class MainActivity extends AppCompatActivity
                 getPreferences(Context.MODE_PRIVATE);
         accountNameView.setText(settings.getString(PREF_ACCOUNT_NAME, "NULL"));
         Picasso.with(getApplicationContext()).load(settings.getString(PREF_ACCOUNT_IMGURI, "NULL")).into(accountImageView);
+
+    }
+
+    /**
+     * Add Vertical Calendar
+     */
+    private  void addCalendarVerticalView() {
+        RecyclerView mRecyclerView;
+        RecyclerView.Adapter mAdapter;
+        RecyclerView.LayoutManager mLayoutManager;
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.calendar_vertical_recyclerview);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
 
     }
 
