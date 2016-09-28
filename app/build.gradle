@@ -12,6 +12,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -44,10 +45,9 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.1.9' //permission library
     compile 'com.squareup.picasso:picasso:2.5.2'  //picasso imageview library
     compile 'com.google.code.gson:gson:2.7' //Gson library
+
     compile 'konifar:fab-transformation:1.0.0' //FAB transformation
-    compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') { //Circul Animation
-        transitive = true;
-    }
+
     compile 'com.mikhaellopez:circularimageview:3.0.2' //CircularImageView
 
     compile 'com.jakewharton:butterknife:8.4.0'  //ButterKnife library
