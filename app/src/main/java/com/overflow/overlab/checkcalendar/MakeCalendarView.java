@@ -145,10 +145,6 @@ public class MakeCalendarView implements View.OnClickListener {
         calendarMonthColumn = new LinearLayout[6][7];
         calendarDayNumberTextView = new TextView[6][7]; // monthview day : 42  x:6 y:7
 
-        calendarDayEventTextView_1 = new TextView[6][7]; //column event textview_1
-        calendarDayEventTextView_2 = new TextView[6][7]; //column event textview_2
-        calendarDayEventTextView_3 = new TextView[6][7]; //column event textview_3
-
         calendarMonthColumnClickCounter = new int[6][7];
 
         for (int row = 0; row < 6; row++) {
@@ -168,15 +164,8 @@ public class MakeCalendarView implements View.OnClickListener {
 
                 calendarDayNumberTextView[row][day] = (TextView) calendarMonthColumn[row][day].findViewById(R.id.calendar_column_day);
 
-                calendarDayEventTextView_1[row][day] = (TextView) calendarMonthColumn[row][day].findViewById(R.id.calendar_column_event_1);
-                calendarDayEventTextView_2[row][day] = (TextView) calendarMonthColumn[row][day].findViewById(R.id.calendar_column_event_2);
-                calendarDayEventTextView_3[row][day] = (TextView) calendarMonthColumn[row][day].findViewById(R.id.calendar_column_event_3);
-
                 //in Text init
                 calendarDayNumberTextView[row][day].setText("");
-                calendarDayEventTextView_1[row][day].setText("");
-                calendarDayEventTextView_2[row][day].setText("");
-                calendarDayEventTextView_3[row][day].setText("");
 
                 calendarMonthRow[row].addView(calendarMonthColumn[row][day]);
             }

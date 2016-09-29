@@ -3,12 +3,11 @@ package com.overflow.overlab.checkcalendar.CalendarView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.overflow.overlab.checkcalendar.R;
-
-import java.util.List;
 
 /**
  * Created by over on 2016-09-24.
@@ -16,25 +15,31 @@ import java.util.List;
 
 public class CalendarVerticalViewAdapter extends RecyclerView.Adapter<CalendarVerticalViewAdapter.ViewHolder> {
 
-    private List mDataSet;
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(View itemView) {
+        public RelativeLayout view;
+        public ViewHolder(RelativeLayout itemView) {
             super(itemView);
-
+            view = itemView;
         }
+
     }
 
-    public CalendarVerticalViewAdapter(List mDataSet) {
-        this.mDataSet = mDataSet;
+    public CalendarVerticalViewAdapter() {
+
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.calendar_vertical, parent, false);
+        RelativeLayout view = (RelativeLayout) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.calendar_vertical_cardview, parent, false);
+
+        CardView cardView =
+                (CardView) view.findViewById(R.id.calendar_vertical_recyclerview_cardview);
+
+        CalendarVerticalView calendarView = new CalendarVerticalView(parent.getContext());
+        cardView.addView(calendarView);
 
         ViewHolder viewHolder = new ViewHolder(view);
 
@@ -44,10 +49,19 @@ public class CalendarVerticalViewAdapter extends RecyclerView.Adapter<CalendarVe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        CardView cardView =
+                (CardView) holder.view.findViewById(R.id.calendar_vertical_recyclerview_cardview);
+        CalendarVerticalView calendarVerticalView =
+                (CalendarVerticalView) holder.view.findViewById(R.id.calendarview_id);
+        calendarVerticalView.setCalendar(position);
+
+        TextView textView = (TextView) holder.view.findViewById(R.id.status_textview);
+        textView.setText(position+"");
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 4400; //1900 ~ 2100 까지 월 갯수
     }
 }

@@ -26,7 +26,7 @@ public class CalendarUtils {
     /**
      * Get Now Calendar
      */
-    public Calendar getNowCalendar() {
+    public static Calendar getNowCalendar() {
         Calendar nowCalendar = Calendar.getInstance();
         Date date = new Date(System.currentTimeMillis());
         nowCalendar.setTime(date);
@@ -35,24 +35,50 @@ public class CalendarUtils {
     }
 
     /**
+     * Get Current Year Number
+     * 1900년부터 시작해서 현재 년도까지
+     * @return ex) 2016 - 1900 = 116
+     */
+    public static int CURRENT_YEAR_NUMBER() {
+        return getNowCalendar().get(Calendar.YEAR) - 1900;
+    }
+
+    /**
+     * Get Current Month Number
+     * @return Jan = 1 ~ DEC = 12
+     */
+    public static int CURRENT_MONTH_NUMBER() {
+        return getNowCalendar().get(Calendar.MONTH) + 1;
+    }
+
+    /**
+     * Position Month
+     * 1900 ~ 2200 사이에 현재 월 위치
+     * @return position
+     */
+    public static int POSITION_CURRENT_MONTH () {
+        return (CURRENT_YEAR_NUMBER() * 12) + CURRENT_MONTH_NUMBER();
+    }
+
+    /**
      * Get Month Number
      * JAN = 0 ~ DEC = 11
      */
-    public int GET_MONTH(Calendar calendar) {
+    public static int GET_MONTH(Calendar calendar) {
         return calendar.get(Calendar.MONTH);
     }
 
     /**
      * Get Day of Month Number
      */
-    public int GET_DAY_OF_MONTH_NUMBER(Calendar calendar) {
+    public static int GET_NUMBER_DAY_OF_MONTH(Calendar calendar) {
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
     /**
      * Get Week of Month Number
      */
-    public int GET_WEEK_OF_MONTH_NUMBER(Calendar calendar) {
+    public static int GET_NUMBER_WEEK_OF_MONTH(Calendar calendar) {
         return calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
     }
 
@@ -60,11 +86,11 @@ public class CalendarUtils {
      * Get First Day of Week in Month Number
      * SUN = 1 ~ SAT = 7
      */
-    public int GET_FIRST_DAY_OF_WEEK_IN_MONTH_NUMBER(Calendar calendar) {
+    public static int GET_NUMBER_FIRST_DAY_OF_WEEK_IN_MONTH(Calendar calendar) {
         Calendar mCalendar = Calendar.getInstance();
         mCalendar.setTime(calendar.getTime());
         mCalendar.set(Calendar.DATE, 1); // 1일로 설정
-        return mCalendar.get(Calendar.DAY_OF_WEEK);
+        return mCalendar.get(Calendar.DAY_OF_WEEK) - 1;
     }
 
 

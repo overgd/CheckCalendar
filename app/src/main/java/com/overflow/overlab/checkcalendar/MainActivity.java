@@ -19,9 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.konifar.fab_transformation.FabTransformation;
+import com.overflow.overlab.checkcalendar.CalendarView.CalendarUtils;
+import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalView;
+import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalViewAdapter;
 import com.overflow.overlab.checkcalendar.Goal.GoalActivity;
 import com.overflow.overlab.checkcalendar.Goal.GoalSetup;
 import com.squareup.picasso.Picasso;
@@ -33,6 +38,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
+
+    /** Main UI **/
+    @BindView(R.id.content_main_layout)
+    RelativeLayout content_main_layout;
 
     /** Goal Setup Variables **/
     @BindView(R.id.goal_fab)
@@ -54,7 +63,6 @@ public class MainActivity extends BaseActivity {
     TextView accountNameView;
 
     /** Calendar UI Variables **/
-    @BindView(R.id.month_textview) TextView month_Text;
     Calendar currentCalendar;
     CalendarPagesAdapter calendarPagesAdapter;
     ViewPager calendarViewPager;
@@ -68,9 +76,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         super.onCreate(savedInstanceState);
-        addCalendarView();
+        addCalendarVerticalView();
         initMainUi();
         initGoalFab();
+//        addCalendarView();
+
     }
 
     /**
@@ -204,15 +214,35 @@ public class MainActivity extends BaseActivity {
      */
     protected void addCalendarVerticalView() {
 
-        RecyclerView mRecyclerView;
-        RecyclerView.Adapter mAdapter;
-        RecyclerView.LayoutManager mLayoutManager;
+        RecyclerView calendarRecyclerView;
+        LinearLayout calendarViewLayout;
+        RecyclerView.Adapter calendarRecyclerAdapter;
+        RecyclerView.LayoutManager calendarLayoutManager;
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.calendar_vertical_recyclerview);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        appBarLayout.addView(CalendarVerticalView.linearLayoutCalendarWeekUI(this));
+
+        calendarViewLayout =
+                (LinearLayout) LayoutInflater.from(this)
+                        .inflate(R.layout.calendar_vertical, null);
+        calendarViewLayout.setId(View.generateViewId());
+
+        calendarRecyclerView =
+                (RecyclerView) calendarViewLayout
+                        .findViewById(R.id.calendar_vertical_recyclerview);
+
+        calendarRecyclerView.setHasFixedSize(true);
+
+        calendarLayoutManager = new LinearLayoutManager(this);
+        calendarRecyclerView.setLayoutManager(calendarLayoutManager);
+
+        calendarRecyclerAdapter = new CalendarVerticalViewAdapter();
+        calendarRecyclerView.setAdapter(calendarRecyclerAdapter);
+
+        content_main_layout.addView(calendarViewLayout);
+        calendarLayoutManager.scrollToPosition(CalendarUtils.POSITION_CURRENT_MONTH());
 
     }
+
 
     /**
      * Add Calendar View
@@ -230,11 +260,11 @@ public class MainActivity extends BaseActivity {
 //                        currentCalendar.get(Calendar.MONTH)]
 //        );
 
-        month_Text.setText(
-                getApplicationContext().getResources()
-                        .getTextArray(R.array.calendar_month)
-                        [currentCalendar.get(Calendar.MONTH)]
-        );
+//        month_Text.setText(
+//                getApplicationContext().getResources()
+//                        .getTextArray(R.array.calendar_month)
+//                        [currentCalendar.get(Calendar.MONTH)]
+//        );
 
         calendarPagesAdapter = new CalendarPagesAdapter(
                 getSupportFragmentManager(), getBaseContext());
@@ -252,9 +282,9 @@ public class MainActivity extends BaseActivity {
             public void onPageSelected(int position) {
 //                getDelegate().getSupportActionBar()
 //                        .setTitle(calendarPagesAdapter.getPageTitle(position));
-                month_Text.setText(
-                        calendarPagesAdapter.getPageTitle(position)
-                );
+//                month_Text.setText(
+//                        calendarPagesAdapter.getPageTitle(position)
+//                );
             }
 
             @Override
