@@ -60,6 +60,18 @@ public class CalendarUtils {
         return (CURRENT_YEAR_NUMBER() * 12) + CURRENT_MONTH_NUMBER();
     }
 
+    public static Calendar CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR (int positionMonth) {
+        int year = (positionMonth / 12) + 1900;
+        int month = (positionMonth % 12);
+        if(month == 0) {  // 나머지가 0일 경우 12월이며, 년도가 +1되는 걸 막아주어야 한다.
+            year = year - 1;
+            month = 12;
+        }
+        Calendar mCalendar = Calendar.getInstance();
+        mCalendar.set(year, month-1, mCalendar.get(Calendar.DATE));
+        return mCalendar;
+    }
+
     /**
      * Get Month Number
      * JAN = 0 ~ DEC = 11

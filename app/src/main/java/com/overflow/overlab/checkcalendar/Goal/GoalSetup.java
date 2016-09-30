@@ -24,10 +24,10 @@ public class GoalSetup {
     private CheckCalendarApplication applicationClass;
     private File goalDataFile;
 
-    static final String CALENDAR_NAME = "CheckCalendar";
-    static final String EMPTY = "EMPTY";
-    static final String NULL = "null";
-    static final String ERROR_STRING = "ERROR_";
+    public static final String CALENDAR_NAME = "CheckCalendar";
+    public static final String EMPTY = "EMPTY";
+    public static final String NULL = "null";
+    public static final String ERROR_STRING = "ERROR_";
 
     public GoalSetup(Context context) {
         applicationClass = (CheckCalendarApplication) context.getApplicationContext();

@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.overflow.overlab.checkcalendar.R;
 
@@ -18,6 +17,7 @@ public class CalendarVerticalViewAdapter extends RecyclerView.Adapter<CalendarVe
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public RelativeLayout view;
+
         public ViewHolder(RelativeLayout itemView) {
             super(itemView);
             view = itemView;
@@ -55,8 +55,8 @@ public class CalendarVerticalViewAdapter extends RecyclerView.Adapter<CalendarVe
                 (CalendarVerticalView) holder.view.findViewById(R.id.calendarview_id);
         calendarVerticalView.setCalendar(position);
 
-        TextView textView = (TextView) holder.view.findViewById(R.id.status_textview);
-        textView.setText(position+"");
+//        TextView textView = (TextView) holder.view.findViewById(R.id.status_textview);
+//        textView.setText(position+"");
 
     }
 

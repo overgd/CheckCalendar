@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -42,6 +42,17 @@ public class MainActivity extends BaseActivity {
     /** Main UI **/
     @BindView(R.id.content_main_layout)
     RelativeLayout content_main_layout;
+
+    /** Toolbar **/
+    Calendar toolbar_Calendar;
+    String toolbar_Goal;
+    String toolBar_Title;
+
+    /** Calendar **/
+    RecyclerView calendarRecyclerView;
+    LinearLayout calendarViewLayout;
+    RecyclerView.Adapter calendarRecyclerAdapter;
+    RecyclerView.LayoutManager calendarLayoutManager;
 
     /** Goal Setup Variables **/
     @BindView(R.id.goal_fab)
@@ -63,9 +74,9 @@ public class MainActivity extends BaseActivity {
     TextView accountNameView;
 
     /** Calendar UI Variables **/
-    Calendar currentCalendar;
-    CalendarPagesAdapter calendarPagesAdapter;
-    ViewPager calendarViewPager;
+//    Calendar currentCalendar;
+//    CalendarPagesAdapter calendarPagesAdapter;
+//    ViewPager calendarViewPager;
 
     /**
      * OnCreate
@@ -92,7 +103,8 @@ public class MainActivity extends BaseActivity {
         goal_subjectList =
                 new GoalSetup(getApplicationContext()).initGoalSetup();
 
-        getSupportActionBar().setTitle(goal_subjectList.get(0));
+        toolbar_Goal = goal_subjectList.get(0);
+        setToolBarTitle();
 
         for(int i = 0; i < goal_subjectList.size(); i++) {
             View goal_sheet =
@@ -206,7 +218,6 @@ public class MainActivity extends BaseActivity {
                 getPreferences(Context.MODE_PRIVATE);
         accountNameView.setText(settings.getString(PREF_ACCOUNT_NAME, "NULL"));
         Picasso.with(getApplicationContext()).load(settings.getString(PREF_ACCOUNT_IMGURI, "NULL")).into(accountImageView);
-
     }
 
     /**
@@ -214,20 +225,13 @@ public class MainActivity extends BaseActivity {
      */
     protected void addCalendarVerticalView() {
 
-        RecyclerView calendarRecyclerView;
-        LinearLayout calendarViewLayout;
-        RecyclerView.Adapter calendarRecyclerAdapter;
-        RecyclerView.LayoutManager calendarLayoutManager;
-
         appBarLayout.addView(CalendarVerticalView.linearLayoutCalendarWeekUI(this));
 
-        calendarViewLayout =
-                (LinearLayout) LayoutInflater.from(this)
+        calendarViewLayout = (LinearLayout) LayoutInflater.from(this)
                         .inflate(R.layout.calendar_vertical, null);
         calendarViewLayout.setId(View.generateViewId());
 
-        calendarRecyclerView =
-                (RecyclerView) calendarViewLayout
+        calendarRecyclerView = (RecyclerView) calendarViewLayout
                         .findViewById(R.id.calendar_vertical_recyclerview);
 
         calendarRecyclerView.setHasFixedSize(true);
@@ -240,58 +244,93 @@ public class MainActivity extends BaseActivity {
 
         content_main_layout.addView(calendarViewLayout);
         calendarLayoutManager.scrollToPosition(CalendarUtils.POSITION_CURRENT_MONTH());
-
-    }
-
-
-    /**
-     * Add Calendar View
-     **/
-    protected void addCalendarView() {
-
-        currentCalendar = Calendar.getInstance(); //현재 날짜
-        int YEAR = currentCalendar.get(Calendar.YEAR) - 1900; // 1900년부터 시작해서 현재 년도까지
-        int MONTH = currentCalendar.get(Calendar.MONTH) + 1; // 0부터 시작되는 월
-        int position = (YEAR * 12) + MONTH; // 1900년 ~ 2200년 사이에 현재 월 위치
-
-        //현재 날짜의 월을 타이틀에 초기화
-//        getDelegate().getSupportActionBar().setTitle(
-//                getApplicationContext().getResources().getStringArray(R.array.calendar_month)[
-//                        currentCalendar.get(Calendar.MONTH)]
-//        );
-
-//        month_Text.setText(
-//                getApplicationContext().getResources()
-//                        .getTextArray(R.array.calendar_month)
-//                        [currentCalendar.get(Calendar.MONTH)]
-//        );
-
-        calendarPagesAdapter = new CalendarPagesAdapter(
-                getSupportFragmentManager(), getBaseContext());
-        calendarViewPager = (ViewPager) findViewById(R.id.calendar_pager);
-        calendarViewPager.setAdapter(calendarPagesAdapter);
-
-        calendarViewPager.setCurrentItem(position);
-        calendarViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        calendarRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
             }
-
             @Override
-            public void onPageSelected(int position) {
-//                getDelegate().getSupportActionBar()
-//                        .setTitle(calendarPagesAdapter.getPageTitle(position));
-//                month_Text.setText(
-//                        calendarPagesAdapter.getPageTitle(position)
-//                );
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager =
+                        (LinearLayoutManager) recyclerView.getLayoutManager();
+                int position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                if(position != -1) {
+                    toolbar_Calendar =
+                            CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(
+                                    position
+                            );
+                    setToolBarTitle();
+                }
             }
         });
-
     }
+
+    public void setToolBarTitle() {
+
+        if (toolbar_Calendar == null) {
+            toolbar_Calendar = Calendar.getInstance();
+        }
+
+        toolBar_Title = getResources().getStringArray(R.array.calendar_month_short)
+                [toolbar_Calendar.get(Calendar.MONTH)]
+                +" "+toolbar_Calendar.get(Calendar.YEAR);
+
+        if (toolbar_Goal != null && !Objects.equals(toolbar_Goal, GoalSetup.EMPTY)) {
+            toolBar_Title = toolBar_Title +", "+ toolbar_Goal;
+        }
+
+        getSupportActionBar().setTitle(toolBar_Title);
+    }
+
+
+//    /**
+//     * Add Calendar View
+//     **/
+//    protected void addCalendarView() {
+//
+//        currentCalendar = Calendar.getInstance(); //현재 날짜
+//        int YEAR = currentCalendar.get(Calendar.YEAR) - 1900; // 1900년부터 시작해서 현재 년도까지
+//        int MONTH = currentCalendar.get(Calendar.MONTH) + 1; // 0부터 시작되는 월
+//        int position = (YEAR * 12) + MONTH; // 1900년 ~ 2200년 사이에 현재 월 위치
+//
+//        //현재 날짜의 월을 타이틀에 초기화
+////        getDelegate().getSupportActionBar().setTitle(
+////                getApplicationContext().getResources().getStringArray(R.array.calendar_month)[
+////                        currentCalendar.get(Calendar.MONTH)]
+////        );
+//
+////        month_Text.setText(
+////                getApplicationContext().getResources()
+////                        .getTextArray(R.array.calendar_month)
+////                        [currentCalendar.get(Calendar.MONTH)]
+////        );
+//
+//        calendarPagesAdapter = new CalendarPagesAdapter(
+//                getSupportFragmentManager(), getBaseContext());
+//        calendarViewPager = (ViewPager) findViewById(R.id.calendar_pager);
+//        calendarViewPager.setAdapter(calendarPagesAdapter);
+//
+//        calendarViewPager.setCurrentItem(position);
+//        calendarViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+////                getDelegate().getSupportActionBar()
+////                        .setTitle(calendarPagesAdapter.getPageTitle(position));
+////                month_Text.setText(
+////                        calendarPagesAdapter.getPageTitle(position)
+////                );
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
+//    }
 }
