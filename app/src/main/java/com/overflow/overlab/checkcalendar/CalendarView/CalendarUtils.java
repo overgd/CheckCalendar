@@ -68,7 +68,7 @@ public class CalendarUtils {
             month = 12;
         }
         Calendar mCalendar = Calendar.getInstance();
-        mCalendar.set(year, month-1, mCalendar.get(Calendar.DATE));
+        mCalendar.set(year, month - 1, 1);
         return mCalendar;
     }
 

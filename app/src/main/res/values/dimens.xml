@@ -13,7 +13,8 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="week_leftpadding">6dp</dimen>
+    <dimen name="week_left_padding">6dp</dimen>
+    <dimen name="week_padding">8dp</dimen>
     <dimen name="week_columnsize">16dp</dimen>
     <dimen name="dayevent_height">14dp</dimen>
     <dimen name="dayevent_columnsize">49dp</dimen>

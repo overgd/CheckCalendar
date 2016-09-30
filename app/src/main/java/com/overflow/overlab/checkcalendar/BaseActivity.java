@@ -10,14 +10,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,24 +38,27 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class BaseActivity extends AppCompatActivity
         implements EasyPermissions.PermissionCallbacks,
-        NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener {
 
     /** Application Class */
     CheckCalendarApplication applicationClass;
 
     /** Request Code **/
+    public static final String REQUEST_CODE = "requestCode";
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     static final int RC_SIGN_IN = 1004;
 
+    public static final int ADD_GOAL = 10000;
+    public static final int EDIT_GOAL = 10001;
+
     /** Navigation Drawer UI Variables **/
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    public Toolbar toolbar;
     @BindView(R.id.appbarlayout)
-    AppBarLayout appBarLayout;
+    public AppBarLayout appBarLayout;
 
     /** Google Sign-in Account API Variables **/
     GoogleSignInOptions gso;
@@ -142,11 +140,6 @@ public class BaseActivity extends AppCompatActivity
     }
 
     /**
-     * Click Listener
-     **/
-
-
-    /**
      * BackKey Press Listener
      **/
     @Override
@@ -154,46 +147,7 @@ public class BaseActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
-    /**
-     * Create Option Menu
-     **/
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.main_activity, menu);
-        return true;
-    }
-
-    /**
-     * Option Menu Item Listener
-     **/
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Navigation Menu Item Listener
-     **/
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-
-        if (id == R.id.nav_manage) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     /**
      * EasyPermission
@@ -306,6 +260,12 @@ public class BaseActivity extends AppCompatActivity
                 break;
 
         }
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        intent.putExtra(REQUEST_CODE, requestCode);
+        super.startActivityForResult(intent, requestCode);
     }
 
     /**

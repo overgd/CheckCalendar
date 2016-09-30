@@ -11,6 +11,8 @@
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:theme="@style/AppTheme.AppBarOverlay">>
 
         <android.support.v7.widget.Toolbar
@@ -23,12 +25,27 @@
 
         </android.support.v7.widget.Toolbar>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <EditText
+                android:id="@+id/goal_input_form.goal_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Goal Title"
+                android:textSize="56sp" />
+
+        </android.support.design.widget.TextInputLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_goal" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/goal_fab"
+        android:id="@+id/confirm_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

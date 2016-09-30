@@ -32,12 +32,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     /** Main UI **/
     @BindView(R.id.content_main_layout)
@@ -73,11 +73,6 @@ public class MainActivity extends BaseActivity {
     ImageView accountImageView;
     TextView accountNameView;
 
-    /** Calendar UI Variables **/
-//    Calendar currentCalendar;
-//    CalendarPagesAdapter calendarPagesAdapter;
-//    ViewPager calendarViewPager;
-
     /**
      * OnCreate
      **/
@@ -100,12 +95,15 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initGoalFab() {
         super.initGoalFab();
+
         goal_subjectList =
                 new GoalSetup(getApplicationContext()).initGoalSetup();
-
-        toolbar_Goal = goal_subjectList.get(0);
+        if(! goal_subjectList.isEmpty()) {
+            toolbar_Goal = goal_subjectList.get(0);
+        }
         setToolBarTitle();
 
+        goal_fab_sheet_list_layout.removeAllViews();
         for(int i = 0; i < goal_subjectList.size(); i++) {
             View goal_sheet =
                     LayoutInflater.from(this).inflate(R.layout.goal_sheet, null);
@@ -136,22 +134,21 @@ public class MainActivity extends BaseActivity {
                     .duration(250)
                     .setOverlay(goal_overlay)
                     .transformTo(goal_fab_sheet);
-            Intent activityGoalIntent = new Intent(this, GoalActivity.class);
         }
     }
     @OnClick(R.id.goal_fab_add_layout)
     void onClickGoalFabSheetAdd() {
         Log.d("goal add", "click");
-        Intent activityGoalIntent = new Intent(this, GoalActivity.class);
+        Intent goalActivityIntent = new Intent(this, GoalActivity.class);
         FabTransformation.with(goal_fab)
                 .duration(100)
                 .setOverlay(goal_overlay)
                 .transformFrom(goal_fab_sheet);
-        startActivity(activityGoalIntent);
-
+        startActivityForResult(goalActivityIntent, ADD_GOAL);
     }
+
     /**
-     * BackKey Press Listener
+     * Back Key Press Listener
      **/
     @Override
     public void onBackPressed() {
@@ -174,7 +171,9 @@ public class MainActivity extends BaseActivity {
      **/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.main_activity, menu);
+        return true;
     }
 
     /**
@@ -182,6 +181,13 @@ public class MainActivity extends BaseActivity {
      **/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -190,14 +196,27 @@ public class MainActivity extends BaseActivity {
      **/
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        return super.onNavigationItemSelected(menuItem);
+        int id = menuItem.getItemId();
+
+        if (id == R.id.nav_manage) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        switch (requestCode) {
+            case ADD_GOAL:
+                if(resultCode == RESULT_OK) {
+                    initGoalFab();
+                }
+        }
     }
 
     /**
@@ -205,7 +224,9 @@ public class MainActivity extends BaseActivity {
      **/
     @Override
     protected void initMainUi() {
+
         super.initMainUi();
+
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -257,9 +278,7 @@ public class MainActivity extends BaseActivity {
                 int position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                 if(position != -1) {
                     toolbar_Calendar =
-                            CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(
-                                    position
-                            );
+                            CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(position);
                     setToolBarTitle();
                 }
             }
@@ -275,62 +294,11 @@ public class MainActivity extends BaseActivity {
         toolBar_Title = getResources().getStringArray(R.array.calendar_month_short)
                 [toolbar_Calendar.get(Calendar.MONTH)]
                 +" "+toolbar_Calendar.get(Calendar.YEAR);
-
-        if (toolbar_Goal != null && !Objects.equals(toolbar_Goal, GoalSetup.EMPTY)) {
+        if (toolbar_Goal != null) {
             toolBar_Title = toolBar_Title +", "+ toolbar_Goal;
         }
 
         getSupportActionBar().setTitle(toolBar_Title);
     }
 
-
-//    /**
-//     * Add Calendar View
-//     **/
-//    protected void addCalendarView() {
-//
-//        currentCalendar = Calendar.getInstance(); //현재 날짜
-//        int YEAR = currentCalendar.get(Calendar.YEAR) - 1900; // 1900년부터 시작해서 현재 년도까지
-//        int MONTH = currentCalendar.get(Calendar.MONTH) + 1; // 0부터 시작되는 월
-//        int position = (YEAR * 12) + MONTH; // 1900년 ~ 2200년 사이에 현재 월 위치
-//
-//        //현재 날짜의 월을 타이틀에 초기화
-////        getDelegate().getSupportActionBar().setTitle(
-////                getApplicationContext().getResources().getStringArray(R.array.calendar_month)[
-////                        currentCalendar.get(Calendar.MONTH)]
-////        );
-//
-////        month_Text.setText(
-////                getApplicationContext().getResources()
-////                        .getTextArray(R.array.calendar_month)
-////                        [currentCalendar.get(Calendar.MONTH)]
-////        );
-//
-//        calendarPagesAdapter = new CalendarPagesAdapter(
-//                getSupportFragmentManager(), getBaseContext());
-//        calendarViewPager = (ViewPager) findViewById(R.id.calendar_pager);
-//        calendarViewPager.setAdapter(calendarPagesAdapter);
-//
-//        calendarViewPager.setCurrentItem(position);
-//        calendarViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-////                getDelegate().getSupportActionBar()
-////                        .setTitle(calendarPagesAdapter.getPageTitle(position));
-////                month_Text.setText(
-////                        calendarPagesAdapter.getPageTitle(position)
-////                );
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-//    }
 }

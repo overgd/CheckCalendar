@@ -36,7 +36,6 @@ public class GoalSetup {
     /**
      * 목표설정 초기화 메서드
      * 1. 저장된 목표설정 데이터 확인
-     * 2. 데이터가 있으면 불러오고, 없으면 데이터를 만들고 제목을 'Check Calendar'로 띄우기
      * 3. 데이터의 리스트를 SharedPreferences와 동기화
      * 4. 리스트를 Sheet에 붙이기
      * 구글캘린더와 동기화
@@ -48,35 +47,26 @@ public class GoalSetup {
         File goalListFile = applicationClass.goalListFile();
         GoalCalendarsModel goalCalendarsModel;
 
-        goalCalendarsModel = new GoalUtils(applicationClass.getApplicationContext())
+        goalCalendarsModel =
+                new GoalUtils(applicationClass.getApplicationContext())
                 .getGoalListGCMfromFile();
 
         try {
-
             if (GoalUtils.isFile(goalListFile)) { //goal list file exist
 
                 if(new Gson().toJson(goalCalendarsModel).isEmpty()) { //Goal List Empty
                     initGoalCalendar(goalListFile);
                 }
-
                 Log.d("goal loadgson", new Gson().toJson(goalCalendarsModel));
-
                 for (int i = 0; i < goalCalendarsModel.getDescription().size(); i++) {
-                    if (! EMPTY.equals(goalCalendarsModel.getDescription().get(i))) {
-                        result.add(goalCalendarsModel.getDescription().get(i).getSummary());
-                    } else {
-                        result.add(EMPTY);
-                        return result;
-                    }
+                    result.add(goalCalendarsModel.getDescription().get(i).getSummary());
                 }
-
                 return result;
 
             } else { //goal list file not exist
                 Log.d("goal", "create new file");
                 goalListFile.createNewFile();
-
-                result.add(0, initGoalCalendar(goalListFile));
+                initGoalCalendar(goalListFile);
                 return result;
             }
 
@@ -84,10 +74,9 @@ public class GoalSetup {
             Log.d("Error initgoal", e.toString());
 
             if (goalCalendarsModel == null) { //GoalCalendarsModel is null
-                result.add(0, initGoalCalendar(goalListFile));
+                initGoalCalendar(goalListFile);
                 return result;
             }
-
             result.add(0, ERROR_STRING+"INIT");
             return result;
         }
@@ -107,7 +96,7 @@ public class GoalSetup {
         GoalCalendarsModel goalCalendarsModel = new GoalCalendarsModel();
         List<GoalCalendarsDescriptionModel> gdmList = new ArrayList<>();
         GoalCalendarsDescriptionModel goalCalendarsDescriptionModel = new GoalCalendarsDescriptionModel();
-        goalCalendarsDescriptionModel.setSummary(EMPTY);
+//        goalCalendarsDescriptionModel.setSummary(EMPTY);
         gdmList.add(goalCalendarsDescriptionModel);
 
         goalCalendarsModel.setSummary(CALENDAR_NAME);

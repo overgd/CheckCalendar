@@ -13,18 +13,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by over on 9/17/2016.
  */
 public class GoalUtils {
 
-    private CheckCalendarApplication applicationClass;
+    static CheckCalendarApplication applicationClass;
 
     static final String CALENDAR_NAME = "CheckCalendar";
     static final String EMPTY = "EMPTY";
     static final String ERROR_STRING = "ERROR_";
+    static final String CONFIRM = "CONFIRM";
 
     public GoalUtils(Context context) {
         applicationClass = (CheckCalendarApplication) context.getApplicationContext();
@@ -35,7 +38,7 @@ public class GoalUtils {
      * @param gsonListString Gson format String
      * @return Success - 'Confirm', Fail - 'Error'
      */
-    public String saveGoalListGsonStringFile(String gsonListString) {
+    static public String saveGoalListGsonStringFile(String gsonListString) {
 
         FileOutputStream fos = applicationClass.fileOutputStream(
                 applicationClass.goalListFile()
@@ -43,20 +46,39 @@ public class GoalUtils {
         try {
             fos.write(gsonListString.getBytes());
             fos.close();
-            return "Confirm";
+            return CONFIRM;
         } catch (IOException e) {
             e.printStackTrace();
             Log.d("Error savegoallist", e.toString());
-            return "Error";
+            return ERROR_STRING;
         }
     }
 
+    static public String saveGoalCalendarsModel(GoalCalendarsModel goalCalendarsModel) {
+
+        FileOutputStream fos = applicationClass.fileOutputStream(
+                applicationClass.goalListFile()
+        );
+        try {
+            fos.write(convertGoalCalendarsModelToString(goalCalendarsModel).getBytes());
+            fos.close();
+            return CONFIRM;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("Error savegoallist", e.toString());
+            return ERROR_STRING;
+        }
+    }
+
+    static public String convertGoalCalendarsModelToString(GoalCalendarsModel goalCalendarsModel) {
+        return new Gson().toJson(goalCalendarsModel);
+    }
     /**
      * get Goal List File to GsonFormat String
      * from Storage
      * @return
      */
-    public String getGoalListGsonStringfromFile() {
+    static public String getGoalListGsonStringfromFile() {
 
         FileInputStream fis = applicationClass.fileInputStream(
                 applicationClass.goalListFile()
@@ -77,7 +99,7 @@ public class GoalUtils {
     /**
      *
      */
-    public GoalCalendarsModel getGoalListGCMfromFile () {
+    static public GoalCalendarsModel getGoalListGCMfromFile () {
         FileInputStream fis = applicationClass.fileInputStream(
                 applicationClass.goalListFile()
         );
@@ -100,7 +122,7 @@ public class GoalUtils {
      * @param goalCalendarsDescriptionModel 목표 설명 모델
      * @return GoalCalendarsModel 목표 캘린더 모델
      */
-    public GoalCalendarsModel addGDMintoGCM(
+    static public GoalCalendarsModel addGDMtoGCM(
             GoalCalendarsModel goalCalendarsModel, GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
 
         List<GoalCalendarsDescriptionModel> mGoalCalendarsDescriptionModel = goalCalendarsModel.getDescription();
@@ -109,14 +131,30 @@ public class GoalUtils {
             if(mGoalCalendarsDescriptionModel.get(i).getSummary() == goalCalendarsDescriptionModel.getSummary()) {
                 return null;
             }
-            removeEmptyGoalDescription(mGoalCalendarsDescriptionModel, i);
         }
 
         mGoalCalendarsDescriptionModel.add(goalCalendarsDescriptionModel);
-
         goalCalendarsModel.setDescription(mGoalCalendarsDescriptionModel);
+        goalCalendarsModel = removeEmptyGoal(goalCalendarsModel);
 
         return goalCalendarsModel;
+    }
+
+    static public String addGoal(GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
+
+        if (!Objects.equals(goalCalendarsDescriptionModel.getSummary(), "")
+                && goalCalendarsDescriptionModel.getSummary().trim().length() > 0) {
+            GoalCalendarsModel goalCalendarsModel = GoalUtils.getGoalListGCMfromFile();
+            goalCalendarsModel =
+                    GoalUtils.addGDMtoGCM(goalCalendarsModel, goalCalendarsDescriptionModel);
+            GoalUtils.saveGoalCalendarsModel(goalCalendarsModel);
+            return CONFIRM;
+        } else if (Objects.equals(goalCalendarsDescriptionModel.getSummary(), "")) {
+            return ERROR_STRING+"NOT_SUMMARY";
+        } else if (goalCalendarsDescriptionModel.getSummary().trim().length() <= 0) {
+            return ERROR_STRING+"WHITESPACE";
+        }
+        return ERROR_STRING;
     }
 
     /**
@@ -127,7 +165,7 @@ public class GoalUtils {
      * @param endDate 종료 날짜
      * @return GoalCalendarsDescriptionModel
      */
-    public GoalCalendarsDescriptionModel setGoalDescriptionModel (
+    static public GoalCalendarsDescriptionModel setGoalDescriptionModel (
             String summary, String description,
             DateTime startDate, DateTime endDate) {
 
@@ -147,7 +185,7 @@ public class GoalUtils {
      * @param inputGDM GoalCalendarsDescriptionModel
      * @return Updated GoalCalendarsModel
      */
-    public GoalCalendarsModel updateSelectedGoal (
+    static public GoalCalendarsModel updateSelectedGoal (
             GoalCalendarsModel goalCalendarsModel, GoalCalendarsDescriptionModel inputGDM) {
 
         List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList = goalCalendarsModel.getDescription();
@@ -175,7 +213,7 @@ public class GoalUtils {
      * @param endDate 종료 날짜
      * @return goalDescriptionModel 수정된 모델
      */
-    public List<GoalCalendarsDescriptionModel> updateGoalDescriptionModel (
+    static public List<GoalCalendarsDescriptionModel> updateGoalDescriptionModel (
             List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList,
             String summary, String description, DateTime startDate, DateTime endDate, String colorId) {
 
@@ -201,7 +239,7 @@ public class GoalUtils {
      * @param goalSummary
      * @return removed Goal - GoalCalendarsModel
      */
-    public GoalCalendarsModel removeSelectedGoal
+    static public GoalCalendarsModel removeSelectedGoal
             (GoalCalendarsModel goalCalendarsModel, String goalSummary) {
 
         List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList = goalCalendarsModel.getDescription();
@@ -209,11 +247,6 @@ public class GoalUtils {
         for(int i = 0; i < goalCalendarsDescriptionModelList.size(); i++) {
             if(goalCalendarsDescriptionModelList.get(i).getSummary() == goalSummary) {
                 goalCalendarsDescriptionModelList.remove(i);
-                if (goalCalendarsDescriptionModelList.size() == 0) {
-                    GoalCalendarsDescriptionModel emptyGDM = new GoalCalendarsDescriptionModel();
-                    emptyGDM.setSummary(EMPTY);
-                    goalCalendarsDescriptionModelList.add(emptyGDM);
-                }
                 goalCalendarsModel.setDescription(goalCalendarsDescriptionModelList);
                 return goalCalendarsModel;
             }
@@ -223,14 +256,31 @@ public class GoalUtils {
 
     /**
      * Remove EMPTY Goal Description
-     * @param goalCalendarsDescriptionModelList
+     * @param
      * @return goalCalendarsModel
      */
-    public List<GoalCalendarsDescriptionModel> removeEmptyGoalDescription(List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList, int index) {
-        if (goalCalendarsDescriptionModelList.get(index).getSummary() == EMPTY) {
-            goalCalendarsDescriptionModelList.remove(index);
+    static public GoalCalendarsModel removeEmptyGoal(GoalCalendarsModel goalCalendarsModel) {
+        for(int i = 0; i < goalCalendarsModel.getDescription().size(); i++) {
+            if (goalCalendarsModel.getDescription().get(i).getSummary() == null
+                    || goalCalendarsModel.getDescription().get(i).getSummary().isEmpty()
+                    || goalCalendarsModel.getDescription().get(i).getSummary().trim().length() <= 0) {
+                goalCalendarsModel.getDescription().remove(i);
+            }
         }
-        return goalCalendarsDescriptionModelList;
+        return goalCalendarsModel;
+    }
+
+    /**
+     * Convert String Time to Calendar
+     * @param calendar
+     * @return 00 : 00
+     */
+    static public String convertCalendarStringTime(Calendar calendar) {
+        return String.format("%1$tH : %1$tM", calendar);
+    }
+
+    static public DateTime convertDateTimeToCalendar(Calendar calendar) {
+        return new DateTime(calendar.getTimeInMillis());
     }
 
     /**
