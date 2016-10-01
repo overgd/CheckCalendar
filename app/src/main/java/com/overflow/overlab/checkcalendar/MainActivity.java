@@ -139,11 +139,11 @@ public class MainActivity extends BaseActivity
     @OnClick(R.id.goal_fab_add_layout)
     void onClickGoalFabSheetAdd() {
         Log.d("goal add", "click");
-        Intent goalActivityIntent = new Intent(this, GoalActivity.class);
         FabTransformation.with(goal_fab)
                 .duration(100)
                 .setOverlay(goal_overlay)
                 .transformFrom(goal_fab_sheet);
+        Intent goalActivityIntent = new Intent(this, GoalActivity.class);
         startActivityForResult(goalActivityIntent, ADD_GOAL);
     }
 
@@ -184,7 +184,9 @@ public class MainActivity extends BaseActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add_goal) {
+            Intent goalActivityIntent = new Intent(this, GoalActivity.class);
+            startActivityForResult(goalActivityIntent, ADD_GOAL);
             return true;
         }
 
@@ -238,7 +240,8 @@ public class MainActivity extends BaseActivity
         SharedPreferences settings =
                 getPreferences(Context.MODE_PRIVATE);
         accountNameView.setText(settings.getString(PREF_ACCOUNT_NAME, "NULL"));
-        Picasso.with(getApplicationContext()).load(settings.getString(PREF_ACCOUNT_IMGURI, "NULL")).into(accountImageView);
+        Picasso.with(getApplicationContext())
+                .load(settings.getString(PREF_ACCOUNT_IMGURI, "NULL")).into(accountImageView);
     }
 
     /**
