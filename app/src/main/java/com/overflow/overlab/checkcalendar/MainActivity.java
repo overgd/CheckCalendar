@@ -37,7 +37,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        View.OnClickListener {
 
     /** Main UI **/
     @BindView(R.id.content_main_layout)
@@ -85,7 +86,6 @@ public class MainActivity extends BaseActivity
         addCalendarVerticalView();
         initMainUi();
         initGoalFab();
-//        addCalendarView();
 
     }
 
@@ -105,19 +105,26 @@ public class MainActivity extends BaseActivity
 
         goal_fab_sheet_list_layout.removeAllViews();
         for(int i = 0; i < goal_subjectList.size(); i++) {
+
+            if(goal_subjectList.get(i) == null ||
+                    goal_subjectList.get(i).trim().length() <= 0) break;
             View goal_sheet =
                     LayoutInflater.from(this).inflate(R.layout.goal_sheet, null);
             TextView goal_sheet_text =
                     (TextView) goal_sheet.findViewById(R.id.goal_fab_sheet_list_text);
             goal_sheet_text.setText(goal_subjectList.get(i));
             goal_fab_sheet_list_layout.addView(goal_sheet);
-        }
 
+        }
     }
 
     /**
      * Click Listener
      **/
+    @Override
+    public void onClick(View v) {
+
+    }
     @OnClick(R.id.goal_overlay)
     void onClickOverlay() {
         if(goal_fab.getVisibility() != View.VISIBLE) {
@@ -184,11 +191,18 @@ public class MainActivity extends BaseActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.action_add_goal) {
-            Intent goalActivityIntent = new Intent(this, GoalActivity.class);
-            startActivityForResult(goalActivityIntent, ADD_GOAL);
-            return true;
+        switch (id) {
+            case R.id.action_add_goal :
+                Intent goalActivityIntent = new Intent(this, GoalActivity.class);
+                startActivityForResult(goalActivityIntent, ADD_GOAL);
+                return true;
         }
+
+//        if (id == R.id.action_add_goal) {
+//            Intent goalActivityIntent = new Intent(this, GoalActivity.class);
+//            startActivityForResult(goalActivityIntent, ADD_GOAL);
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

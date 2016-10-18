@@ -8,18 +8,20 @@
 
     <dimen name="cardview_sidepadding">8dp</dimen>
 
+    <dimen name="monthnum_size">24dp</dimen>
+
     <dimen name="calendarmonthcolumn_minheight">100dp</dimen>
-    <dimen name="calendarmonthcolumn_textsize">10sp</dimen>
+    <dimen name="calendarmonthcolumn_margin">3dp</dimen>
+    <dimen name="calendarmonthcolumn_textsize">12sp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="week_left_padding">6dp</dimen>
-    <dimen name="week_padding">8dp</dimen>
+    <dimen name="weeknum_margin">6dp</dimen>
+    <dimen name="weeklayout_padding">8dp</dimen>
     <dimen name="week_columnsize">16dp</dimen>
+
     <dimen name="dayevent_height">14dp</dimen>
     <dimen name="dayevent_columnsize">49dp</dimen>
-
-    <dimen name="month_fontsize">8dp</dimen>
 
     <dimen name="size_3dp">3dp</dimen>
 </resources>

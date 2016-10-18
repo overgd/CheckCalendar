@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -12,23 +14,24 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.overflow.overlab.checkcalendar.Check.CheckView;
 import com.overflow.overlab.checkcalendar.R;
 
 import java.util.Calendar;
-
-import static android.view.Gravity.CENTER;
 
 /**
  * Created by over on 2016-09-23.
  */
 
-public class CalendarVerticalView extends RelativeLayout {
+public class CalendarVerticalView extends RelativeLayout
+        implements View.OnClickListener, View.OnTouchListener {
 
     Context context;
     TableLayout calendarMonthLayout;
     TableRow[] calendarMonthRow;
     LinearLayout[][] calendarMonthColumn;
     TextView[][] calendarDayNumberTextView;
+    CheckView[][] checkView;
 
     public CalendarVerticalView(Context context) {
         super(context);
@@ -39,15 +42,10 @@ public class CalendarVerticalView extends RelativeLayout {
         ));
         setId(R.id.calendarview_id);
 
-        calendarMonthLayout = tableLayoutCalendarMonthUI(context);
-        calendarMonthLayout.setPadding(
-                getResources().getDimensionPixelSize(R.dimen.cardview_sidepadding),
-                0,
-                getResources().getDimensionPixelSize(R.dimen.cardview_sidepadding),
-                0
-        );
-        addView(calendarMonthLayout);
+        checkView = new CheckView[6][7];
 
+        calendarMonthLayout = tableLayoutCalendarMonthUI(context);
+        addView(calendarMonthLayout);
     }
 
     public void setCalendar(int positionMonth) {
@@ -55,10 +53,12 @@ public class CalendarVerticalView extends RelativeLayout {
         Calendar mCalendar =
                 CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(positionMonth);
 
-        /** Clear TextView **/
-        for (TextView[] i : calendarDayNumberTextView) {
-            for (TextView j : i) {
-                j.setText("");
+        /** Clear View **/
+        for(int x = 0; x < 6; x++) {
+            for(int y = 0; y < 7; y++) {
+                calendarDayNumberTextView[x][y].setText("");
+                calendarMonthColumn[x][y].setOnClickListener(null);
+                removeView(checkView[x][y]);
             }
         }
 
@@ -71,40 +71,29 @@ public class CalendarVerticalView extends RelativeLayout {
         }
 
         /** Set Day TextView **/
-        for (int total_day = 1; total_day < CalendarUtils.GET_NUMBER_DAY_OF_MONTH(mCalendar); ) {
-            int total_row = CalendarUtils.GET_NUMBER_WEEK_OF_MONTH(mCalendar);
+        int total_day = 1;
+        int first_day_num = CalendarUtils.GET_NUMBER_FIRST_DAY_OF_WEEK_IN_MONTH(mCalendar);
+        int day_of_month = CalendarUtils.GET_NUMBER_DAY_OF_MONTH(mCalendar);
 
-            for (int current_row = 0; current_row < total_row; current_row++) {
-                for (int column = 0; column < calendarDayNumberTextView[current_row].length; column++) {
-                    if (current_row == 0) {
-                        int fdoim = CalendarUtils.GET_NUMBER_FIRST_DAY_OF_WEEK_IN_MONTH(mCalendar);
-                        if (fdoim + column < calendarDayNumberTextView[current_row].length) {
-                            if(total_day == 1) {
-                                calendarDayNumberTextView[current_row][column + fdoim]
-                                        .setText((mCalendar.get(Calendar.MONTH)+1)
-                                                +"/"+String.valueOf(total_day).toString());
-                                calendarDayNumberTextView[current_row][column + fdoim]
-                                        .setTextSize(
-                                                TypedValue.COMPLEX_UNIT_PX,
-                                                getResources().getDimension(R.dimen.calendarmonthcolumn_textsize)-2
-                                        );
-                            } else {
-                                calendarDayNumberTextView[current_row][column + fdoim]
-                                        .setText(String.valueOf(total_day).toString());
-                            }
-                            total_day++;
+        for(int row = 0; row < 6; row++) {
+            for(int col = 0; col < 7; col++) {
+                if(row == 0) {
+                    if(col + first_day_num < 7) {
+                        if(total_day == 1)  {
+                            calendarDayNumberTextView[row][col + first_day_num].setText(
+                                    (mCalendar.get(Calendar.MONTH)+1)
+                                                +"/"+String.valueOf(total_day));
                         } else {
-                            break;
+                            calendarDayNumberTextView[row][col + first_day_num].setText(String.valueOf(total_day));
                         }
-
-                    } else {
-                        calendarDayNumberTextView[current_row][column]
-                                .setText(String.valueOf(total_day).toString());
-                        if (total_day < CalendarUtils.GET_NUMBER_DAY_OF_MONTH(mCalendar)) {
-                            total_day++;
-                        } else {
-                            break;
-                        }
+                        calendarMonthColumn[row][col + first_day_num].setOnClickListener(this);
+                        total_day++;
+                    }
+                } else {
+                    if(total_day <= day_of_month) {
+                        calendarDayNumberTextView[row][col].setText(String.valueOf(total_day));
+                        calendarMonthColumn[row][col].setOnClickListener(this);
+                        total_day++;
                     }
                 }
             }
@@ -121,7 +110,11 @@ public class CalendarVerticalView extends RelativeLayout {
         calendarMonthLayout.setLayoutParams(new TableLayout.LayoutParams(
                 TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.MATCH_PARENT));
-//        calendarMonthLayout.setStretchAllColumns(true);
+        calendarMonthLayout.setPadding(
+                (int) context.getResources().getDimension(R.dimen.cardview_sidepadding),
+                0,
+                (int) context.getResources().getDimension(R.dimen.cardview_sidepadding),
+                0);
 
         calendarMonthRow = new TableRow[6]; // monthview row : 6
         calendarMonthColumn = new LinearLayout[6][7];
@@ -134,9 +127,10 @@ public class CalendarVerticalView extends RelativeLayout {
             for (int day = 0; day < 7; day++) {
 
                 calendarMonthColumn[row][day] = new LinearLayout(context);
+
                 calendarMonthColumn[row][day].setLayoutParams(
                         new TableRow.LayoutParams(
-                                TableRow.LayoutParams.WRAP_CONTENT,
+                                TableRow.LayoutParams.MATCH_PARENT,
                                 TableRow.LayoutParams.MATCH_PARENT,
                                 1f
                         ));
@@ -148,17 +142,11 @@ public class CalendarVerticalView extends RelativeLayout {
 
                 //in Text init
                 calendarDayNumberTextView[row][day] = new TextView(context);
-                LinearLayout.LayoutParams mLayoutParams = new LinearLayout.LayoutParams(
-                        getResources().getDimensionPixelSize(R.dimen.week_columnsize),
-                        getResources().getDimensionPixelSize(R.dimen.week_columnsize)
-                );
-                mLayoutParams.setMargins(
-                        0,
-                        getResources().getDimensionPixelSize(R.dimen.size_3dp),
-                        0,
-                        getResources().getDimensionPixelSize(R.dimen.size_3dp));
-                calendarDayNumberTextView[row][day].setLayoutParams(mLayoutParams);
-                calendarDayNumberTextView[row][day].setGravity(CENTER);
+                calendarDayNumberTextView[row][day].setLayoutParams(
+                        new ViewGroup.LayoutParams(
+                                (int) context.getResources().getDimension(R.dimen.monthnum_size),
+                                ViewGroup.LayoutParams.WRAP_CONTENT
+                        ));
                 calendarDayNumberTextView[row][day].setTextSize(
                         TypedValue.COMPLEX_UNIT_PX,
                         getResources().getDimension(R.dimen.calendarmonthcolumn_textsize)
@@ -200,9 +188,9 @@ public class CalendarVerticalView extends RelativeLayout {
         ));
         calendarWeekLayout.setOrientation(LinearLayout.HORIZONTAL);
         calendarWeekLayout.setPadding(
-                (int) context.getResources().getDimension(R.dimen.week_padding),
+                (int) context.getResources().getDimension(R.dimen.cardview_sidepadding),
                 0,
-                (int) context.getResources().getDimension(R.dimen.week_padding),
+                (int) context.getResources().getDimension(R.dimen.cardview_sidepadding),
                 0);
 
         calendarWeekTextView = new TextView[7]; // days of week
@@ -212,17 +200,10 @@ public class CalendarVerticalView extends RelativeLayout {
             calendarWeekTextView[i] = new TextView(context);
 
             calendarWeekTextView[i].setLayoutParams(new TableLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    (int) context.getResources().getDimension(R.dimen.monthnum_size),
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     1f
             ));
-
-            TableLayout.LayoutParams layoutParams = (TableLayout.LayoutParams) calendarWeekTextView[i].getLayoutParams();
-            layoutParams.setMargins((int) context.getResources().getDimension(R.dimen.week_left_padding),
-                    0,
-                    0,
-                    (int) context.getResources().getDimension(R.dimen.week_left_padding));
-            calendarWeekTextView[i].setLayoutParams(layoutParams);
 
             calendarWeekTextView[i].setTextSize(10f);
             calendarWeekTextView[i].setText(
@@ -249,5 +230,41 @@ public class CalendarVerticalView extends RelativeLayout {
         calendarWeekLayout.setId(generateViewId());
 
         return calendarWeekLayout;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int indexX = 0;
+        int indexY = 0;
+        for(LinearLayout[] columnX : calendarMonthColumn) {
+            for(LinearLayout column : columnX) {
+                if(v == column) {
+                    int[] viewPostion = new int[2];
+                    int[] tablePosition = new int[2];
+
+                    getLocationInWindow(tablePosition);
+                    v.getLocationInWindow(viewPostion);
+
+                    if(checkView[indexX][indexY] == null) {
+                        checkView[indexX][indexY] = new CheckView(context);
+                    }
+                    checkView[indexX][indexY].setX(viewPostion[0]-tablePosition[0]);
+                    checkView[indexX][indexY].setY(viewPostion[1]-tablePosition[1]);
+
+                    removeView(checkView[indexX][indexY]);
+                    addView(checkView[indexX][indexY]);
+                }
+                indexY++;
+            }
+            indexX++;
+            indexY = 0;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        return false;
+
     }
 }

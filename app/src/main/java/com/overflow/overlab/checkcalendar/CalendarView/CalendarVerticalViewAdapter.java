@@ -55,9 +55,6 @@ public class CalendarVerticalViewAdapter extends RecyclerView.Adapter<CalendarVe
                 (CalendarVerticalView) holder.view.findViewById(R.id.calendarview_id);
         calendarVerticalView.setCalendar(position);
 
-//        TextView textView = (TextView) holder.view.findViewById(R.id.status_textview);
-//        textView.setText(position+"");
-
     }
 
     @Override
