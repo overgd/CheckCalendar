@@ -40,4 +40,11 @@
         android:layout_toRightOf="@id/goal_fab.sheet_list.icon.layout"
         android:text="NO_DATA" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/goal_fab.sheet_list.id"
+        android:text="NO_DATA"
+        android:visibility="gone"/>
+
 </RelativeLayout>

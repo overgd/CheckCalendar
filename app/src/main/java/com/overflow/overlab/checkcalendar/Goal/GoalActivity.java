@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.overflow.overlab.checkcalendar.BaseActivity;
+import com.overflow.overlab.checkcalendar.CheckCalendarApplication;
 import com.overflow.overlab.checkcalendar.Model.GoalCalendarsDescriptionModel;
 import com.overflow.overlab.checkcalendar.R;
 
@@ -45,6 +46,8 @@ public class GoalActivity extends BaseActivity {
     Calendar endCalendar = Calendar.getInstance();
     Calendar currentCalendar = Calendar.getInstance();
 
+    CheckCalendarApplication applicationClass;
+
     final static int START_DATE = 0;
     final static int END_DATE = 1;
 
@@ -54,8 +57,8 @@ public class GoalActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         setContentView(R.layout.activity_goal);
-
         super.onCreate(savedInstanceState);
+        applicationClass = (CheckCalendarApplication) getApplicationContext();
         requestCode = getIntent().getIntExtra(REQUEST_CODE, 0);
         initMainUi();
         setDateEditText(goalStartDateEditText, START_DATE);
@@ -174,6 +177,10 @@ public class GoalActivity extends BaseActivity {
             String result = GoalUtils.addGoal(goalCalendarsDescriptionModel);
             if(Objects.equals(result, GoalUtils.CONFIRM)) {
                 this.setResult(RESULT_OK);
+                applicationClass.setCurrentGoal(
+                        goalCalendarsDescriptionModel.getId(),
+                        goalCalendarsDescriptionModel.getSummary()
+                );
                 this.finish();
             } else {
                 Log.d("ERROR", result);

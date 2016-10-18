@@ -26,7 +26,7 @@ public class GoalSetup {
 
     public static final String CALENDAR_NAME = "CheckCalendar";
     public static final String EMPTY = "EMPTY";
-    public static final String NULL = "null";
+    public static final String NULL = "NULL";
     public static final String ERROR_STRING = "ERROR_";
 
     public GoalSetup(Context context) {
@@ -47,9 +47,7 @@ public class GoalSetup {
         File goalListFile = applicationClass.goalListFile();
         GoalCalendarsModel goalCalendarsModel;
 
-        goalCalendarsModel =
-                new GoalUtils(applicationClass.getApplicationContext())
-                .getGoalListGCMfromFile();
+        goalCalendarsModel = new GoalUtils(applicationClass.getApplicationContext()).getGoalListGCMfromFile();
 
         try {
             if (GoalUtils.isFile(goalListFile)) { //goal list file exist
@@ -59,7 +57,17 @@ public class GoalSetup {
                 }
                 Log.d("goal loadgson", new Gson().toJson(goalCalendarsModel));
                 for (int i = 0; i < goalCalendarsModel.getDescription().size(); i++) {
-                    result.add(goalCalendarsModel.getDescription().get(i).getSummary());
+                    result.add(goalCalendarsModel.getDescription().get(i).getId());
+                    applicationClass.setGoalList(
+                            goalCalendarsModel.getDescription().get(i).getId(),
+                            goalCalendarsModel.getDescription().get(i).getSummary()
+                    );
+                }
+                if(applicationClass.getCurrentGoal()[0].equals(applicationClass.NULL)) {
+                    applicationClass.setCurrentGoal(
+                            goalCalendarsModel.getDescription().get(0).getId(),
+                            goalCalendarsModel.getDescription().get(0).getSummary()
+                    );
                 }
                 return result;
 

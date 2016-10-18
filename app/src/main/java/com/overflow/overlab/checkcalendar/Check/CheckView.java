@@ -13,10 +13,16 @@ import com.overflow.overlab.checkcalendar.R;
 public class CheckView extends RelativeLayout {
 
     Context context;
+    int STATUS;
 
     public CheckView(Context context) {
         super(context);
         this.context = context;
+
+        setCheck();
+    }
+
+    public void setCheck() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setBackground(context.getDrawable(R.drawable.ic_check_black_24dp));
         } else {

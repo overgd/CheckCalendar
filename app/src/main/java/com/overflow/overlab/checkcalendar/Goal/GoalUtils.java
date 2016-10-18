@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by over on 9/17/2016.
@@ -122,7 +123,7 @@ public class GoalUtils {
      * @param goalCalendarsDescriptionModel 목표 설명 모델
      * @return GoalCalendarsModel 목표 캘린더 모델
      */
-    static public GoalCalendarsModel addGDMtoGCM(
+    static public GoalCalendarsModel addGDMintoGCM(
             GoalCalendarsModel goalCalendarsModel, GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
 
         List<GoalCalendarsDescriptionModel> mGoalCalendarsDescriptionModel = goalCalendarsModel.getDescription();
@@ -142,17 +143,25 @@ public class GoalUtils {
 
     static public String addGoal(GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
 
-        if (!Objects.equals(goalCalendarsDescriptionModel.getSummary(), "")
-                && goalCalendarsDescriptionModel.getSummary().trim().length() > 0) {
+        if (!Objects.equals(goalCalendarsDescriptionModel.getSummary(), "") &&
+                goalCalendarsDescriptionModel.getSummary().trim().length() > 0 &&
+                !goalCalendarsDescriptionModel.getSummary().equals(applicationClass.NULL)) {
             GoalCalendarsModel goalCalendarsModel = GoalUtils.getGoalListGCMfromFile();
+            for(GoalCalendarsDescriptionModel gcd : goalCalendarsModel.getDescription()) {
+                if (goalCalendarsDescriptionModel.getSummary().equals(gcd.getSummary())) {
+                    return ERROR_STRING+"SAME_SUMMARY";
+                }
+            }
             goalCalendarsModel =
-                    GoalUtils.addGDMtoGCM(goalCalendarsModel, goalCalendarsDescriptionModel);
+                    GoalUtils.addGDMintoGCM(goalCalendarsModel, goalCalendarsDescriptionModel);
             GoalUtils.saveGoalCalendarsModel(goalCalendarsModel);
             return CONFIRM;
         } else if (Objects.equals(goalCalendarsDescriptionModel.getSummary(), "")) {
             return ERROR_STRING+"NOT_SUMMARY";
         } else if (goalCalendarsDescriptionModel.getSummary().trim().length() <= 0) {
             return ERROR_STRING+"WHITESPACE";
+        } else if (goalCalendarsDescriptionModel.getSummary().equals(applicationClass.NULL)) {
+            return ERROR_STRING+"DONT_NULL";
         }
         return ERROR_STRING;
     }
@@ -171,6 +180,7 @@ public class GoalUtils {
 
         GoalCalendarsDescriptionModel goalCalendarsDescriptionModel = new GoalCalendarsDescriptionModel();
 
+        goalCalendarsDescriptionModel.setId(UUID.randomUUID().toString());
         goalCalendarsDescriptionModel.setSummary(summary);
         goalCalendarsDescriptionModel.setDescription(description);
         goalCalendarsDescriptionModel.setStartDate(startDate);
@@ -182,11 +192,11 @@ public class GoalUtils {
     /**
      * Update GoalSelectedGoal
      * @param goalCalendarsModel GoalCalendarsModel
-     * @param inputGDM GoalCalendarsDescriptionModel
+     * @param goalCalendarsDescriptionModel GoalCalendarsDescriptionModel
      * @return Updated GoalCalendarsModel
      */
     static public GoalCalendarsModel updateSelectedGoal (
-            GoalCalendarsModel goalCalendarsModel, GoalCalendarsDescriptionModel inputGDM) {
+            GoalCalendarsModel goalCalendarsModel, GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
 
         List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList = goalCalendarsModel.getDescription();
 
@@ -194,9 +204,9 @@ public class GoalUtils {
 
             GoalCalendarsDescriptionModel mGoalCalendarsDescriptionModel = goalCalendarsDescriptionModelList.get(i);
 
-            if(inputGDM.getSummary() == mGoalCalendarsDescriptionModel.getSummary()) {
+            if(goalCalendarsDescriptionModel.getSummary() == mGoalCalendarsDescriptionModel.getSummary()) {
                 goalCalendarsDescriptionModelList.remove(i);
-                goalCalendarsDescriptionModelList.add(i, inputGDM);
+                goalCalendarsDescriptionModelList.add(i, goalCalendarsDescriptionModel);
                 goalCalendarsModel.setDescription(goalCalendarsDescriptionModelList);
                 return goalCalendarsModel;
             }
@@ -236,16 +246,16 @@ public class GoalUtils {
     /**
      * Remove Selected Goal
      * @param goalCalendarsModel
-     * @param goalSummary
+     * @param goalId
      * @return removed Goal - GoalCalendarsModel
      */
     static public GoalCalendarsModel removeSelectedGoal
-            (GoalCalendarsModel goalCalendarsModel, String goalSummary) {
+            (GoalCalendarsModel goalCalendarsModel, String goalId) {
 
         List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModelList = goalCalendarsModel.getDescription();
 
         for(int i = 0; i < goalCalendarsDescriptionModelList.size(); i++) {
-            if(goalCalendarsDescriptionModelList.get(i).getSummary() == goalSummary) {
+            if(goalCalendarsDescriptionModelList.get(i).getId().equals(goalId)) {
                 goalCalendarsDescriptionModelList.remove(i);
                 goalCalendarsModel.setDescription(goalCalendarsDescriptionModelList);
                 return goalCalendarsModel;

@@ -28,6 +28,12 @@ import java.util.Calendar;
  */
 public class CheckCalendarApplication extends Application {
 
+    public final String NOWGOAL = "NOWGOAL";
+    public final String GOAL = "GOAL";
+    public final String ID = "ID";
+    public final String SUMMARY = "SUMMARY";
+    public final String NULL = "NULL";
+
     public GoogleAccountCredential mCredential;
     public com.google.api.services.calendar.Calendar mCalendarService;
 
@@ -42,6 +48,34 @@ public class CheckCalendarApplication extends Application {
 
     public void setMainActivity(Activity mainActivity) {
         this.mainActivity = mainActivity;
+    }
+
+    public void setGoalList(String id, String summary) {
+        sharedPreferences = getSharedPreferences(GOAL, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(id, summary);
+        editor.commit();
+    }
+
+    public String getGoalSummary(String id) {
+        sharedPreferences = getSharedPreferences(GOAL, MODE_PRIVATE);
+        return sharedPreferences.getString(id, NULL);
+    }
+
+    public void setCurrentGoal(String id, String summary) {
+        sharedPreferences = getSharedPreferences(NOWGOAL, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(ID, id);
+        editor.putString(SUMMARY, summary);
+        editor.commit();
+    }
+
+    public String[] getCurrentGoal() {
+        String[] result = new String[2];
+        sharedPreferences = getSharedPreferences(NOWGOAL, MODE_PRIVATE);
+        result[0] = sharedPreferences.getString(ID, NULL);
+        result[1] = sharedPreferences.getString(SUMMARY, NULL);
+        return result;
     }
 
     public File calendarDataFile(Calendar calendar) {

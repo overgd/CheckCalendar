@@ -248,6 +248,7 @@ public class CalendarVerticalView extends RelativeLayout
                     if(checkView[indexX][indexY] == null) {
                         checkView[indexX][indexY] = new CheckView(context);
                     }
+
                     checkView[indexX][indexY].setX(viewPostion[0]-tablePosition[0]);
                     checkView[indexX][indexY].setY(viewPostion[1]-tablePosition[1]);
 

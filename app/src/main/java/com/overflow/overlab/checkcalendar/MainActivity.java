@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.goal_fab_sheet) View goal_fab_sheet;
     @BindView(R.id.goal_fab_sheet_list_layout)
     ViewGroup goal_fab_sheet_list_layout;
-    List<String> goal_subjectList;
+    List<String> goal_idList;
 
     /** Navigation Drawer UI Variables **/
     @BindView(R.id.drawer_layout)
@@ -86,7 +86,6 @@ public class MainActivity extends BaseActivity
         addCalendarVerticalView();
         initMainUi();
         initGoalFab();
-
     }
 
     /**
@@ -96,25 +95,27 @@ public class MainActivity extends BaseActivity
     protected void initGoalFab() {
         super.initGoalFab();
 
-        goal_subjectList =
+        goal_idList =
                 new GoalSetup(getApplicationContext()).initGoalSetup();
-        if(! goal_subjectList.isEmpty()) {
-            toolbar_Goal = goal_subjectList.get(0);
-        }
+
         setToolBarTitle();
 
         goal_fab_sheet_list_layout.removeAllViews();
-        for(int i = 0; i < goal_subjectList.size(); i++) {
+        for(int i = 0; i < goal_idList.size(); i++) {
+            Log.d("idlistsize", String.valueOf(goal_idList.size()));
+            if(goal_idList.get(i) == null || goal_idList.get(i).equals(applicationClass.NULL)) break;
 
-            if(goal_subjectList.get(i) == null ||
-                    goal_subjectList.get(i).trim().length() <= 0) break;
-            View goal_sheet =
-                    LayoutInflater.from(this).inflate(R.layout.goal_sheet, null);
+            View goal_sheet = LayoutInflater.from(this).inflate(R.layout.goal_sheet, null);
             TextView goal_sheet_text =
                     (TextView) goal_sheet.findViewById(R.id.goal_fab_sheet_list_text);
-            goal_sheet_text.setText(goal_subjectList.get(i));
-            goal_fab_sheet_list_layout.addView(goal_sheet);
+            TextView goal_sheet_id =
+                    (TextView) goal_sheet.findViewById(R.id.goal_fab_sheet_list_id);
+            goal_sheet_text.setText(
+                    applicationClass.getGoalSummary(goal_idList.get(i)));
+            goal_sheet_id.setText(goal_idList.get(i));
 
+            goal_fab_sheet_list_layout.addView(goal_sheet);
+            goal_sheet.setOnClickListener(this);
         }
     }
 
@@ -123,7 +124,19 @@ public class MainActivity extends BaseActivity
      **/
     @Override
     public void onClick(View v) {
-
+        TextView idView = (TextView) v.findViewById(R.id.goal_fab_sheet_list_id);
+        for(String id : goal_idList) {
+            if(idView.getText().equals(id)) {
+                applicationClass.setCurrentGoal(
+                        id,
+                        applicationClass.getGoalSummary(id));
+                FabTransformation.with(goal_fab)
+                        .duration(250)
+                        .setOverlay(goal_overlay)
+                        .transformFrom(goal_fab_sheet);
+                setToolBarTitle();
+            }
+        }
     }
     @OnClick(R.id.goal_overlay)
     void onClickOverlay() {
@@ -302,10 +315,18 @@ public class MainActivity extends BaseActivity
         });
     }
 
+    private void refreshCalendarVerticalView() {
+
+    }
+
     public void setToolBarTitle() {
 
         if (toolbar_Calendar == null) {
             toolbar_Calendar = Calendar.getInstance();
+        }
+
+        if(! applicationClass.getCurrentGoal()[1].equals(applicationClass.NULL)) {
+            toolbar_Goal = applicationClass.getCurrentGoal()[1];
         }
 
         toolBar_Title = getResources().getStringArray(R.array.calendar_month_short)
