@@ -10,14 +10,5 @@
     tools:context="com.overflow.overlab.checkcalendar.MainActivity"
     tools:showIn="@layout/app_bar_main"
     >
-    <RelativeLayout
-        android:id="@+id/calendar_vertical.week_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        >
-    </RelativeLayout>
 
 </RelativeLayout>

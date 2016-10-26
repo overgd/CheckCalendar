@@ -8,8 +8,6 @@
 
     <dimen name="cardview_sidepadding">8dp</dimen>
 
-    <dimen name="monthnum_size">24dp</dimen>
-
     <dimen name="calendarmonthcolumn_minheight">100dp</dimen>
     <dimen name="calendarmonthcolumn_margin">3dp</dimen>
     <dimen name="calendarmonthcolumn_textsize">12sp</dimen>

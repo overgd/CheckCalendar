@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.konifar.fab_transformation.FabTransformation;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarUtils;
@@ -60,7 +61,8 @@ public class MainActivity extends BaseActivity
     FloatingActionButton goal_fab;
     @BindView(R.id.goal_overlay)
     View goal_overlay;
-    @BindView(R.id.goal_fab_sheet) View goal_fab_sheet;
+    @BindView(R.id.goal_fab_sheet)
+    View goal_fab_sheet;
     @BindView(R.id.goal_fab_sheet_list_layout)
     ViewGroup goal_fab_sheet_list_layout;
     List<String> goal_idList;
@@ -95,9 +97,7 @@ public class MainActivity extends BaseActivity
     protected void initGoalFab() {
         super.initGoalFab();
 
-        goal_idList =
-                new GoalSetup(getApplicationContext()).initGoalSetup();
-
+        goal_idList = new GoalSetup(getApplicationContext()).initGoalSetup();
         setToolBarTitle();
 
         goal_fab_sheet_list_layout.removeAllViews();
@@ -124,12 +124,13 @@ public class MainActivity extends BaseActivity
      **/
     @Override
     public void onClick(View v) {
+
+        Toast.makeText(this, "onClick", Toast.LENGTH_SHORT).show();
+
         TextView idView = (TextView) v.findViewById(R.id.goal_fab_sheet_list_id);
         for(String id : goal_idList) {
             if(idView.getText().equals(id)) {
-                applicationClass.setCurrentGoal(
-                        id,
-                        applicationClass.getGoalSummary(id));
+                applicationClass.setCurrentGoal(id, applicationClass.getGoalSummary(id));
                 FabTransformation.with(goal_fab)
                         .duration(250)
                         .setOverlay(goal_overlay)
@@ -137,6 +138,8 @@ public class MainActivity extends BaseActivity
                 setToolBarTitle();
             }
         }
+
+
     }
     @OnClick(R.id.goal_overlay)
     void onClickOverlay() {
@@ -295,6 +298,9 @@ public class MainActivity extends BaseActivity
 
         content_main_layout.addView(calendarViewLayout);
         calendarLayoutManager.scrollToPosition(CalendarUtils.POSITION_CURRENT_MONTH());
+
+        calendarRecyclerView.setOnClickListener(this);
+
         calendarRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
