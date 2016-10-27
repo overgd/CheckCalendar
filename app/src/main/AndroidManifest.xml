@@ -22,9 +22,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DayActivity" android:theme="@style/AppTheme.Day"/>
-
         <activity android:name=".Goal.GoalActivity"/>
+        <activity android:name=".Check.CheckActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

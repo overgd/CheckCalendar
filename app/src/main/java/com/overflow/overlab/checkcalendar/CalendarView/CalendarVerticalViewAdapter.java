@@ -30,8 +30,6 @@ public class CalendarVerticalViewAdapter
 
     }
 
-
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 

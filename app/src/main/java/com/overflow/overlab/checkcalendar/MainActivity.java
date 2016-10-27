@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalViewAdapter;
 import com.overflow.overlab.checkcalendar.Goal.GoalActivity;
 import com.overflow.overlab.checkcalendar.Goal.GoalSetup;
+import com.overflow.overlab.checkcalendar.Goal.GoalSheetView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
@@ -39,7 +41,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        View.OnClickListener {
+        View.OnClickListener, View.OnTouchListener {
 
     /** Main UI **/
     @BindView(R.id.content_main_layout)
@@ -105,18 +107,20 @@ public class MainActivity extends BaseActivity
             Log.d("idlistsize", String.valueOf(goal_idList.size()));
             if(goal_idList.get(i) == null || goal_idList.get(i).equals(applicationClass.NULL)) break;
 
-            View goal_sheet = LayoutInflater.from(this).inflate(R.layout.goal_sheet, null);
-            TextView goal_sheet_text =
-                    (TextView) goal_sheet.findViewById(R.id.goal_fab_sheet_list_text);
-            TextView goal_sheet_id =
-                    (TextView) goal_sheet.findViewById(R.id.goal_fab_sheet_list_id);
-            goal_sheet_text.setText(
-                    applicationClass.getGoalSummary(goal_idList.get(i)));
-            goal_sheet_id.setText(goal_idList.get(i));
-
+            GoalSheetView goal_sheet = new GoalSheetView(this);
+            goal_sheet.setGoalText(applicationClass.getGoalSummary(goal_idList.get(i)));
+            goal_sheet.setGoalId(goal_idList.get(i));
             goal_fab_sheet_list_layout.addView(goal_sheet);
-            goal_sheet.setOnClickListener(this);
+
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        Toast.makeText(this, "onTouch : "+v.getClass().getName(), Toast.LENGTH_SHORT).show();
+
+        return false;
     }
 
     /**
@@ -125,21 +129,20 @@ public class MainActivity extends BaseActivity
     @Override
     public void onClick(View v) {
 
-        Toast.makeText(this, "onClick", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "onClick : "+v.getClass().getName(), Toast.LENGTH_SHORT).show();
 
-        TextView idView = (TextView) v.findViewById(R.id.goal_fab_sheet_list_id);
-        for(String id : goal_idList) {
-            if(idView.getText().equals(id)) {
-                applicationClass.setCurrentGoal(id, applicationClass.getGoalSummary(id));
-                FabTransformation.with(goal_fab)
-                        .duration(250)
-                        .setOverlay(goal_overlay)
-                        .transformFrom(goal_fab_sheet);
-                setToolBarTitle();
+        if(v.getId() == R.id.goal_fab_sheet_layout) {
+            for(String id : goal_idList) {
+                if(((GoalSheetView) v.getParent()).getGoalId().equals(id)) {
+                    applicationClass.setCurrentGoal(id, applicationClass.getGoalSummary(id));
+                    FabTransformation.with(goal_fab)
+                            .duration(250)
+                            .setOverlay(goal_overlay)
+                            .transformFrom(goal_fab_sheet);
+                    setToolBarTitle();
+                }
             }
         }
-
-
     }
     @OnClick(R.id.goal_overlay)
     void onClickOverlay() {

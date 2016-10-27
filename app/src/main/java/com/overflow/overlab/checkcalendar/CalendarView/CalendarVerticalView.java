@@ -93,7 +93,7 @@ public class CalendarVerticalView extends RelativeLayout
                 } else {
                     if(total_day <= day_of_month) {
                         calendarDayNumberTextView[row][col].setText(String.valueOf(total_day));
-                        calendarMonthColumn[row][col].setOnClickListener(this);
+                        calendarMonthColumn[row][col].setOnClickListener((MainActivity) context);
                         total_day++;
                     }
                 }
