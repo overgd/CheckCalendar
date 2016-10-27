@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.konifar.fab_transformation.FabTransformation;
+import com.overflow.overlab.checkcalendar.CalendarView.CalendarDayTextView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarUtils;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalViewAdapter;
@@ -142,6 +143,8 @@ public class MainActivity extends BaseActivity
                     setToolBarTitle();
                 }
             }
+        } else if(v instanceof CalendarDayTextView) {
+
         }
     }
     @OnClick(R.id.goal_overlay)
@@ -216,12 +219,6 @@ public class MainActivity extends BaseActivity
                 startActivityForResult(goalActivityIntent, ADD_GOAL);
                 return true;
         }
-
-//        if (id == R.id.action_add_goal) {
-//            Intent goalActivityIntent = new Intent(this, GoalActivity.class);
-//            startActivityForResult(goalActivityIntent, ADD_GOAL);
-//            return true;
-//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -301,8 +298,6 @@ public class MainActivity extends BaseActivity
 
         content_main_layout.addView(calendarViewLayout);
         calendarLayoutManager.scrollToPosition(CalendarUtils.POSITION_CURRENT_MONTH());
-
-        calendarRecyclerView.setOnClickListener(this);
 
         calendarRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

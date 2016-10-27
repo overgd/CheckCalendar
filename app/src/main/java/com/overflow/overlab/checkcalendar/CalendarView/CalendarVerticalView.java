@@ -30,8 +30,7 @@ public class CalendarVerticalView extends RelativeLayout
     Context context;
     TableLayout calendarMonthLayout;
     TableRow[] calendarMonthRow;
-    LinearLayout[][] calendarMonthColumn;
-    TextView[][] calendarDayNumberTextView;
+    CalendarDayTextView[][] calendarDayNumberTextView;
     CheckView[][] checkView;
 
     public CalendarVerticalView(Context context) {
@@ -58,7 +57,7 @@ public class CalendarVerticalView extends RelativeLayout
         for(int x = 0; x < 6; x++) {
             for(int y = 0; y < 7; y++) {
                 calendarDayNumberTextView[x][y].setText("");
-                calendarMonthColumn[x][y].setOnClickListener(null);
+//                calendarMonthColumn[x][y].setOnClickListener(null);
                 removeView(checkView[x][y]);
             }
         }
@@ -87,13 +86,13 @@ public class CalendarVerticalView extends RelativeLayout
                         } else {
                             calendarDayNumberTextView[row][col + first_day_num].setText(String.valueOf(total_day));
                         }
-                        calendarMonthColumn[row][col + first_day_num].setOnClickListener((MainActivity) context);
+                        calendarDayNumberTextView[row][col + first_day_num].setOnClickListener((MainActivity) context);
                         total_day++;
                     }
                 } else {
                     if(total_day <= day_of_month) {
                         calendarDayNumberTextView[row][col].setText(String.valueOf(total_day));
-                        calendarMonthColumn[row][col].setOnClickListener((MainActivity) context);
+                        calendarDayNumberTextView[row][col].setOnClickListener((MainActivity) context);
                         total_day++;
                     }
                 }
@@ -118,8 +117,7 @@ public class CalendarVerticalView extends RelativeLayout
                 0);
 
         calendarMonthRow = new TableRow[6]; // monthview row : 6
-        calendarMonthColumn = new LinearLayout[6][7];
-        calendarDayNumberTextView = new TextView[6][7]; // monthview day : 42  x:6 y:7
+        calendarDayNumberTextView = new CalendarDayTextView[6][7]; // monthview day : 42  x:6 y:7
 
         for (int row = 0; row < 6; row++) {
 
@@ -128,26 +126,17 @@ public class CalendarVerticalView extends RelativeLayout
 
             for (int day = 0; day < 7; day++) {
 
-                calendarMonthColumn[row][day] = new LinearLayout(context);
-                calendarMonthColumn[row][day].setLayoutParams(
+                //in Text init
+                calendarDayNumberTextView[row][day] = new CalendarDayTextView(context);
+                calendarDayNumberTextView[row][day].setLayoutParams(
                         new TableRow.LayoutParams(
                                 0,
                                 TableRow.LayoutParams.WRAP_CONTENT,
                                 1f
                         ));
-                calendarMonthColumn[row][day].setOrientation(LinearLayout.VERTICAL);
-                calendarMonthColumn[row][day].setMinimumHeight(
+                calendarDayNumberTextView[row][day].setMinHeight(
                         context.getResources().getDimensionPixelSize(R.dimen.calendarmonthcolumn_minheight)
                 );
-
-                //in Text init
-                calendarDayNumberTextView[row][day] = new TextView(context);
-                calendarDayNumberTextView[row][day].setLayoutParams(
-                        new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                        ));
-                Log.d("width", String.valueOf(calendarMonthColumn[row][day].getMinimumWidth()));
                 calendarDayNumberTextView[row][day].setTextSize(
                         TypedValue.COMPLEX_UNIT_PX,
                         getResources().getDimension(R.dimen.calendarmonthcolumn_textsize)
@@ -162,8 +151,7 @@ public class CalendarVerticalView extends RelativeLayout
                     );
                 }
 
-                calendarMonthColumn[row][day].addView(calendarDayNumberTextView[row][day]);
-                calendarMonthRow[row].addView(calendarMonthColumn[row][day]);
+                calendarMonthRow[row].addView(calendarDayNumberTextView[row][day]);
 
             }
 
@@ -239,33 +227,33 @@ public class CalendarVerticalView extends RelativeLayout
     @Override
     public void onClick(View v) {
 
-        int indexX = 0;
-        int indexY = 0;
-        for(LinearLayout[] columnX : calendarMonthColumn) {
-            for(LinearLayout column : columnX) {
-                if(v == column) {
-                    int[] viewPostion = new int[2];
-                    int[] tablePosition = new int[2];
-
-                    getLocationInWindow(tablePosition);
-                    v.getLocationInWindow(viewPostion);
-
-                    if(checkView[indexX][indexY] == null) {
-                        checkView[indexX][indexY] = new CheckView(context);
-                    }
-
-                    checkView[indexX][indexY].setX(viewPostion[0]-tablePosition[0]);
-                    checkView[indexX][indexY].setY(viewPostion[1]-tablePosition[1]);
-
-                    removeView(checkView[indexX][indexY]);
-                    addView(checkView[indexX][indexY]);
-
-                }
-                indexY++;
-            }
-            indexX++;
-            indexY = 0;
-        }
+//        int indexX = 0;
+//        int indexY = 0;
+//        for(LinearLayout[] columnX : calendarMonthColumn) {
+//            for(LinearLayout column : columnX) {
+//                if(v == column) {
+//                    int[] viewPostion = new int[2];
+//                    int[] tablePosition = new int[2];
+//
+//                    getLocationInWindow(tablePosition);
+//                    v.getLocationInWindow(viewPostion);
+//
+//                    if(checkView[indexX][indexY] == null) {
+//                        checkView[indexX][indexY] = new CheckView(context);
+//                    }
+//
+//                    checkView[indexX][indexY].setX(viewPostion[0]-tablePosition[0]);
+//                    checkView[indexX][indexY].setY(viewPostion[1]-tablePosition[1]);
+//
+//                    removeView(checkView[indexX][indexY]);
+//                    addView(checkView[indexX][indexY]);
+//
+//                }
+//                indexY++;
+//            }
+//            indexX++;
+//            indexY = 0;
+//        }
 
     }
 
