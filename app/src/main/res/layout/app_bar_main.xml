@@ -39,7 +39,8 @@
             android:layout_height="match_parent"
             android:background="@color/black_alpha_30"
             android:clickable="true"
-            android:visibility="gone" />
+            android:visibility="gone"
+            />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/goal_fab"

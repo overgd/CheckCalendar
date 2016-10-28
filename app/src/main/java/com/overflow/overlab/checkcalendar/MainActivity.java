@@ -1,6 +1,7 @@
 package com.overflow.overlab.checkcalendar;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -144,7 +146,23 @@ public class MainActivity extends BaseActivity
                 }
             }
         } else if(v instanceof CalendarDayTextView) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+            builder.setView(inflater.inflate(R.layout.check_view, null))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                })
+                .setNegativeButton("CANCLE", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
     @OnClick(R.id.goal_overlay)
@@ -310,6 +328,7 @@ public class MainActivity extends BaseActivity
                 LinearLayoutManager linearLayoutManager =
                         (LinearLayoutManager) recyclerView.getLayoutManager();
                 int position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                Log.d("position", String.valueOf(position));
                 if(position != -1) {
                     toolbar_Calendar =
                             CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(position);
