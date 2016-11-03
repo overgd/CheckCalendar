@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.overflow.overlab.checkcalendar.R;
 
+import java.util.Calendar;
+
 /**
  * Created by over on 10/28/2016.
  */
@@ -16,6 +18,7 @@ import com.overflow.overlab.checkcalendar.R;
 public class CalendarDayTextView extends TextView {
 
     Context context;
+    Calendar calendar;
 
     public CalendarDayTextView(Context context) {
         super(context);
@@ -41,11 +44,10 @@ public class CalendarDayTextView extends TextView {
     }
 
     private void init() {
-
-        setMinHeight((int) getResources().getDimension(R.dimen.calendarmonthcolumn_minheight));
+        setMinHeight((int) getResources().getDimension(R.dimen.calendarmonth_column_minheight));
         setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.calendarmonthcolumn_textsize)
+                getResources().getDimension(R.dimen.calendarmonth_column_textsize)
         );
         setText("num");
         if (Build.VERSION.SDK_INT >= 23) {
@@ -54,4 +56,13 @@ public class CalendarDayTextView extends TextView {
             setTextColor(context.getResources().getColor(R.color.fontColorPrimary));
         }
     }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
+
 }

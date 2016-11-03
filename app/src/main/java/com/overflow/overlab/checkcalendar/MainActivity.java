@@ -1,7 +1,6 @@
 package com.overflow.overlab.checkcalendar;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,6 +29,7 @@ import com.overflow.overlab.checkcalendar.CalendarView.CalendarDayTextView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarUtils;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalViewAdapter;
+import com.overflow.overlab.checkcalendar.Check.CheckDialogFragment;
 import com.overflow.overlab.checkcalendar.Goal.GoalActivity;
 import com.overflow.overlab.checkcalendar.Goal.GoalSetup;
 import com.overflow.overlab.checkcalendar.Goal.GoalSheetView;
@@ -51,9 +50,9 @@ public class MainActivity extends BaseActivity
     RelativeLayout content_main_layout;
 
     /** Toolbar **/
-    Calendar toolbar_Calendar;
-    String toolbar_Goal;
-    String toolBar_Title;
+    Calendar toolbar_calendar;
+    String toolbar_goal;
+    String toolBar_title;
 
     /** Calendar **/
     RecyclerView calendarRecyclerView;
@@ -70,7 +69,7 @@ public class MainActivity extends BaseActivity
     View goal_fab_sheet;
     @BindView(R.id.goal_fab_sheet_list_layout)
     ViewGroup goal_fab_sheet_list_layout;
-    List<String> goal_idList;
+    List<String> goal_id_list;
 
     /** Navigation Drawer UI Variables **/
     @BindView(R.id.drawer_layout)
@@ -102,17 +101,18 @@ public class MainActivity extends BaseActivity
     protected void initGoalFab() {
         super.initGoalFab();
 
-        goal_idList = new GoalSetup(getApplicationContext()).initGoalSetup();
+        goal_id_list = new GoalSetup(getApplicationContext()).initGoalSetup();
         setToolBarTitle();
 
         goal_fab_sheet_list_layout.removeAllViews();
-        for(int i = 0; i < goal_idList.size(); i++) {
-            Log.d("idlistsize", String.valueOf(goal_idList.size()));
-            if(goal_idList.get(i) == null || goal_idList.get(i).equals(applicationClass.NULL)) break;
+
+        for(int i = 0; i < goal_id_list.size(); i++) {
+
+            if(goal_id_list.get(i) == null || goal_id_list.get(i).equals(applicationClass.NULL)) break;
 
             GoalSheetView goal_sheet = new GoalSheetView(this);
-            goal_sheet.setGoalText(applicationClass.getGoalSummary(goal_idList.get(i)));
-            goal_sheet.setGoalId(goal_idList.get(i));
+            goal_sheet.setGoalText(applicationClass.getGoalSummary(goal_id_list.get(i)));
+            goal_sheet.setGoalId(goal_id_list.get(i));
             goal_fab_sheet_list_layout.addView(goal_sheet);
 
         }
@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity
         Toast.makeText(this, "onClick : "+v.getClass().getName(), Toast.LENGTH_SHORT).show();
 
         if(v.getId() == R.id.goal_fab_sheet_layout) {
-            for(String id : goal_idList) {
+            for(String id : goal_id_list) {
                 if(((GoalSheetView) v.getParent()).getGoalId().equals(id)) {
                     applicationClass.setCurrentGoal(id, applicationClass.getGoalSummary(id));
                     FabTransformation.with(goal_fab)
@@ -146,23 +146,16 @@ public class MainActivity extends BaseActivity
                 }
             }
         } else if(v instanceof CalendarDayTextView) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            LayoutInflater inflater = getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.check_view, null))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                })
-                .setNegativeButton("CANCLE", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+            Bundle args = new Bundle();
+            args.putLong(CALENDAR_LONG, ((CalendarDayTextView) v).getCalendar().getTimeInMillis());
+            args.putString(GOAL_ID, applicationClass.getCurrentGoal()[0]);
+            args.putString(GOAL_SUMMARY, applicationClass.getCurrentGoal()[1]);
 
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            CheckDialogFragment checkDialogFragment = new CheckDialogFragment();
+            checkDialogFragment.setArguments(args);
+            checkDialogFragment.show(getFragmentManager(), "CalendarCheckDialog");
+
         }
     }
     @OnClick(R.id.goal_overlay)
@@ -330,7 +323,7 @@ public class MainActivity extends BaseActivity
                 int position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                 Log.d("position", String.valueOf(position));
                 if(position != -1) {
-                    toolbar_Calendar =
+                    toolbar_calendar =
                             CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(position);
                     setToolBarTitle();
                 }
@@ -344,22 +337,22 @@ public class MainActivity extends BaseActivity
 
     public void setToolBarTitle() {
 
-        if (toolbar_Calendar == null) {
-            toolbar_Calendar = Calendar.getInstance();
+        if (toolbar_calendar == null) {
+            toolbar_calendar = Calendar.getInstance();
         }
 
         if(! applicationClass.getCurrentGoal()[1].equals(applicationClass.NULL)) {
-            toolbar_Goal = applicationClass.getCurrentGoal()[1];
+            toolbar_goal = applicationClass.getCurrentGoal()[1];
         }
 
-        toolBar_Title = getResources().getStringArray(R.array.calendar_month_short)
-                [toolbar_Calendar.get(Calendar.MONTH)]
-                +" "+toolbar_Calendar.get(Calendar.YEAR);
-        if (toolbar_Goal != null) {
-            toolBar_Title = toolBar_Title +", "+ toolbar_Goal;
+        toolBar_title = getResources().getStringArray(R.array.calendar_month_short)
+                [toolbar_calendar.get(Calendar.MONTH)]
+                +" "+ toolbar_calendar.get(Calendar.YEAR);
+        if (toolbar_goal != null) {
+            toolBar_title = toolBar_title +", "+ toolbar_goal;
         }
 
-        getSupportActionBar().setTitle(toolBar_Title);
+        getSupportActionBar().setTitle(toolBar_title);
     }
 
 }

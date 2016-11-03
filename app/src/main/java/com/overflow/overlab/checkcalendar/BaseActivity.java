@@ -67,6 +67,9 @@ public class BaseActivity extends AppCompatActivity
     /** Statement **/
     static final String PREF_ACCOUNT_NAME = "accountName";
     static final String PREF_ACCOUNT_IMGURI = "accountImgURI";
+    static final String CALENDAR_LONG = "calendar_long";
+    static final String GOAL_ID = "goal_id";
+    static final String GOAL_SUMMARY = "goal_summary";
 
     /**
      * OnCreate

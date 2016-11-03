@@ -60,7 +60,6 @@ public class GoalSheetView extends RelativeLayout {
     }
 
     public void setGoalText(String listText) {
-
         goalTextView.setText(listText);
     }
 

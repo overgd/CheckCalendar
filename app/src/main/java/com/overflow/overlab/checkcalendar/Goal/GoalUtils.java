@@ -40,7 +40,6 @@ public class GoalUtils {
      * @return Success - 'Confirm', Fail - 'Error'
      */
     static public String saveGoalListGsonStringFile(String gsonListString) {
-
         FileOutputStream fos = applicationClass.fileOutputStream(
                 applicationClass.goalListFile()
         );
@@ -56,7 +55,6 @@ public class GoalUtils {
     }
 
     static public String saveGoalCalendarsModel(GoalCalendarsModel goalCalendarsModel) {
-
         FileOutputStream fos = applicationClass.fileOutputStream(
                 applicationClass.goalListFile()
         );
@@ -95,6 +93,21 @@ public class GoalUtils {
             Log.d("Error loadgoallist", e.toString());
             return "Error";
         }
+    }
+
+    /**
+     *
+     * */
+    static public String getGoalDescription(String goalId) {
+        String result = null;
+        GoalCalendarsModel goalCalendarsModel = getGoalListGCMfromFile();
+        List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModels = goalCalendarsModel.getDescription();
+        for(int i = 0; i < goalCalendarsDescriptionModels.size(); i++) {
+            if(Objects.equals(goalId, goalCalendarsDescriptionModels.get(i).getId())) {
+                result = goalCalendarsDescriptionModels.get(i).getDescription();
+            }
+        }
+        return result;
     }
 
     /**
@@ -142,7 +155,6 @@ public class GoalUtils {
     }
 
     static public String addGoal(GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
-
         if (!Objects.equals(goalCalendarsDescriptionModel.getSummary(), "") &&
                 goalCalendarsDescriptionModel.getSummary().trim().length() > 0 &&
                 !goalCalendarsDescriptionModel.getSummary().equals(applicationClass.NULL)) {

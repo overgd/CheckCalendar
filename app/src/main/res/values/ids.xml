@@ -2,19 +2,4 @@
 <resources>
     <item name="calendarview_id" type="id"/>
 
-    <item name="calendarmonthrowview_1" type="id"/>
-    <item name="calendarmonthrowview_2" type="id"/>
-    <item name="calendarmonthrowview_3" type="id"/>
-    <item name="calendarmonthrowview_4" type="id"/>
-    <item name="calendarmonthrowview_5" type="id"/>
-    <item name="calendarmonthrowview_0" type="id"/>
-
-    <item name="calendarmonthday_1" type="id"/>
-    <item name="calendarmonthday_2" type="id"/>
-    <item name="calendarmonthday_3" type="id"/>
-    <item name="calendarmonthday_4" type="id"/>
-    <item name="calendarmonthday_5" type="id"/>
-    <item name="calendarmonthday_6" type="id"/>
-    <item name="calendarmonthday_0" type="id"/>
-
 </resources>

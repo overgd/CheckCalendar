@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
@@ -14,19 +14,31 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/constraintLayout"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:contentDescription="@string/app_name">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Goal"
             android:textColor="@color/colorWhite"
-            android:textSize="36sp"
-            android:id="@+id/check_goal_textview"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginStart="16dp"
+            android:textSize="10sp"
+            android:text="Date"
+            android:id="@+id/check_date_textview"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="16dp" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginStart="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GOAL"
+            android:textColor="@color/colorWhite"
+            android:textSize="30sp"
+            android:id="@+id/check_goal_textview"
+            app:layout_constraintLeft_toLeftOf="@+id/check_date_textview"
+            app:layout_constraintTop_toBottomOf="@+id/check_date_textview"
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,18 +47,21 @@
             android:id="@+id/check_description_textview"
             android:textColor="@color/colorWhite"
             android:textSize="24sp"
-            android:layout_marginTop="16dp"
+            android:visibility="visible"
             app:layout_constraintTop_toBottomOf="@+id/check_goal_textview"
             app:layout_constraintLeft_toLeftOf="@+id/check_goal_textview"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="8dp" />
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
@@ -55,9 +70,9 @@
             android:id="@+id/check_memo_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
             android:hint="Memo"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            />
 
     </android.support.design.widget.TextInputLayout>
 

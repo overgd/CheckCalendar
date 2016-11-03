@@ -54,7 +54,7 @@ public class CheckCalendarApplication extends Application {
         sharedPreferences = getSharedPreferences(GOAL, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(id, summary);
-        editor.commit();
+        editor.apply();
     }
 
     public String getGoalSummary(String id) {
@@ -67,7 +67,7 @@ public class CheckCalendarApplication extends Application {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(ID, id);
         editor.putString(SUMMARY, summary);
-        editor.commit();
+        editor.apply();
     }
 
     public String[] getCurrentGoal() {
@@ -75,6 +75,7 @@ public class CheckCalendarApplication extends Application {
         sharedPreferences = getSharedPreferences(NOWGOAL, MODE_PRIVATE);
         result[0] = sharedPreferences.getString(ID, NULL);
         result[1] = sharedPreferences.getString(SUMMARY, NULL);
+
         return result;
     }
 
@@ -90,14 +91,12 @@ public class CheckCalendarApplication extends Application {
 
         String goalDataSubject = null;
         goalDataSubject = String.format("%s", goalSubject);
-        return new File(getApplicationContext().getFilesDir(),
-                "goaldata_" + goalDataSubject);
+        return new File(getApplicationContext().getFilesDir(), "goaldata_" + goalDataSubject);
 
     }
 
     public File goalListFile() {
-        return new File(getApplicationContext().getFilesDir(),
-                "goallist");
+        return new File(getApplicationContext().getFilesDir(), "goallist");
     }
 
     public FileOutputStream fileOutputStream(File file) {
@@ -129,7 +128,8 @@ public class CheckCalendarApplication extends Application {
     }
 
     public boolean isDeviceOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }

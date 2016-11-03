@@ -28,6 +28,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp">
 
@@ -36,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Goal Title"
-                android:textSize="56sp" />
+                android:textSize="45sp" />
 
         </android.support.design.widget.TextInputLayout>
 

@@ -3,8 +3,8 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:minHeight="@dimen/calendarmonthcolumn_minheight"
-    android:textSize="@dimen/calendarmonthcolumn_textsize"
+    android:minHeight="@dimen/calendarmonth_column_minheight"
+    android:textSize="@dimen/calendarmonth_column_textsize"
     android:textColor="@color/fontColorPrimary"
     android:text="num"
     >
