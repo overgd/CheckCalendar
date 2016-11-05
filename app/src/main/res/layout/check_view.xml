@@ -47,7 +47,7 @@
             android:id="@+id/check_description_textview"
             android:textColor="@color/colorWhite"
             android:textSize="24sp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/check_goal_textview"
             app:layout_constraintLeft_toLeftOf="@+id/check_goal_textview"
             app:layout_constraintBottom_toBottomOf="parent"

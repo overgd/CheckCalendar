@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.overflow.overlab.checkcalendar.R;
@@ -43,18 +44,34 @@ public class CalendarDayTextView extends TextView {
         super.onDraw(canvas);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+    }
+
     private void init() {
-        setMinHeight((int) getResources().getDimension(R.dimen.calendarmonth_column_minheight));
+        setId(generateViewId());
+
+        setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                getResources().getDimensionPixelSize(R.dimen.calendarmonth_column_minheight),
+                1f));
         setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
-                getResources().getDimension(R.dimen.calendarmonth_column_textsize)
+                getResources().getDimension(R.dimen.calendarmonth_column_fontsize)
         );
         setText("num");
         if (Build.VERSION.SDK_INT >= 23) {
             setTextColor(context.getColor(R.color.fontColorPrimary));
         } else {
-            setTextColor(context.getResources().getColor(R.color.fontColorPrimary));
+            setTextColor(getResources().getColor(R.color.fontColorPrimary));
         }
+        setPadding(
+                getResources().getDimensionPixelSize(R.dimen.calendar_text_startendpadding),
+                getResources().getDimensionPixelSize(R.dimen.calendar_text_topbottompadding),
+                getResources().getDimensionPixelSize(R.dimen.calendar_text_startendpadding),
+                0
+        );
     }
 
     public Calendar getCalendar() {
@@ -62,7 +79,22 @@ public class CalendarDayTextView extends TextView {
     }
 
     public void setCalendar(Calendar calendar) {
+
         this.calendar = calendar;
+
+        setText(String.valueOf(calendar.get(Calendar.DATE)));
+
+        //Today!
+//        if(calendar.get(Calendar.YEAR) == CalendarUtils.getNowCalendar().get(Calendar.YEAR)
+//                && calendar.get(Calendar.MONTH) == CalendarUtils.getNowCalendar().get(Calendar.MONTH)
+//                && calendar.get(Calendar.DATE) == CalendarUtils.getNowCalendar().get(Calendar.DATE)) {
+//            setBackgroundResource(R.drawable.calendar_active_number_wrapped);
+//            setTextColor(getResources().getColor(R.color.colorWhite));
+//        }
+    }
+
+    public void setDayText(String day) {
+        setText(day);
     }
 
 }

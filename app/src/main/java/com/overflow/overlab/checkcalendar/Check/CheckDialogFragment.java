@@ -47,6 +47,8 @@ public class CheckDialogFragment extends DialogFragment {
         if(! goal_description.isEmpty()) {
             checkView.goal_description_textview.setVisibility(View.VISIBLE);
             checkView.setGoalDescriptionText(goal_description);
+        } else {
+            checkView.goal_description_textview.setVisibility(View.GONE);
         }
 
         builder.setView(checkView)

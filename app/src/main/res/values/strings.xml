@@ -9,6 +9,8 @@
     
     <string name="need_access_googleaccount">This App Need Google Account Access</string>
 
+    <string name="today">TODAY</string>
+
     <string-array name="calendar_week">
         <item>S</item>
         <item>M</item>

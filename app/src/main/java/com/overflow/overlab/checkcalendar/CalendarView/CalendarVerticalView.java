@@ -3,13 +3,14 @@ package com.overflow.overlab.checkcalendar.CalendarView;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v7.widget.CardView;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.overflow.overlab.checkcalendar.MainActivity;
@@ -21,23 +22,30 @@ import java.util.Calendar;
  * Created by over on 2016-09-23.
  */
 
-public class CalendarVerticalView extends RelativeLayout
+public class CalendarVerticalView extends ConstraintLayout
         implements View.OnClickListener, View.OnTouchListener {
 
     Context context;
     LinearLayout[] calendarMonthRowLayout;
     CalendarDayTextView[][] calendarDayTextView;
+    CalendarDayTextView todayTextView;
+    CalendarTodayTextView todayView;
+
+    TextView[][] checkBoxView;
+
+    ConstraintSet constraintSet;
 
     public CalendarVerticalView(Context context) {
         super(context);
         this.context = context;
-        setLayoutParams(new CardView.LayoutParams(
-                CardView.LayoutParams.MATCH_PARENT,
-                CardView.LayoutParams.WRAP_CONTENT
+        setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         ));
         setId(R.id.calendarview_id);
-
+        constraintSet = new ConstraintSet();
         addView(linearLayoutCalendarMonthUI(context));
+
     }
 
     public void setCalendar(int positionMonth) {
@@ -49,10 +57,11 @@ public class CalendarVerticalView extends RelativeLayout
         /** Clear View **/
         for (int x = 0; x < 6; x++) {
             for (int y = 0; y < 7; y++) {
-                calendarDayTextView[x][y].setText("");
+                calendarDayTextView[x][y].setDayText("");
                 calendarDayTextView[x][y].setOnClickListener(null);
             }
         }
+        removeView(todayView);
 
         //빈 줄 삭제
         if (calendarMonthRowLayout.length != CalendarUtils.GET_NUMBER_WEEK_OF_MONTH(positionCalendar)) {
@@ -69,34 +78,29 @@ public class CalendarVerticalView extends RelativeLayout
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 7; col++) {
 
-                if (row == 0) {
-                    if (col + first_day_num < 7) {
-                        if (total_day == 1) {
-                            calendarDayTextView[row][col + first_day_num]
-                                    .setText((positionCalendar.get(Calendar.MONTH) + 1)
-                                            + "/" + String.valueOf(total_day));
-                        } else {
-                            calendarDayTextView[row][col + first_day_num].setText(String.valueOf(total_day));
-                        }
-                        dayCalendar = Calendar.getInstance();
-                        dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
-                        dayCalendar.set(Calendar.DATE, total_day);
-                        calendarDayTextView[row][col + first_day_num].setCalendar(dayCalendar);
-                        calendarDayTextView[row][col + first_day_num].setOnClickListener((MainActivity) context);
-                        total_day++;
-                    }
-                } else {
-                    if (total_day <= day_of_month) {
-                        calendarDayTextView[row][col].setText(String.valueOf(total_day));
-                        dayCalendar = Calendar.getInstance();
-                        dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
-                        dayCalendar.set(Calendar.DATE, total_day);
-                        calendarDayTextView[row][col].setCalendar(dayCalendar);
-                        calendarDayTextView[row][col].setOnClickListener((MainActivity) context);
-                        total_day++;
-                    }
+                int day = col;
+
+                if(row == 0) {
+                    day = col+first_day_num;
+                    if(day == 7) break;
+                } else if (total_day > day_of_month) {
+                    break;
                 }
 
+                dayCalendar = Calendar.getInstance();
+                dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
+                dayCalendar.set(Calendar.DATE, total_day);
+                calendarDayTextView[row][day].setCalendar(dayCalendar);
+                calendarDayTextView[row][day].setOnClickListener((MainActivity) context);
+
+                //Today!
+                if(positionCalendar.get(Calendar.YEAR) == CalendarUtils.getNowCalendar().get(Calendar.YEAR)
+                        && positionCalendar.get(Calendar.MONTH) == CalendarUtils.getNowCalendar().get(Calendar.MONTH)
+                        && Integer.valueOf(CalendarUtils.getNowCalendar().get(Calendar.DATE)) == total_day) {
+                    setTodayTextView(calendarDayTextView[row][day]);
+                }
+
+                total_day++;
             }
         }
     }
@@ -104,52 +108,47 @@ public class CalendarVerticalView extends RelativeLayout
     public LinearLayout linearLayoutCalendarMonthUI(Context context) {
 
         LinearLayout calendarMonthLayout = new LinearLayout(context);
-        calendarMonthLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+        calendarMonthLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
         ));
         calendarMonthLayout.setOrientation(LinearLayout.VERTICAL);
+        calendarMonthLayout.setId(generateViewId());
 
         calendarMonthRowLayout = new LinearLayout[6];
-
         calendarDayTextView = new CalendarDayTextView[6][7];
+        checkBoxView = new TextView[6][7];
 
         for (int row = 0; row < calendarMonthRowLayout.length; row++) {
 
             calendarMonthRowLayout[row] = new LinearLayout(context);
             calendarMonthRowLayout[row].setPadding(
-                    getResources().getDimensionPixelSize(R.dimen.cardview_sidepadding),
+                    getResources().getDimensionPixelSize(R.dimen.calendarmonth_row_sidepadding),
                     0,
-                    getResources().getDimensionPixelSize(R.dimen.cardview_sidepadding),
+                    getResources().getDimensionPixelSize(R.dimen.calendarmonth_row_sidepadding),
                     0
             );
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                calendarMonthRowLayout[row].setBackground(
-                        context.getDrawable(R.drawable.calendar_column_shape)
-                );
-            } else {
-                calendarMonthRowLayout[row].setBackground(
-                        context.getResources().getDrawable(R.drawable.calendar_column_shape)
-                );
-            }
-
+            calendarMonthRowLayout[row].setBackgroundResource(R.drawable.calendar_column_shape);
             calendarMonthRowLayout[row].setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             ));
             calendarMonthRowLayout[row].setOrientation(LinearLayout.HORIZONTAL);
+
             for (int day = 0; day < 7; day++) {
                 //in Text init
                 calendarDayTextView[row][day] = new CalendarDayTextView(context);
-                calendarDayTextView[row][day].setLayoutParams(new LinearLayout.LayoutParams(
-                        0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        1f
-                ));
                 calendarMonthRowLayout[row].addView(calendarDayTextView[row][day]);
+
+                checkBoxView[row][day] = new TextView(context);
+                checkBoxView[row][day].setText(String.valueOf(day));
+                addView(checkBoxView[row][day]);
             }
+
             calendarMonthLayout.addView(calendarMonthRowLayout[row]);
+
         }
+
         return calendarMonthLayout;
     }
 
@@ -169,9 +168,9 @@ public class CalendarVerticalView extends RelativeLayout
         calendarWeekLayout.setWeightSum(7f);
         calendarWeekLayout.setOrientation(LinearLayout.HORIZONTAL);
         calendarWeekLayout.setPadding(
-                (int) context.getResources().getDimension(R.dimen.cardview_sidepadding),
+                context.getResources().getDimensionPixelSize(R.dimen.cardview_sidepadding),
                 0,
-                (int) context.getResources().getDimension(R.dimen.cardview_sidepadding),
+                context.getResources().getDimensionPixelSize(R.dimen.cardview_sidepadding),
                 0);
 
         calendarWeekTextView = new TextView[7]; // days of week
@@ -182,17 +181,23 @@ public class CalendarVerticalView extends RelativeLayout
 
             calendarWeekTextView[i].setLayoutParams(new LinearLayout.LayoutParams(
                     0,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
                     1f
             ));
 
             calendarWeekTextView[i].setTextSize(
                     TypedValue.COMPLEX_UNIT_PX,
-                    context.getResources().getDimension(R.dimen.calendarmonth_column_textsize));
+                    context.getResources().getDimension(R.dimen.calendarmonth_column_fontsize));
             calendarWeekTextView[i].setText(
                     context.getResources().getTextArray(R.array.calendar_week)[i]
             );
             calendarWeekTextView[i].setTypeface(null, Typeface.BOLD);
+            calendarWeekTextView[i].setPadding(
+                    context.getResources().getDimensionPixelSize(R.dimen.calendar_text_startendpadding),
+                    context.getResources().getDimensionPixelSize(R.dimen.calendar_text_startendpadding),
+                    context.getResources().getDimensionPixelSize(R.dimen.calendar_text_startendpadding),
+                    context.getResources().getDimensionPixelSize(R.dimen.calendar_text_startendpadding)
+            );
 
             if (Build.VERSION.SDK_INT >= 23) {
                 if (i == 0 | i == 6) {
@@ -215,36 +220,37 @@ public class CalendarVerticalView extends RelativeLayout
         return calendarWeekLayout;
     }
 
+    public void setTodayTextView(CalendarDayTextView tv) {
+        todayTextView = tv;
+        todayView = new CalendarTodayTextView(context);
+        addView(todayView);
+
+        todayView.setWidth(todayTextView.getWidth());
+        Log.d("width", String.valueOf(todayTextView.getWidth()));
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+        if(todayView != null) {
+            int[] tvPostion = new int[2];
+            int[] position = new int[2];
+
+            todayTextView.getLocationInWindow(tvPostion);
+            getLocationInWindow(position);
+
+            todayView.setX(tvPostion[0]-position[0]);
+            todayView.setY(tvPostion[1]-position[1]);
+
+            todayView.setWidth(todayTextView.getWidth());
+            Log.d("width", String.valueOf(todayTextView.getWidth()));
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
-
-//        int indexX = 0;
-//        int indexY = 0;
-//        for(LinearLayout[] columnX : calendarMonthColumn) {
-//            for(LinearLayout column : columnX) {
-//                if(v == column) {
-//                    int[] viewPostion = new int[2];
-//                    int[] tablePosition = new int[2];
-//
-//                    getLocationInWindow(tablePosition);
-//                    v.getLocationInWindow(viewPostion);
-//
-//                    if(checkView[indexX][indexY] == null) {
-//                        checkView[indexX][indexY] = new CheckView(context);
-//                    }
-//
-//                    checkView[indexX][indexY].setX(viewPostion[0]-tablePosition[0]);
-//                    checkView[indexX][indexY].setY(viewPostion[1]-tablePosition[1]);
-//
-//                    removeView(checkView[indexX][indexY]);
-//                    addView(checkView[indexX][indexY]);
-//
-//                }
-//                indexY++;
-//            }
-//            indexX++;
-//            indexY = 0;
-//        }
 
     }
 

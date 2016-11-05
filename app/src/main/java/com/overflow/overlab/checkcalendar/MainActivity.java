@@ -293,7 +293,7 @@ public class MainActivity extends BaseActivity
         appBarLayout.addView(CalendarVerticalView.linearLayoutCalendarWeekUI(this));
 
         calendarViewLayout = (LinearLayout) LayoutInflater.from(this)
-                        .inflate(R.layout.calendar_vertical, null);
+                        .inflate(R.layout.calendar_vertical, content_main_layout, false);
         calendarViewLayout.setId(View.generateViewId());
 
         calendarRecyclerView = (RecyclerView) calendarViewLayout
@@ -308,6 +308,7 @@ public class MainActivity extends BaseActivity
         calendarRecyclerView.setAdapter(calendarRecyclerAdapter);
 
         content_main_layout.addView(calendarViewLayout);
+
         calendarLayoutManager.scrollToPosition(CalendarUtils.POSITION_CURRENT_MONTH());
 
         calendarRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

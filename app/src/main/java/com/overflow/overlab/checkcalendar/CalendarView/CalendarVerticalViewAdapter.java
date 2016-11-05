@@ -30,6 +30,7 @@ public class CalendarVerticalViewAdapter
 
         CardView view = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.calendar_cardview, parent, false);
+
         view.addView(new CalendarVerticalView(parent.getContext()));
         ViewHolder viewHolder = new ViewHolder(view);
 

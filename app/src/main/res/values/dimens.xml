@@ -6,11 +6,19 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
 
-    <dimen name="cardview_sidepadding">8dp</dimen>
+    <dimen name="cardview_sidepadding">6dp</dimen>
 
-    <dimen name="calendarmonth_column_minheight">86dp</dimen>
-    <dimen name="calendarmonth_column_margin">3dp</dimen>
-    <dimen name="calendarmonth_column_textsize">12sp</dimen>
+    <dimen name="calendarmonth_column_minheight">84dp</dimen>
+    <dimen name="calendarmonth_column_leftpadding">4dp</dimen>
+    <dimen name="calendarmonth_column_fontsize">12sp</dimen>
+
+    <dimen name="calendarmonth_row_sidepadding">8dp</dimen>
+
+    <dimen name="calendar_text_startendpadding">4dp</dimen>
+    <dimen name="calendar_text_topbottompadding">8dp</dimen>
+
+    <dimen name="calendar_today_viewsize">22dp</dimen>
+    <dimen name="calendar_today_fontsize">8sp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
 
