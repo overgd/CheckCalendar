@@ -7,12 +7,14 @@
     android:layout_height="match_parent"
     tools:openDrawer="start"
     android:fitsSystemWindows="true"
+    android:background="@null"
     >
 
     <include
         layout="@layout/app_bar_main"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="@null"
         android:fitsSystemWindows="true"/>
 
     <android.support.design.widget.NavigationView
@@ -23,6 +25,7 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer"
         android:fitsSystemWindows="true"
+
     />
 
 </android.support.v4.widget.DrawerLayout>

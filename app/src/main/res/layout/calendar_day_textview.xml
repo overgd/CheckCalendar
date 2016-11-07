@@ -3,9 +3,10 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:minHeight="@dimen/calendarmonth_column_minheight"
+    android:minHeight="@dimen/calendarmonth_column_height"
     android:textSize="@dimen/calendarmonth_column_fontsize"
     android:textColor="@color/fontColorPrimary"
     android:text="num"
+    android:background="@null"
     >
 </TextView>

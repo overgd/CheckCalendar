@@ -1,6 +1,5 @@
 package com.overflow.overlab.checkcalendar.CalendarView;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -16,9 +15,9 @@ public class CalendarVerticalViewAdapter
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public CardView view;
+        public CalendarView view;
 
-        public ViewHolder(CardView itemView) {
+        public ViewHolder(CalendarView itemView) {
             super(itemView);
             view = itemView;
         }
@@ -28,20 +27,21 @@ public class CalendarVerticalViewAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        CardView view = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.calendar_cardview, parent, false);
+        CalendarView calendarView = (CalendarView) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.calendar_view, parent, false);
 
-        view.addView(new CalendarVerticalView(parent.getContext()));
-        ViewHolder viewHolder = new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(calendarView);
 
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        CalendarVerticalView calendarVerticalView =
-                (CalendarVerticalView) holder.view.findViewById(R.id.calendarview_id);
-        calendarVerticalView.setCalendar(position);
+
+        CalendarView calendarView =
+                (CalendarView) holder.view.findViewById(R.id.calendar_vertical_recyclerview_calendarview);
+        calendarView.setCalendar(position);
+
     }
 
     @Override

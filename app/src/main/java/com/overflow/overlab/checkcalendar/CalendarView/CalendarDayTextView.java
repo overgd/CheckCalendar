@@ -19,7 +19,7 @@ import java.util.Calendar;
 public class CalendarDayTextView extends TextView {
 
     Context context;
-    Calendar calendar;
+    public Calendar calendar;
 
     public CalendarDayTextView(Context context) {
         super(context);
@@ -51,10 +51,9 @@ public class CalendarDayTextView extends TextView {
 
     private void init() {
         setId(generateViewId());
-
         setLayoutParams(new LinearLayout.LayoutParams(
                 0,
-                getResources().getDimensionPixelSize(R.dimen.calendarmonth_column_minheight),
+                getResources().getDimensionPixelSize(R.dimen.calendarmonth_column_height),
                 1f));
         setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
@@ -74,27 +73,8 @@ public class CalendarDayTextView extends TextView {
         );
     }
 
-    public Calendar getCalendar() {
-        return calendar;
+    public void clearView() {
+        setText("");
+        setOnClickListener(null);
     }
-
-    public void setCalendar(Calendar calendar) {
-
-        this.calendar = calendar;
-
-        setText(String.valueOf(calendar.get(Calendar.DATE)));
-
-        //Today!
-//        if(calendar.get(Calendar.YEAR) == CalendarUtils.getNowCalendar().get(Calendar.YEAR)
-//                && calendar.get(Calendar.MONTH) == CalendarUtils.getNowCalendar().get(Calendar.MONTH)
-//                && calendar.get(Calendar.DATE) == CalendarUtils.getNowCalendar().get(Calendar.DATE)) {
-//            setBackgroundResource(R.drawable.calendar_active_number_wrapped);
-//            setTextColor(getResources().getColor(R.color.colorWhite));
-//        }
-    }
-
-    public void setDayText(String day) {
-        setText(day);
-    }
-
 }

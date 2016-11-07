@@ -20,14 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.konifar.fab_transformation.FabTransformation;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarDayTextView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarUtils;
-import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalView;
+import com.overflow.overlab.checkcalendar.CalendarView.CalendarView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalViewAdapter;
 import com.overflow.overlab.checkcalendar.Check.CheckDialogFragment;
 import com.overflow.overlab.checkcalendar.Goal.GoalActivity;
@@ -47,7 +46,7 @@ public class MainActivity extends BaseActivity
 
     /** Main UI **/
     @BindView(R.id.content_main_layout)
-    RelativeLayout content_main_layout;
+    LinearLayout content_main_layout;
 
     /** Toolbar **/
     Calendar toolbar_calendar;
@@ -55,8 +54,8 @@ public class MainActivity extends BaseActivity
     String toolBar_title;
 
     /** Calendar **/
+    int month_position;
     RecyclerView calendarRecyclerView;
-    LinearLayout calendarViewLayout;
     RecyclerView.Adapter calendarRecyclerAdapter;
     RecyclerView.LayoutManager calendarLayoutManager;
 
@@ -148,7 +147,7 @@ public class MainActivity extends BaseActivity
         } else if(v instanceof CalendarDayTextView) {
 
             Bundle args = new Bundle();
-            args.putLong(CALENDAR_LONG, ((CalendarDayTextView) v).getCalendar().getTimeInMillis());
+            args.putLong(CALENDAR_LONG, ((CalendarDayTextView) v).calendar.getTimeInMillis());
             args.putString(GOAL_ID, applicationClass.getCurrentGoal()[0]);
             args.putString(GOAL_SUMMARY, applicationClass.getCurrentGoal()[1]);
 
@@ -290,42 +289,45 @@ public class MainActivity extends BaseActivity
      */
     protected void addCalendarVerticalView() {
 
-        appBarLayout.addView(CalendarVerticalView.linearLayoutCalendarWeekUI(this));
+        appBarLayout.addView(CalendarView.linearLayoutCalendarWeekUI(this));
 
-        calendarViewLayout = (LinearLayout) LayoutInflater.from(this)
-                        .inflate(R.layout.calendar_vertical, content_main_layout, false);
-        calendarViewLayout.setId(View.generateViewId());
-
-        calendarRecyclerView = (RecyclerView) calendarViewLayout
-                        .findViewById(R.id.calendar_vertical_recyclerview);
+        calendarRecyclerView = (RecyclerView) LayoutInflater.from(this)
+                .inflate(R.layout.calendar_vertical, content_main_layout, false);
 
         calendarRecyclerView.setHasFixedSize(true);
 
         calendarLayoutManager = new LinearLayoutManager(this);
+
         calendarRecyclerView.setLayoutManager(calendarLayoutManager);
 
         calendarRecyclerAdapter = new CalendarVerticalViewAdapter();
         calendarRecyclerView.setAdapter(calendarRecyclerAdapter);
 
-        content_main_layout.addView(calendarViewLayout);
+        content_main_layout.addView(calendarRecyclerView);
 
         calendarLayoutManager.scrollToPosition(CalendarUtils.POSITION_CURRENT_MONTH());
 
         calendarRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if(newState == 0) {
+                    calendarLayoutManager.scrollToPosition(month_position);
+                }
             }
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
                 LinearLayoutManager linearLayoutManager =
                         (LinearLayoutManager) recyclerView.getLayoutManager();
                 int position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-                Log.d("position", String.valueOf(position));
+                Log.d("position", String.valueOf(month_position));
                 if(position != -1) {
+                    month_position = position;
                     toolbar_calendar =
-                            CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(position);
+                            CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(month_position);
                     setToolBarTitle();
                 }
             }

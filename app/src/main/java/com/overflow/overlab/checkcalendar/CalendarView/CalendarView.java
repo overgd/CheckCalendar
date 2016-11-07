@@ -4,11 +4,8 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.util.Log;
+import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,8 +19,10 @@ import java.util.Calendar;
  * Created by over on 2016-09-23.
  */
 
-public class CalendarVerticalView extends ConstraintLayout
-        implements View.OnClickListener, View.OnTouchListener {
+public class CalendarView extends ConstraintLayout {
+
+    static final int ROW = 6;
+    static final int COL = 7;
 
     Context context;
     LinearLayout[] calendarMonthRowLayout;
@@ -31,21 +30,26 @@ public class CalendarVerticalView extends ConstraintLayout
     CalendarDayTextView todayTextView;
     CalendarTodayTextView todayView;
 
-    TextView[][] checkBoxView;
-
-    ConstraintSet constraintSet;
-
-    public CalendarVerticalView(Context context) {
+    public CalendarView(Context context) {
         super(context);
         this.context = context;
-        setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        setId(R.id.calendarview_id);
-        constraintSet = new ConstraintSet();
-        addView(linearLayoutCalendarMonthUI(context));
+        init();
+    }
 
+    public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.context = context;
+        init();
+    }
+
+    public CalendarView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        init();
+    }
+
+    public void init() {
+        addView(linearLayoutCalendarMonthUI(context));
     }
 
     public void setCalendar(int positionMonth) {
@@ -55,28 +59,28 @@ public class CalendarVerticalView extends ConstraintLayout
         Calendar dayCalendar;
 
         /** Clear View **/
-        for (int x = 0; x < 6; x++) {
-            for (int y = 0; y < 7; y++) {
-                calendarDayTextView[x][y].setDayText("");
-                calendarDayTextView[x][y].setOnClickListener(null);
+        for (int row = 0; row < ROW; row++) {
+            for (int col = 0; col < COL; col++) {
+                calendarDayTextView[row][col].clearView();
             }
         }
         removeView(todayView);
+        calendarMonthRowLayout[calendarMonthRowLayout.length - 1].setVisibility(VISIBLE);
 
-        //빈 줄 삭제
+        /**빈 줄 삭제*/
         if (calendarMonthRowLayout.length != CalendarUtils.GET_NUMBER_WEEK_OF_MONTH(positionCalendar)) {
             calendarMonthRowLayout[calendarMonthRowLayout.length - 1].setVisibility(GONE);
-        } else {
-            calendarMonthRowLayout[calendarMonthRowLayout.length - 1].setVisibility(VISIBLE);
         }
 
         /** Set Day TextView **/
         int total_day = 1;
-        int first_day_num = CalendarUtils.GET_NUMBER_FIRST_DAY_OF_WEEK_IN_MONTH(positionCalendar);
-        int day_of_month = CalendarUtils.GET_NUMBER_DAY_OF_MONTH(positionCalendar);
+        final int first_day_num = CalendarUtils.GET_NUMBER_FIRST_DAY_OF_WEEK_IN_MONTH(positionCalendar);
+        final int day_of_month = CalendarUtils.GET_NUMBER_DAY_OF_MONTH(positionCalendar);
+        dayCalendar = Calendar.getInstance();
+        dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
 
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 7; col++) {
+        for (int row = 0; row < ROW; row++) {
+            for (int col = 0; col < COL; col++) {
 
                 int day = col;
 
@@ -87,17 +91,17 @@ public class CalendarVerticalView extends ConstraintLayout
                     break;
                 }
 
-                dayCalendar = Calendar.getInstance();
-                dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
                 dayCalendar.set(Calendar.DATE, total_day);
-                calendarDayTextView[row][day].setCalendar(dayCalendar);
+
+                calendarDayTextView[row][day].calendar = dayCalendar;
+                calendarDayTextView[row][day].setText(String.valueOf(dayCalendar.get(Calendar.DATE)));
                 calendarDayTextView[row][day].setOnClickListener((MainActivity) context);
 
                 //Today!
                 if(positionCalendar.get(Calendar.YEAR) == CalendarUtils.getNowCalendar().get(Calendar.YEAR)
                         && positionCalendar.get(Calendar.MONTH) == CalendarUtils.getNowCalendar().get(Calendar.MONTH)
                         && Integer.valueOf(CalendarUtils.getNowCalendar().get(Calendar.DATE)) == total_day) {
-                    setTodayTextView(calendarDayTextView[row][day]);
+                    setTodayView(calendarDayTextView[row][day]);
                 }
 
                 total_day++;
@@ -108,18 +112,22 @@ public class CalendarVerticalView extends ConstraintLayout
     public LinearLayout linearLayoutCalendarMonthUI(Context context) {
 
         LinearLayout calendarMonthLayout = new LinearLayout(context);
-        calendarMonthLayout.setLayoutParams(new ConstraintLayout.LayoutParams(
+        calendarMonthLayout.setLayoutParams(new ViewGroup.LayoutParams(
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT
         ));
         calendarMonthLayout.setOrientation(LinearLayout.VERTICAL);
         calendarMonthLayout.setId(generateViewId());
 
-        calendarMonthRowLayout = new LinearLayout[6];
-        calendarDayTextView = new CalendarDayTextView[6][7];
-        checkBoxView = new TextView[6][7];
+        calendarMonthRowLayout = new LinearLayout[ROW];
+        calendarDayTextView = new CalendarDayTextView[ROW][COL];
 
-        for (int row = 0; row < calendarMonthRowLayout.length; row++) {
+        ViewGroup.LayoutParams rowLayoutParams = new ViewGroup.LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
+        );
+
+        for (int row = 0; row < ROW; row++) {
 
             calendarMonthRowLayout[row] = new LinearLayout(context);
             calendarMonthRowLayout[row].setPadding(
@@ -129,20 +137,13 @@ public class CalendarVerticalView extends ConstraintLayout
                     0
             );
             calendarMonthRowLayout[row].setBackgroundResource(R.drawable.calendar_column_shape);
-            calendarMonthRowLayout[row].setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            ));
+            calendarMonthRowLayout[row].setLayoutParams(rowLayoutParams);
             calendarMonthRowLayout[row].setOrientation(LinearLayout.HORIZONTAL);
 
-            for (int day = 0; day < 7; day++) {
+            for (int day = 0; day < COL; day++) {
                 //in Text init
                 calendarDayTextView[row][day] = new CalendarDayTextView(context);
                 calendarMonthRowLayout[row].addView(calendarDayTextView[row][day]);
-
-                checkBoxView[row][day] = new TextView(context);
-                checkBoxView[row][day].setText(String.valueOf(day));
-                addView(checkBoxView[row][day]);
             }
 
             calendarMonthLayout.addView(calendarMonthRowLayout[row]);
@@ -168,9 +169,9 @@ public class CalendarVerticalView extends ConstraintLayout
         calendarWeekLayout.setWeightSum(7f);
         calendarWeekLayout.setOrientation(LinearLayout.HORIZONTAL);
         calendarWeekLayout.setPadding(
-                context.getResources().getDimensionPixelSize(R.dimen.cardview_sidepadding),
+                context.getResources().getDimensionPixelSize(R.dimen.calendarview_sidepadding),
                 0,
-                context.getResources().getDimensionPixelSize(R.dimen.cardview_sidepadding),
+                context.getResources().getDimensionPixelSize(R.dimen.calendarview_sidepadding),
                 0);
 
         calendarWeekTextView = new TextView[7]; // days of week
@@ -220,13 +221,12 @@ public class CalendarVerticalView extends ConstraintLayout
         return calendarWeekLayout;
     }
 
-    public void setTodayTextView(CalendarDayTextView tv) {
+    public void setTodayView(CalendarDayTextView tv) {
         todayTextView = tv;
         todayView = new CalendarTodayTextView(context);
         addView(todayView);
 
         todayView.setWidth(todayTextView.getWidth());
-        Log.d("width", String.valueOf(todayTextView.getWidth()));
     }
 
     @Override
@@ -244,20 +244,8 @@ public class CalendarVerticalView extends ConstraintLayout
             todayView.setY(tvPostion[1]-position[1]);
 
             todayView.setWidth(todayTextView.getWidth());
-            Log.d("width", String.valueOf(todayTextView.getWidth()));
         }
 
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-
-        return false;
-
-    }
 }
