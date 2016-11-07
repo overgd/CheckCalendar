@@ -26,8 +26,9 @@ import android.widget.Toast;
 import com.konifar.fab_transformation.FabTransformation;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarDayTextView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarUtils;
-import com.overflow.overlab.checkcalendar.CalendarView.CalendarView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarVerticalViewAdapter;
+import com.overflow.overlab.checkcalendar.CalendarView.CalendarView;
+import com.overflow.overlab.checkcalendar.Check.CheckAsyncTask;
 import com.overflow.overlab.checkcalendar.Check.CheckDialogFragment;
 import com.overflow.overlab.checkcalendar.Goal.GoalActivity;
 import com.overflow.overlab.checkcalendar.Goal.GoalSetup;
@@ -44,6 +45,8 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         View.OnClickListener, View.OnTouchListener {
 
+    public static final int CHECK_DIALOG_OK = 10004;
+
     /** Main UI **/
     @BindView(R.id.content_main_layout)
     LinearLayout content_main_layout;
@@ -58,6 +61,7 @@ public class MainActivity extends BaseActivity
     RecyclerView calendarRecyclerView;
     RecyclerView.Adapter calendarRecyclerAdapter;
     RecyclerView.LayoutManager calendarLayoutManager;
+    CalendarView currentCalendarView;
 
     /** Goal Setup Variables **/
     @BindView(R.id.goal_fab)
@@ -120,8 +124,6 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        Toast.makeText(this, "onTouch : "+v.getClass().getName(), Toast.LENGTH_SHORT).show();
-
         return false;
     }
 
@@ -130,8 +132,6 @@ public class MainActivity extends BaseActivity
      **/
     @Override
     public void onClick(View v) {
-
-        Toast.makeText(this, "onClick : "+v.getClass().getName(), Toast.LENGTH_SHORT).show();
 
         if(v.getId() == R.id.goal_fab_sheet_layout) {
             for(String id : goal_id_list) {
@@ -253,11 +253,17 @@ public class MainActivity extends BaseActivity
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         switch (requestCode) {
             case ADD_GOAL:
                 if(resultCode == RESULT_OK) {
                     initGoalFab();
                 }
+                break;
+            case CHECK_DIALOG_OK:
+                Toast.makeText(this, "Result : OK ", Toast.LENGTH_SHORT).show();
+                new CheckAsyncTask(currentCalendarView).execute();
+                break;
         }
     }
 
@@ -309,13 +315,19 @@ public class MainActivity extends BaseActivity
 
         calendarRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            int state = 3;
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                state = newState;
                 if(newState == 0) {
                     calendarLayoutManager.scrollToPosition(month_position);
+                    Log.d("newState", String.valueOf(newState));
+                    executeCheckTask(recyclerView);
                 }
             }
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -323,15 +335,29 @@ public class MainActivity extends BaseActivity
                 LinearLayoutManager linearLayoutManager =
                         (LinearLayoutManager) recyclerView.getLayoutManager();
                 int position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-                Log.d("position", String.valueOf(month_position));
-                if(position != -1) {
+
+                if(position != -1 ) {
+                    Log.d("position", String.valueOf(position));
                     month_position = position;
                     toolbar_calendar =
                             CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(month_position);
                     setToolBarTitle();
                 }
+
+                if(state == 3) {
+                    executeCheckTask(recyclerView);
+                }
+            }
+
+            public void executeCheckTask(RecyclerView recyclerView) {
+
+                currentCalendarView = (CalendarView) recyclerView.findViewById(R.id.calendar_vertical_recyclerview_calendarview);
+
+//                new CheckAsyncTask(currentCalendarView).execute();
+                recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
+
     }
 
     private void refreshCalendarVerticalView() {

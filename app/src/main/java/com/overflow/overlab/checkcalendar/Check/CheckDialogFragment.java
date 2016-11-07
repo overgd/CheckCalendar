@@ -3,6 +3,7 @@ package com.overflow.overlab.checkcalendar.Check;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -17,11 +18,19 @@ import java.util.Locale;
  * Created by over on 10/22/2016.
  */
 
-public class CheckDialogFragment extends DialogFragment {
+public class CheckDialogFragment extends DialogFragment
+implements DialogInterface.OnClickListener{
 
     static final String CALENDAR_LONG = "calendar_long";
     static final String GOAL_ID = "goal_id";
     static final String GOAL_SUMMARY = "goal_summary";
+    Intent intent;
+
+    public interface DialogListener {
+
+    }
+
+    DialogListener dialogListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -52,21 +61,25 @@ public class CheckDialogFragment extends DialogFragment {
         }
 
         builder.setView(checkView)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setNegativeButton("CANCLE", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
+                .setPositiveButton("OK", this)
+                .setNegativeButton("CANCLE", this);
 
         return builder.create();
-
     }
 
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+
+        final int OK = -1;
+        final int CANCLE = -2;
+
+        switch (which) {
+            case OK :
+                //모르겠따
+                break;
+            case CANCLE :
+                break;
+        }
+
+    }
 }

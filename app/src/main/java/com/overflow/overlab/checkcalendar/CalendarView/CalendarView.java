@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -227,6 +228,12 @@ public class CalendarView extends ConstraintLayout {
         addView(todayView);
 
         todayView.setWidth(todayTextView.getWidth());
+    }
+
+    public void addCheckActivateView() {
+        ImageView view = new ImageView(context);
+        view.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
+        addView(view);
     }
 
     @Override

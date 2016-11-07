@@ -99,6 +99,13 @@ public class CheckCalendarApplication extends Application {
         return new File(getApplicationContext().getFilesDir(), "goallist");
     }
 
+    public File checkListFile(Calendar calendar) {
+        return new File(getApplicationContext().getFilesDir(),
+                "check_"
+                +String.valueOf(calendar.get(Calendar.YEAR))
+                +String.valueOf(calendar.get(Calendar.MONTH)));
+    }
+
     public FileOutputStream fileOutputStream(File file) {
 
         FileOutputStream fileOutputStream;

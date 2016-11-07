@@ -59,7 +59,7 @@ public class GoalUtils {
                 applicationClass.goalListFile()
         );
         try {
-            fos.write(convertGoalCalendarsModelToString(goalCalendarsModel).getBytes());
+            fos.write(convertGoalCalendarsModelToGson(goalCalendarsModel).getBytes());
             fos.close();
             return CONFIRM;
         } catch (IOException e) {
@@ -69,7 +69,7 @@ public class GoalUtils {
         }
     }
 
-    static public String convertGoalCalendarsModelToString(GoalCalendarsModel goalCalendarsModel) {
+    static public String convertGoalCalendarsModelToGson(GoalCalendarsModel goalCalendarsModel) {
         return new Gson().toJson(goalCalendarsModel);
     }
     /**
