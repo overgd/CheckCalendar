@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.overflow.overlab.checkcalendar.CalendarView.CalendarView
+<com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/calendar_vertical.recyclerview.calendarview"
     android:background="@null"
@@ -10,4 +10,4 @@
     android:layout_marginTop="@dimen/calendarview_sidepadding"
     android:layout_marginBottom="4dp">
 
-</com.overflow.overlab.checkcalendar.CalendarView.CalendarView>
+</com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView>

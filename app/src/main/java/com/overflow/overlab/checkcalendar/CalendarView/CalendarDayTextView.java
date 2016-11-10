@@ -59,7 +59,7 @@ public class CalendarDayTextView extends TextView {
                 TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimension(R.dimen.calendarmonth_column_fontsize)
         );
-        setText("num");
+        setText("init");
         if (Build.VERSION.SDK_INT >= 23) {
             setTextColor(context.getColor(R.color.fontColorPrimary));
         } else {

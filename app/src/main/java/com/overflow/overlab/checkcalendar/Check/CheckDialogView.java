@@ -13,26 +13,26 @@ import com.overflow.overlab.checkcalendar.R;
  * Created by over on 10/18/2016.
  */
 
-public class CheckView extends ConstraintLayout {
+public class CheckDialogView extends ConstraintLayout {
 
     Context context;
     public TextView goal_summary_textview;
     public TextView goal_description_textview;
     public TextView goal_date_textview;
 
-    public CheckView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CheckDialogView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init();
     }
 
-    public CheckView(Context context, AttributeSet attrs) {
+    public CheckDialogView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init();
     }
 
-    public CheckView(Context context) {
+    public CheckDialogView(Context context) {
         super(context);
         this.context = context;
         init();
@@ -41,7 +41,7 @@ public class CheckView extends ConstraintLayout {
     public void init() {
         LayoutInflater li = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = li.inflate(R.layout.check_view, this, true);
+        View view = li.inflate(R.layout.check_dialog_view, this, true);
 
         goal_date_textview = (TextView) view.findViewById(R.id.check_date_textview);
         goal_summary_textview = (TextView) view.findViewById(R.id.check_goal_textview);

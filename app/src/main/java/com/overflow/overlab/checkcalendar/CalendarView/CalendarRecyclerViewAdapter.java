@@ -10,14 +10,14 @@ import com.overflow.overlab.checkcalendar.R;
  * Created by over on 2016-09-24.
  */
 
-public class CalendarVerticalViewAdapter
-        extends RecyclerView.Adapter<CalendarVerticalViewAdapter.ViewHolder> {
+public class CalendarRecyclerViewAdapter
+        extends RecyclerView.Adapter<CalendarRecyclerViewAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public CalendarView view;
+        public CalendarConstraintView view;
 
-        public ViewHolder(CalendarView itemView) {
+        public ViewHolder(CalendarConstraintView itemView) {
             super(itemView);
             view = itemView;
         }
@@ -27,10 +27,10 @@ public class CalendarVerticalViewAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        CalendarView calendarView = (CalendarView) LayoutInflater.from(parent.getContext())
+        CalendarConstraintView calendarConstraintView = (CalendarConstraintView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.calendar_view, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(calendarView);
+        ViewHolder viewHolder = new ViewHolder(calendarConstraintView);
 
         return viewHolder;
     }
@@ -38,9 +38,9 @@ public class CalendarVerticalViewAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        CalendarView calendarView =
-                (CalendarView) holder.view.findViewById(R.id.calendar_vertical_recyclerview_calendarview);
-        calendarView.setCalendar(position);
+        CalendarConstraintView calendarConstraintView =
+                (CalendarConstraintView) holder.view.findViewById(R.id.calendar_vertical_recyclerview_calendarview);
+        calendarConstraintView.setCalendar(position);
 
     }
 

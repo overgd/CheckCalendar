@@ -20,30 +20,33 @@ import java.util.Calendar;
  * Created by over on 2016-09-23.
  */
 
-public class CalendarView extends ConstraintLayout {
+public class CalendarConstraintView extends ConstraintLayout {
 
     static final int ROW = 6;
     static final int COL = 7;
 
     Context context;
+
+    public Calendar positionCalendar;
+
     LinearLayout[] calendarMonthRowLayout;
     CalendarDayTextView[][] calendarDayTextView;
     CalendarDayTextView todayTextView;
     CalendarTodayTextView todayView;
 
-    public CalendarView(Context context) {
+    public CalendarConstraintView(Context context) {
         super(context);
         this.context = context;
         init();
     }
 
-    public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CalendarConstraintView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init();
     }
 
-    public CalendarView(Context context, AttributeSet attrs) {
+    public CalendarConstraintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init();
@@ -55,7 +58,7 @@ public class CalendarView extends ConstraintLayout {
 
     public void setCalendar(int positionMonth) {
 
-        Calendar positionCalendar =
+        positionCalendar =
                 CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(positionMonth);
         Calendar dayCalendar;
 
@@ -77,8 +80,6 @@ public class CalendarView extends ConstraintLayout {
         int total_day = 1;
         final int first_day_num = CalendarUtils.GET_NUMBER_FIRST_DAY_OF_WEEK_IN_MONTH(positionCalendar);
         final int day_of_month = CalendarUtils.GET_NUMBER_DAY_OF_MONTH(positionCalendar);
-        dayCalendar = Calendar.getInstance();
-        dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
 
         for (int row = 0; row < ROW; row++) {
             for (int col = 0; col < COL; col++) {
@@ -92,6 +93,8 @@ public class CalendarView extends ConstraintLayout {
                     break;
                 }
 
+                dayCalendar = Calendar.getInstance();
+                dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
                 dayCalendar.set(Calendar.DATE, total_day);
 
                 calendarDayTextView[row][day].calendar = dayCalendar;
@@ -230,7 +233,7 @@ public class CalendarView extends ConstraintLayout {
         todayView.setWidth(todayTextView.getWidth());
     }
 
-    public void addCheckActivateView() {
+    public void addCheckActiveView() {
         ImageView view = new ImageView(context);
         view.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
         addView(view);

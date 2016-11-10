@@ -9,6 +9,7 @@ import com.overflow.overlab.checkcalendar.CheckCalendarApplication;
 import com.overflow.overlab.checkcalendar.Model.CalendarEventsItemsModel;
 import com.overflow.overlab.checkcalendar.Model.CalendarEventsTimeModel;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
@@ -34,6 +35,26 @@ public class CheckUtils {
         super();
         this.context = context;
         applicationClass = (CheckCalendarApplication) context.getApplicationContext();
+    }
+
+    static public CalendarEventsItemsModel loadCheckCalendarEventsItemsModel (Calendar calendar) {
+
+        FileInputStream fis = applicationClass.fileInputStream(
+                applicationClass.checkListFile(calendar)
+        );
+        try {
+            CalendarEventsItemsModel checkCalendarEventsItemsModel;
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            checkCalendarEventsItemsModel =
+                    new Gson().fromJson(new String(buffer), CalendarEventsItemsModel.class);
+            fis.close();
+            return checkCalendarEventsItemsModel;
+        } catch (Exception e) {
+            Log.d("Error loadcheckcalendar", e.toString());
+            return null;
+        }
+
     }
 
     static public CalendarEventsItemsModel setCheckCalendarEventsItemsModel
