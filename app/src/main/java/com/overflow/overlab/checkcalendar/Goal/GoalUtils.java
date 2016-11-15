@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.google.api.client.util.DateTime;
 import com.google.gson.Gson;
-import com.overflow.overlab.checkcalendar.CheckCalendarApplication;
+import com.overflow.overlab.checkcalendar.CCUtils;
 import com.overflow.overlab.checkcalendar.Model.GoalCalendarsDescriptionModel;
 import com.overflow.overlab.checkcalendar.Model.GoalCalendarsModel;
 
@@ -23,7 +23,7 @@ import java.util.UUID;
  */
 public class GoalUtils {
 
-    static CheckCalendarApplication applicationClass;
+    private CCUtils ccUtils;
 
     static final String CALENDAR_NAME = "CheckCalendar";
     static final String EMPTY = "EMPTY";
@@ -31,7 +31,7 @@ public class GoalUtils {
     static final String CONFIRM = "CONFIRM";
 
     public GoalUtils(Context context) {
-        applicationClass = (CheckCalendarApplication) context.getApplicationContext();
+        ccUtils = new CCUtils(context);
     }
 
     /**
@@ -39,9 +39,9 @@ public class GoalUtils {
      * @param gsonListString Gson format String
      * @return Success - 'Confirm', Fail - 'Error'
      */
-    static public String saveGoalListGsonStringFile(String gsonListString) {
-        FileOutputStream fos = applicationClass.fileOutputStream(
-                applicationClass.goalListFile()
+    public String saveGoalListGsonStringFile(String gsonListString) {
+        FileOutputStream fos = ccUtils.fileOutputStream(
+                ccUtils.goalListFile()
         );
         try {
             fos.write(gsonListString.getBytes());
@@ -54,9 +54,9 @@ public class GoalUtils {
         }
     }
 
-    static public String saveGoalCalendarsModel(GoalCalendarsModel goalCalendarsModel) {
-        FileOutputStream fos = applicationClass.fileOutputStream(
-                applicationClass.goalListFile()
+    public String saveGoalCalendarsModel(GoalCalendarsModel goalCalendarsModel) {
+        FileOutputStream fos = ccUtils.fileOutputStream(
+                ccUtils.goalListFile()
         );
         try {
             fos.write(convertGoalCalendarsModelToGson(goalCalendarsModel).getBytes());
@@ -69,7 +69,7 @@ public class GoalUtils {
         }
     }
 
-    static public String convertGoalCalendarsModelToGson(GoalCalendarsModel goalCalendarsModel) {
+    public String convertGoalCalendarsModelToGson(GoalCalendarsModel goalCalendarsModel) {
         return new Gson().toJson(goalCalendarsModel);
     }
     /**
@@ -77,10 +77,10 @@ public class GoalUtils {
      * from Storage
      * @return
      */
-    static public String getGoalListGsonStringfromFile() {
+    public String getGoalListGsonStringfromFile() {
 
-        FileInputStream fis = applicationClass.fileInputStream(
-                applicationClass.goalListFile()
+        FileInputStream fis = ccUtils.fileInputStream(
+                ccUtils.goalListFile()
         );
         try {
             String gsonResult;
@@ -98,7 +98,7 @@ public class GoalUtils {
     /**
      *
      * */
-    static public String getGoalDescription(String goalId) {
+    public String getGoalDescription(String goalId) {
         String result = null;
         GoalCalendarsModel goalCalendarsModel = getGoalListGCMfromFile();
         List<GoalCalendarsDescriptionModel> goalCalendarsDescriptionModels = goalCalendarsModel.getDescription();
@@ -113,9 +113,9 @@ public class GoalUtils {
     /**
      *
      */
-    static public GoalCalendarsModel getGoalListGCMfromFile () {
-        FileInputStream fis = applicationClass.fileInputStream(
-                applicationClass.goalListFile()
+    public GoalCalendarsModel getGoalListGCMfromFile () {
+        FileInputStream fis = ccUtils.fileInputStream(
+                ccUtils.goalListFile()
         );
         try {
             GoalCalendarsModel goalCalendarsModel;
@@ -154,11 +154,11 @@ public class GoalUtils {
         return goalCalendarsModel;
     }
 
-    static public String addGoal(GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
+    public String addGoal(GoalCalendarsDescriptionModel goalCalendarsDescriptionModel) {
         if (!Objects.equals(goalCalendarsDescriptionModel.getSummary(), "") &&
                 goalCalendarsDescriptionModel.getSummary().trim().length() > 0 &&
-                !goalCalendarsDescriptionModel.getSummary().equals(applicationClass.NULL)) {
-            GoalCalendarsModel goalCalendarsModel = GoalUtils.getGoalListGCMfromFile();
+                !goalCalendarsDescriptionModel.getSummary().equals(ccUtils.NULL)) {
+            GoalCalendarsModel goalCalendarsModel = getGoalListGCMfromFile();
             for(GoalCalendarsDescriptionModel gcd : goalCalendarsModel.getDescription()) {
                 if (goalCalendarsDescriptionModel.getSummary().equals(gcd.getSummary())) {
                     return ERROR_STRING+"SAME_SUMMARY";
@@ -166,13 +166,13 @@ public class GoalUtils {
             }
             goalCalendarsModel =
                     GoalUtils.addGDMintoGCM(goalCalendarsModel, goalCalendarsDescriptionModel);
-            GoalUtils.saveGoalCalendarsModel(goalCalendarsModel);
+            saveGoalCalendarsModel(goalCalendarsModel);
             return CONFIRM;
         } else if (Objects.equals(goalCalendarsDescriptionModel.getSummary(), "")) {
             return ERROR_STRING+"NOT_SUMMARY";
         } else if (goalCalendarsDescriptionModel.getSummary().trim().length() <= 0) {
             return ERROR_STRING+"WHITESPACE";
-        } else if (goalCalendarsDescriptionModel.getSummary().equals(applicationClass.NULL)) {
+        } else if (goalCalendarsDescriptionModel.getSummary().equals(ccUtils.NULL)) {
             return ERROR_STRING+"DONT_NULL";
         }
         return ERROR_STRING;

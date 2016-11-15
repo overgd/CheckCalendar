@@ -3,7 +3,6 @@ package com.overflow.overlab.checkcalendar.Check;
 import android.os.AsyncTask;
 
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView;
-import com.overflow.overlab.checkcalendar.Model.CalendarEventsItemsModel;
 
 import java.util.Calendar;
 
@@ -13,8 +12,8 @@ import java.util.Calendar;
 
 public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, Void> {
 
-    CalendarConstraintView calendarConstraintView;
-    Calendar calendar;
+    private CalendarConstraintView calendarConstraintView;
+
 
     public AddCheckViewAsyncTask(CalendarConstraintView calendarConstraintView) {
         super();
@@ -24,9 +23,9 @@ public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, Void> {
     @Override
     protected Void doInBackground(Integer... params) {
 
+        Calendar calendar;
         calendar = calendarConstraintView.positionCalendar;
-        CalendarEventsItemsModel checkCalendarEventsItemsModel
-                = CheckUtils.loadCheckCalendarEventsItemsModel(calendar);
+
         return null;
     }
 
@@ -34,6 +33,5 @@ public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        calendarConstraintView.addCheckActiveView();
     }
 }

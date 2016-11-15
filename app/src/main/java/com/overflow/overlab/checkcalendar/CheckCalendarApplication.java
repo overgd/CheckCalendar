@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -17,9 +16,6 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -95,18 +91,7 @@ public class CheckCalendarApplication extends Application {
 
     }
 
-    public File goalListFile() {
-        return new File(getApplicationContext().getFilesDir(), "goallist");
-    }
-
-    public File checkListFile(Calendar calendar) {
-        return new File(getApplicationContext().getFilesDir(),
-                "check_"
-                +String.valueOf(calendar.get(Calendar.YEAR))
-                +String.valueOf(calendar.get(Calendar.MONTH)));
-    }
-
-    public FileOutputStream fileOutputStream(File file) {
+    /*public FileOutputStream fileOutputStream(File file) {
 
         FileOutputStream fileOutputStream;
 
@@ -132,7 +117,7 @@ public class CheckCalendarApplication extends Application {
         }
 
         return null;
-    }
+    }*/
 
     public boolean isDeviceOnline() {
         ConnectivityManager connMgr =

@@ -19,7 +19,7 @@ import java.util.Locale;
  */
 
 public class CheckDialogFragment extends DialogFragment
-implements DialogInterface.OnClickListener{
+implements DialogInterface.OnClickListener {
 
     static final String CALENDAR_LONG = "calendar_long";
     static final String GOAL_ID = "goal_id";
@@ -38,7 +38,7 @@ implements DialogInterface.OnClickListener{
         Bundle args = getArguments();
         String goal_id = args.getString(GOAL_ID);
         String goal_summary = args.getString(GOAL_SUMMARY);
-        String goal_description = GoalUtils.getGoalDescription(goal_id);
+        String goal_description = new GoalUtils(getActivity()).getGoalDescription(goal_id);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(args.getLong(CALENDAR_LONG));

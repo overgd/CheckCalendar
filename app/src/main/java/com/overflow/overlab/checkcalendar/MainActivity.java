@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity
     LinearLayout content_main_layout;
 
     /** Toolbar **/
-    Calendar toolbar_calendar;
+    Calendar current_calendar;
     String toolbar_goal;
     String toolBar_title;
 
@@ -96,6 +96,11 @@ public class MainActivity extends BaseActivity
         addCalendarVerticalView();
         initMainUi();
         initGoalFab();
+
+    }
+
+    protected void initCheckView() {
+
     }
 
     /**
@@ -343,7 +348,7 @@ public class MainActivity extends BaseActivity
             if(newState == 0) {
 
                 linearLayoutManager.smoothScrollToPosition(recyclerView, null, month_position);
-
+                initCheckView();
 //                linearLayoutManager.scrollToPositionWithOffset(month_position, 0);
 //                recyclerView.smoothScrollToPosition(month_position);
                 executeCheckTask(recyclerView);
@@ -359,7 +364,7 @@ public class MainActivity extends BaseActivity
             if(position != -1 && position != month_position) {
                     Log.d("position", String.valueOf(position));
                     month_position = position;
-                    toolbar_calendar =
+                    current_calendar =
                             CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(month_position);
                     setToolBarTitle();
             }
@@ -385,8 +390,8 @@ public class MainActivity extends BaseActivity
 
     public void setToolBarTitle() {
 
-        if (toolbar_calendar == null) {
-            toolbar_calendar = Calendar.getInstance();
+        if (current_calendar == null) {
+            current_calendar = Calendar.getInstance();
         }
 
         if(! applicationClass.getCurrentGoal()[1].equals(applicationClass.NULL)) {
@@ -394,8 +399,8 @@ public class MainActivity extends BaseActivity
         }
 
         toolBar_title = getResources().getStringArray(R.array.calendar_month_short)
-                [toolbar_calendar.get(Calendar.MONTH)]
-                +" "+ toolbar_calendar.get(Calendar.YEAR);
+                [current_calendar.get(Calendar.MONTH)]
+                +" "+ current_calendar.get(Calendar.YEAR);
         if (toolbar_goal != null) {
             toolBar_title = toolBar_title +", "+ toolbar_goal;
         }

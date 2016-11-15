@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.overflow.overlab.checkcalendar.CheckCalendarApplication;
+import com.overflow.overlab.checkcalendar.CCUtils;
 import com.overflow.overlab.checkcalendar.Model.GoalCalendarsDescriptionModel;
 import com.overflow.overlab.checkcalendar.Model.GoalCalendarsModel;
 
@@ -21,16 +21,18 @@ import java.util.List;
  */
 public class GoalSetup {
 
-    private CheckCalendarApplication applicationClass;
-    private File goalDataFile;
+    private CCUtils ccUtils;
 
     public static final String CALENDAR_NAME = "CheckCalendar";
     public static final String EMPTY = "EMPTY";
     public static final String NULL = "NULL";
     public static final String ERROR_STRING = "ERROR_";
 
+    private Context context;
+
     public GoalSetup(Context context) {
-        applicationClass = (CheckCalendarApplication) context.getApplicationContext();
+        this.context = context;
+        ccUtils = new CCUtils(context);
     }
 
     /**
@@ -44,10 +46,10 @@ public class GoalSetup {
     public List<String> initGoalSetup() {
 
         List<String> result = new ArrayList<>();
-        File goalListFile = applicationClass.goalListFile();
+        File goalListFile = ccUtils.goalListFile();
         GoalCalendarsModel goalCalendarsModel;
 
-        goalCalendarsModel = new GoalUtils(applicationClass.getApplicationContext()).getGoalListGCMfromFile();
+        goalCalendarsModel = new GoalUtils(context).getGoalListGCMfromFile();
 
         try {
             if (GoalUtils.isFile(goalListFile)) { //goal list file exist
@@ -58,13 +60,13 @@ public class GoalSetup {
                 Log.d("goal loadgson", new Gson().toJson(goalCalendarsModel));
                 for (int i = 0; i < goalCalendarsModel.getDescription().size(); i++) {
                     result.add(goalCalendarsModel.getDescription().get(i).getId());
-                    applicationClass.setGoalList(
+                    ccUtils.setGoalList(
                             goalCalendarsModel.getDescription().get(i).getId(),
                             goalCalendarsModel.getDescription().get(i).getSummary()
                     );
                 }
-                if(applicationClass.getCurrentGoal()[0].equals(applicationClass.NULL)) {
-                    applicationClass.setCurrentGoal(
+                if(ccUtils.getCurrentGoal()[0].equals(ccUtils.NULL)) {
+                    ccUtils.setCurrentGoal(
                             goalCalendarsModel.getDescription().get(0).getId(),
                             goalCalendarsModel.getDescription().get(0).getSummary()
                     );
@@ -119,7 +121,7 @@ public class GoalSetup {
 
         try {
             Log.d("goal", "create new goal calendar");
-            FileOutputStream fos = applicationClass.fileOutputStream(goalListFile);
+            FileOutputStream fos = ccUtils.fileOutputStream(goalListFile);
             String gson = setEmptyGoalCalendar();
             Log.d("goal new gson", gson);
             fos.write(gson.getBytes());

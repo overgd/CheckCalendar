@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * Created by over on 2016-09-23.
- * Utils
+ * CCUtils
  * 7 Days of 1 Week
  *
  */

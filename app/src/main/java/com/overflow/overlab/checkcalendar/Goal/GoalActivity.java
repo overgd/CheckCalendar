@@ -174,7 +174,7 @@ public class GoalActivity extends BaseActivity {
                     GoalUtils.convertDateTimeToCalendar(startCalendar),
                     GoalUtils.convertDateTimeToCalendar(endCalendar));
 
-            String result = GoalUtils.addGoal(goalCalendarsDescriptionModel);
+            String result = new GoalUtils(getApplicationContext()).addGoal(goalCalendarsDescriptionModel);
             if(Objects.equals(result, GoalUtils.CONFIRM)) {
                 this.setResult(RESULT_OK);
                 applicationClass.setCurrentGoal(

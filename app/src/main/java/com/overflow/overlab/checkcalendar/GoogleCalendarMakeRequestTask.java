@@ -1,3 +1,4 @@
+/*
 package com.overflow.overlab.checkcalendar;
 
 import android.content.Context;
@@ -22,9 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+*/
 /**
  * Created by over on 6/29/2016.
- */
+ *//*
+
 
 class GoogleCalendarMakeRequestTask extends AsyncTask<java.util.Calendar, Void, String> {
 
@@ -175,9 +178,11 @@ class GoogleCalendarMakeRequestTask extends AsyncTask<java.util.Calendar, Void, 
 
     }
 
-    /*
+    */
+/*
     입력된 캘린더 이벤트 모델을 Gson 포맷으로 변경 후 String 형식으로 파일로 저장
-     */
+     *//*
+
     private String savedFlieCalendarEventsModel(Events events) throws Exception {
 
         try {
@@ -378,9 +383,11 @@ class GoogleCalendarMakeRequestTask extends AsyncTask<java.util.Calendar, Void, 
 
     }
 
-    /*
+    */
+/*
     월 달력 뷰에 이벤트 세팅
-     */
+     *//*
+
     private void setEventsInMonthView(String gsonString) {
 
         CalendarEventsModel eventsModel = new Gson().fromJson(gsonString, CalendarEventsModel.class);
@@ -464,3 +471,4 @@ class GoogleCalendarMakeRequestTask extends AsyncTask<java.util.Calendar, Void, 
     }
 
 }
+*/
