@@ -379,7 +379,9 @@ public class MainActivity extends BaseActivity
             CalendarRecyclerViewAdapter.ViewHolder viewHolder =
                     (CalendarRecyclerViewAdapter.ViewHolder) recyclerView
                             .findViewHolderForLayoutPosition(month_position);
-            currentCalendarConstraintView = viewHolder.view;
+            if(viewHolder.view != null) {
+                currentCalendarConstraintView = viewHolder.view;
+            }
         }
 
     }

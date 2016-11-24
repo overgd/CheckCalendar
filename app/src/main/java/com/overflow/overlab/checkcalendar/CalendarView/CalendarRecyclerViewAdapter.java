@@ -38,8 +38,7 @@ public class CalendarRecyclerViewAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        CalendarConstraintView calendarConstraintView =
-                (CalendarConstraintView) holder.view.findViewById(R.id.calendar_vertical_recyclerview_calendarview);
+        CalendarConstraintView calendarConstraintView = holder.view;
         calendarConstraintView.setCalendar(position);
 
     }

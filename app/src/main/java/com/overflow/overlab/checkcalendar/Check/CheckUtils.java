@@ -36,7 +36,6 @@ public class CheckUtils {
         ccUtils = new CCUtils(context);
     }
 
-
     public CalendarEventsItemsModel loadCheckCalendarEventsItemsModel (Calendar calendar) {
 
         try {

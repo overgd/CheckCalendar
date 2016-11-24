@@ -8,6 +8,7 @@
 
     <dimen name="calendarview_sidepadding">6dp</dimen>
 
+    <dimen name="calendarmonth_column_width">47.5dp</dimen>
     <dimen name="calendarmonth_column_height">82dp</dimen>
     <dimen name="calendarmonth_column_leftpadding">4dp</dimen>
     <dimen name="calendarmonth_column_fontsize">12sp</dimen>
@@ -18,7 +19,7 @@
     <dimen name="calendar_text_topbottompadding">8dp</dimen>
 
     <dimen name="calendar_today_viewsize">22dp</dimen>
-    <dimen name="calendar_today_fontsize">8sp</dimen>
+    <dimen name="calendar_today_fontsize">7sp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
 
