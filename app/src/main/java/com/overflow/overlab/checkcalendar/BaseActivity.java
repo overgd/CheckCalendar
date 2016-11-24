@@ -70,6 +70,7 @@ public class BaseActivity extends AppCompatActivity
     static final String CALENDAR_LONG = "calendar_long";
     static final String GOAL_ID = "goal_id";
     static final String GOAL_SUMMARY = "goal_summary";
+    static final String PARENT_ID = "parent_id";
 
     /**
      * OnCreate

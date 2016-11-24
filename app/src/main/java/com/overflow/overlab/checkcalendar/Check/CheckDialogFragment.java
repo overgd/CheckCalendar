@@ -24,6 +24,9 @@ implements DialogInterface.OnClickListener {
     static final String CALENDAR_LONG = "calendar_long";
     static final String GOAL_ID = "goal_id";
     static final String GOAL_SUMMARY = "goal_summary";
+    static final String PARENT_ID = "parent_id";
+
+    public int parent_id;
 
     DialogListener dialogListener;
 
@@ -39,6 +42,7 @@ implements DialogInterface.OnClickListener {
         String goal_id = args.getString(GOAL_ID);
         String goal_summary = args.getString(GOAL_SUMMARY);
         String goal_description = new GoalUtils(getActivity()).getGoalDescription(goal_id);
+        parent_id = args.getInt(PARENT_ID);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(args.getLong(CALENDAR_LONG));

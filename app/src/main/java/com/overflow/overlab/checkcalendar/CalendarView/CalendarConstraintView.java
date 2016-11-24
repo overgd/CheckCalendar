@@ -7,10 +7,10 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.overflow.overlab.checkcalendar.Check.AddCheckViewAsyncTask;
 import com.overflow.overlab.checkcalendar.MainActivity;
 import com.overflow.overlab.checkcalendar.R;
 
@@ -30,7 +30,7 @@ public class CalendarConstraintView extends ConstraintLayout {
     public Calendar positionCalendar;
 
     LinearLayout[] calendarMonthRowLayout;
-    CalendarDayTextView[][] calendarDayTextView;
+    public CalendarDayTextView[][] calendarDayTextView;
     CalendarDayTextView todayTextView;
     CalendarTodayTextView todayView;
 
@@ -57,6 +57,8 @@ public class CalendarConstraintView extends ConstraintLayout {
     }
 
     public void setCalendar(int positionMonth) {
+
+        setId(generateViewId());
 
         positionCalendar =
                 CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(positionMonth);
@@ -97,6 +99,7 @@ public class CalendarConstraintView extends ConstraintLayout {
                 dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
                 dayCalendar.set(Calendar.DATE, total_day);
 
+                calendarDayTextView[row][day].PARENT_ID = getId();
                 calendarDayTextView[row][day].calendar = dayCalendar;
                 calendarDayTextView[row][day].setText(String.valueOf(dayCalendar.get(Calendar.DATE)));
                 calendarDayTextView[row][day].setOnClickListener((MainActivity) context);
@@ -121,7 +124,7 @@ public class CalendarConstraintView extends ConstraintLayout {
                 LayoutParams.WRAP_CONTENT
         ));
         calendarMonthLayout.setOrientation(LinearLayout.VERTICAL);
-        calendarMonthLayout.setId(generateViewId());
+//        calendarMonthLayout.setId(generateViewId());
 
         calendarMonthRowLayout = new LinearLayout[ROW];
         calendarDayTextView = new CalendarDayTextView[ROW][COL];
@@ -233,10 +236,9 @@ public class CalendarConstraintView extends ConstraintLayout {
         todayView.setWidth(todayTextView.getWidth());
     }
 
-    public void addCheckActiveView() {
-        ImageView view = new ImageView(context);
-        view.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
-        addView(view);
+    public void setCheckActiveView() {
+
+        new AddCheckViewAsyncTask(this).execute();
     }
 
     @Override

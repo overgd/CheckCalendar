@@ -29,7 +29,6 @@ import com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarDayTextView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarRecyclerViewAdapter;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarUtils;
-import com.overflow.overlab.checkcalendar.Check.AddCheckViewAsyncTask;
 import com.overflow.overlab.checkcalendar.Check.CheckDialogFragment;
 import com.overflow.overlab.checkcalendar.Goal.GoalActivity;
 import com.overflow.overlab.checkcalendar.Goal.GoalSetup;
@@ -156,6 +155,7 @@ public class MainActivity extends BaseActivity
             args.putLong(CALENDAR_LONG, ((CalendarDayTextView) v).calendar.getTimeInMillis());
             args.putString(GOAL_ID, applicationClass.getCurrentGoal()[0]);
             args.putString(GOAL_SUMMARY, applicationClass.getCurrentGoal()[1]);
+            args.putInt(PARENT_ID, ((CalendarDayTextView) v).PARENT_ID);
 
             CheckDialogFragment checkDialogFragment = new CheckDialogFragment();
             checkDialogFragment.setArguments(args);
@@ -272,7 +272,10 @@ public class MainActivity extends BaseActivity
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         Toast.makeText(this, "Result : OK ", Toast.LENGTH_SHORT).show();
-        new AddCheckViewAsyncTask(currentCalendarConstraintView).execute();
+
+        CalendarConstraintView calendarConstraintView = (CalendarConstraintView)
+        calendarRecyclerView.findViewById(((CheckDialogFragment) dialog).parent_id);
+        calendarConstraintView.setCheckActiveView();
     }
 
     @Override
@@ -324,35 +327,35 @@ public class MainActivity extends BaseActivity
 
         content_main_layout.addView(calendarRecyclerView);
 
+        calendarLayoutManager.scrollToPosition(CalendarUtils.POSITION_CURRENT_MONTH());
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        calendarLayoutManager.scrollToPosition(CalendarUtils.POSITION_CURRENT_MONTH());
         calendarRecyclerView.addOnScrollListener(new calendarRecyclerViewScrollListener());
 
     }
 
     private class calendarRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
 
-        int state = 3;
+        boolean INIT_STATE = true;
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
-            state = newState;
+
             LinearLayoutManager linearLayoutManager =
                     (LinearLayoutManager) recyclerView.getLayoutManager();
             if(newState == 0) {
-
-                linearLayoutManager.smoothScrollToPosition(recyclerView, null, month_position);
                 initCheckView();
-//                linearLayoutManager.scrollToPositionWithOffset(month_position, 0);
-//                recyclerView.smoothScrollToPosition(month_position);
-                executeCheckTask(recyclerView);
+                if(!INIT_STATE) {
+                    saveCurrentCalendarView(recyclerView);
+                }
             }
+
         }
 
         @Override
@@ -361,27 +364,31 @@ public class MainActivity extends BaseActivity
             LinearLayoutManager linearLayoutManager =
                     (LinearLayoutManager) recyclerView.getLayoutManager();
             int position = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+            Log.d("firstcom position", String.valueOf(position));
+            Log.d("first position", String.valueOf(linearLayoutManager.findFirstVisibleItemPosition()));
+            Log.d("lastcom position", String.valueOf(linearLayoutManager.findLastCompletelyVisibleItemPosition()));
+            Log.d("last position", String.valueOf(linearLayoutManager.findLastVisibleItemPosition()));
+
+            INIT_STATE = false;
             if(position != -1 && position != month_position) {
-                    Log.d("position", String.valueOf(position));
                     month_position = position;
                     current_calendar =
                             CalendarUtils.CONVERT_MONTH_POSITION_NUMBER_TO_CALENDAR(month_position);
                     setToolBarTitle();
-            }
-
-            if(state == 3) {
-                executeCheckTask(recyclerView);
+                if(!INIT_STATE) {
+                    saveCurrentCalendarView(recyclerView);
+                }
+            } else {
+                INIT_STATE = true;
             }
 
         }
 
-        public void executeCheckTask(RecyclerView recyclerView) {
+        private void saveCurrentCalendarView(RecyclerView recyclerView) {
             CalendarRecyclerViewAdapter.ViewHolder viewHolder =
                     (CalendarRecyclerViewAdapter.ViewHolder) recyclerView
                             .findViewHolderForLayoutPosition(month_position);
-            if(viewHolder.view != null) {
-                currentCalendarConstraintView = viewHolder.view;
-            }
+            currentCalendarConstraintView = viewHolder.view;
         }
 
     }
