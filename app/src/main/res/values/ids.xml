@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="calendarview_id" type="id"/>
-
     <item name="calendar_column_id" type="id"/>
 </resources>

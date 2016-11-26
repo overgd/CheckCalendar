@@ -1,7 +1,6 @@
 package com.overflow.overlab.checkcalendar.Check;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView;
@@ -29,34 +28,34 @@ public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, CalendarDayT
 
         Calendar calendar;
         calendar = calendarConstraintView.positionCalendar;
-        CalendarDayTextView[][] calendarDayTextViews = calendarConstraintView.calendarDayTextView;
 
-        return calendarDayTextViews;
+        return calendarConstraintView.calendarDayTextView;
     }
 
     @Override
     protected void onPostExecute(CalendarDayTextView[][] calendarDayTextViews) {
         super.onPostExecute(calendarDayTextViews);
-        int[] posmain = new int[2];
-        calendarConstraintView.getLocationInWindow(posmain);
 
+        int[] posMain = new int[2];
+        int[] posText = new int[2];
+
+        calendarConstraintView.getLocationInWindow(posMain);
         for(int i = 0; i < 6; i++) {
             for(int j = 0; j < 7; j++) {
-                int[] posText = new int[2];
+
                 calendarDayTextViews[i][j].getLocationInWindow(posText);
-                Log.d("position x", String.valueOf(posText[0]));
-                Log.d("position x", String.valueOf(posText[1]));
-                ImageView view = new ImageView(calendarConstraintView.getContext());
-                view.setImageDrawable(calendarConstraintView.getContext().getResources().getDrawable(R.drawable.ic_check_black_24dp));
-                view.setX(posText[0]-posmain[0]);
-                view.setY(posText[1]-posmain[1]);
-                calendarConstraintView.addView(view);
+                if(posText[0]-posMain[0] == 0) {
+                    break;
+                }
+                ImageView checkImageView = new ImageView(calendarConstraintView.getContext());
+                checkImageView.setImageDrawable(calendarConstraintView.getContext().getResources().getDrawable(R.drawable.ic_check_black_24dp));
+                checkImageView.setX(posText[0] - posMain[0]);
+                checkImageView.setY(posText[1] - posMain[1]);
+                calendarConstraintView.checkImageView[i][j] = checkImageView;
+                calendarConstraintView.addView(calendarConstraintView.checkImageView[i][j]);
+
             }
         }
-
-//        Log.d("position x", String.valueOf(calendarConstraintView.getX()));
-//        Log.d("position y", String.valueOf(calendarConstraintView.getY()));
-
 
     }
 }

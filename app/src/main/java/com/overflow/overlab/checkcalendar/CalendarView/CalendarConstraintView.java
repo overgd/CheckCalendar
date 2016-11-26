@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ public class CalendarConstraintView extends ConstraintLayout {
     public Calendar positionCalendar;
 
     LinearLayout[] calendarMonthRowLayout;
+    public ImageView[][] checkImageView;
     public CalendarDayTextView[][] calendarDayTextView;
     CalendarDayTextView todayTextView;
     CalendarTodayTextView todayView;
@@ -53,6 +55,7 @@ public class CalendarConstraintView extends ConstraintLayout {
     }
 
     public void init() {
+        checkImageView = new ImageView[ROW][COL];
         addView(linearLayoutCalendarMonthUI(context));
     }
 
@@ -68,6 +71,7 @@ public class CalendarConstraintView extends ConstraintLayout {
         for (int row = 0; row < ROW; row++) {
             for (int col = 0; col < COL; col++) {
                 calendarDayTextView[row][col].clearView();
+                removeView(checkImageView[row][col]);
             }
         }
         removeView(todayView);
@@ -80,8 +84,8 @@ public class CalendarConstraintView extends ConstraintLayout {
 
         /** Set Day TextView **/
         int total_day = 1;
-        final int first_day_num = CalendarUtils.GET_NUMBER_FIRST_DAY_OF_WEEK_IN_MONTH(positionCalendar);
-        final int day_of_month = CalendarUtils.GET_NUMBER_DAY_OF_MONTH(positionCalendar);
+        int first_day_num = CalendarUtils.GET_NUMBER_FIRST_DAY_OF_WEEK_IN_MONTH(positionCalendar);
+        int day_of_month = CalendarUtils.GET_NUMBER_DAY_OF_MONTH(positionCalendar);
 
         for (int row = 0; row < ROW; row++) {
             for (int col = 0; col < COL; col++) {
