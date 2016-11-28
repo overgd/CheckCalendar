@@ -63,6 +63,9 @@ implements DialogInterface.OnClickListener {
             checkDialogView.goal_description_textview.setVisibility(View.GONE);
         }
 
+        String checkCalendarModel = new CheckSetup(getActivity()).initCheckCalendar(calendar);
+        Log.d("checkcalendarmodel", checkCalendarModel);
+
         builder.setView(checkDialogView)
                 .setPositiveButton("OK", this)
                 .setNegativeButton("CANCLE", this);
@@ -88,6 +91,7 @@ implements DialogInterface.OnClickListener {
 
         switch (which) {
             case OK :
+
                 dialogListener.onDialogPositiveClick(this);
                 break;
             case CANCLE :

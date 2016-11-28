@@ -12,6 +12,7 @@ import com.overflow.overlab.checkcalendar.Model.CalendarEventsModel;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.overflow.overlab.checkcalendar.Goal.GoalSetup.EMPTY;
@@ -23,27 +24,35 @@ import static com.overflow.overlab.checkcalendar.Goal.GoalSetup.EMPTY;
 public class CheckSetup {
 
     private CCUtils ccUtils;
+    private CheckUtils checkUtils;
 
-    static final String ERROR_STRING = "ERROR_";
+    static private final String ERROR_STRING = "ERROR_";
 
     public CheckSetup(Context context) {
         ccUtils = new CCUtils(context);
+        checkUtils = new CheckUtils(context);
     }
 
-    public void initCheck() {
-        String gsonCheckListModel;
+    public String initCheckCalendar(Calendar calendar) {
+        String gsonCheckListModel = initCheckListFile(ccUtils.checkListFile(calendar));
+        return gsonCheckListModel;
     }
 
     public String initCheckListFile(File checkListFile) {
 
         try {
-            Log.d("checklist", "create new check list");
-            FileOutputStream fos = ccUtils.fileOutputStream(checkListFile);
-            String gson = setEmptyChcekCalendar();
-            Log.d("check new gson", gson);
-            fos.write(gson.getBytes());
-            fos.close();
-            return EMPTY;
+            if(checkListFile.isFile()) {
+                return checkUtils.loadCheckCalendarEventsItemsModel(checkListFile);
+            } else {
+                checkListFile.createNewFile();
+                Log.d("checklist", "create new check list");
+                FileOutputStream fos = ccUtils.fileOutputStream(checkListFile);
+                String gson = setEmptyChcekCalendar();
+                Log.d("check new gson", gson);
+                fos.write(gson.getBytes());
+                fos.close();
+                return EMPTY;
+            }
         } catch (Exception e) {
             Log.d("Error initchecklist", e.toString());
             return ERROR_STRING+"FAIL_NEW_CHECKLISTFILE";

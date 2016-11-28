@@ -9,6 +9,7 @@ import com.overflow.overlab.checkcalendar.CCUtils;
 import com.overflow.overlab.checkcalendar.Model.CalendarEventsItemsModel;
 import com.overflow.overlab.checkcalendar.Model.CalendarEventsTimeModel;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,22 +37,19 @@ public class CheckUtils {
         ccUtils = new CCUtils(context);
     }
 
-    public CalendarEventsItemsModel loadCheckCalendarEventsItemsModel (Calendar calendar) {
+    public String loadCheckCalendarEventsItemsModel (File file) {
 
         try {
-            FileInputStream fis = ccUtils.fileInputStream(
-                    ccUtils.checkListFile(calendar)
-            );
+            FileInputStream fis = ccUtils.fileInputStream(file);
             CalendarEventsItemsModel checkCalendarEventsItemsModel;
             byte[] buffer = new byte[fis.available()];
             fis.read(buffer);
             checkCalendarEventsItemsModel =
                     new Gson().fromJson(new String(buffer), CalendarEventsItemsModel.class);
             fis.close();
-            return checkCalendarEventsItemsModel;
+            return new Gson().toJson(checkCalendarEventsItemsModel);
         } catch (NullPointerException ne) {
             Log.d("Error checklistfile", ne.toString());
-            new CheckSetup(context).initCheck();
             return null;
         } catch (IOException ie) {
             Log.d("Error checklistfile", ie.toString());
