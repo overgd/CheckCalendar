@@ -91,7 +91,6 @@ implements DialogInterface.OnClickListener {
 
         switch (which) {
             case OK :
-
                 dialogListener.onDialogPositiveClick(this);
                 break;
             case CANCLE :

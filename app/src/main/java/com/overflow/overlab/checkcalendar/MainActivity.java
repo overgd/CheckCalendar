@@ -273,8 +273,9 @@ public class MainActivity extends BaseActivity
     public void onDialogPositiveClick(DialogFragment dialog) {
         Toast.makeText(this, "Result : OK ", Toast.LENGTH_SHORT).show();
 
-        CalendarConstraintView calendarConstraintView = (CalendarConstraintView)
-        calendarRecyclerView.findViewById(((CheckDialogFragment) dialog).parent_id);
+        CalendarConstraintView calendarConstraintView =
+                (CalendarConstraintView) calendarRecyclerView
+                        .findViewById(((CheckDialogFragment) dialog).parent_id);
         calendarConstraintView.setCheckActiveView();
     }
 
