@@ -17,6 +17,7 @@ import java.util.Calendar;
 
 /**
  * Created by over on 10/18/2016.
+ * 목표체크에 필요한 Utils
  */
 
 public class CheckUtils {
@@ -37,6 +38,9 @@ public class CheckUtils {
         ccUtils = new CCUtils(context);
     }
 
+    /**
+    *
+    **/
     public String loadCheckCalendarEventsItemsModel (File file) {
 
         try {

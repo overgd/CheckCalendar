@@ -16,6 +16,8 @@ import java.util.Locale;
 
 /**
  * Created by over on 10/22/2016.
+ * 체크 다이얼로그
+ *
  */
 
 public class CheckDialogFragment extends DialogFragment
@@ -39,12 +41,14 @@ implements DialogInterface.OnClickListener {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Bundle args = getArguments();
-        String goal_id = args.getString(GOAL_ID);
-        String goal_summary = args.getString(GOAL_SUMMARY);
-        String goal_description = new GoalUtils(getActivity()).getGoalDescription(goal_id);
-        parent_id = args.getInt(PARENT_ID);
+        String goal_id = args.getString(GOAL_ID); // Goal id
+        String goal_summary = args.getString(GOAL_SUMMARY); // Goal Summary
+        String goal_description = new GoalUtils(getActivity()).getGoalDescription(goal_id); // Goal Description
+        // 현재 목표의 id, 제목, 내용
 
-        Calendar calendar = Calendar.getInstance();
+        parent_id = args.getInt(PARENT_ID); // Calendar Text View ID
+
+        Calendar calendar = Calendar.getInstance();  // 다이얼로그에 표시되는 날짜
         calendar.setTimeInMillis(args.getLong(CALENDAR_LONG));
         Log.d("calendar_long", String.valueOf(calendar.get(Calendar.DATE)));
 
@@ -54,9 +58,11 @@ implements DialogInterface.OnClickListener {
         checkDialogView.setGoalDateText(calendar.get(Calendar.YEAR) +"/" +
                         calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
                         +"/"+calendar.get(Calendar.DATE)
-        );
-        checkDialogView.setGoalSummaryText(goal_summary);
-        if(! goal_description.isEmpty()) {
+        ); // Ex) 2017/Feb/12
+
+        checkDialogView.setGoalSummaryText(goal_summary); // 목표 제목 표시
+
+        if(! goal_description.isEmpty()) { //목표 내용이 있으면 표시, 없으면 표시 안함
             checkDialogView.goal_description_textview.setVisibility(View.VISIBLE);
             checkDialogView.setGoalDescriptionText(goal_description);
         } else {
@@ -64,6 +70,7 @@ implements DialogInterface.OnClickListener {
         }
 
         String checkCalendarModel = new CheckSetup(getActivity()).initCheckCalendar(calendar);
+
         Log.d("checkcalendarmodel", checkCalendarModel);
 
         builder.setView(checkDialogView)

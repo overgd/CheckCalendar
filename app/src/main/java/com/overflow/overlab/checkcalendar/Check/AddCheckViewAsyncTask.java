@@ -11,12 +11,12 @@ import java.util.Calendar;
 
 /**
  * Created by over on 11/7/2016.
+ * 생성되어 있는 CalendarView에 체크표시를 넣는 AsyncTask
  */
 
 public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, CalendarDayTextView[][]> {
 
     private CalendarConstraintView calendarConstraintView;
-
 
     public AddCheckViewAsyncTask(CalendarConstraintView calendarConstraintView) {
         super();
@@ -40,6 +40,7 @@ public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, CalendarDayT
         int[] posText = new int[2];
 
         calendarConstraintView.getLocationInWindow(posMain);
+
         for(int i = 0; i < 6; i++) {
             for(int j = 0; j < 7; j++) {
 
