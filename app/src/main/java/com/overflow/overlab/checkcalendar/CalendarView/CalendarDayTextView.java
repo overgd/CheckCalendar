@@ -18,7 +18,7 @@ import java.util.Calendar;
 
 public class CalendarDayTextView extends TextView {
 
-    public int PARENT_ID;
+    public int PARENT_ID; //CalendarContraintView ID
     Context context;
     public Calendar calendar;
 

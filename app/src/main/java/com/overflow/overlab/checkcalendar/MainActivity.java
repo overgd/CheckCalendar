@@ -276,6 +276,7 @@ public class MainActivity extends BaseActivity
         CalendarConstraintView calendarConstraintView =
                 (CalendarConstraintView) calendarRecyclerView
                         .findViewById(((CheckDialogFragment) dialog).parent_id);
+
         calendarConstraintView.setCheckActiveView();
     }
 

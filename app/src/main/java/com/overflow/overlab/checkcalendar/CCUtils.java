@@ -91,8 +91,7 @@ public class CCUtils {
 
     public File checkListFile(Calendar calendar) {
         return new File(context.getFilesDir(),
-                "check_"
-                        +String.valueOf(calendar.get(Calendar.YEAR))
+                "check_"+String.valueOf(calendar.get(Calendar.YEAR))
                         +String.valueOf(calendar.get(Calendar.MONTH)));
     }
 

@@ -46,7 +46,7 @@ implements DialogInterface.OnClickListener {
         String goal_description = new GoalUtils(getActivity()).getGoalDescription(goal_id); // Goal Description
         // 현재 목표의 id, 제목, 내용
 
-        parent_id = args.getInt(PARENT_ID); // Calendar Text View ID
+        parent_id = args.getInt(PARENT_ID); // CalendarConstraintView ID
 
         Calendar calendar = Calendar.getInstance();  // 다이얼로그에 표시되는 날짜
         calendar.setTimeInMillis(args.getLong(CALENDAR_LONG));

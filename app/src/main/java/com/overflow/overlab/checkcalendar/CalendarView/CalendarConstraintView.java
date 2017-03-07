@@ -32,7 +32,7 @@ public class CalendarConstraintView extends ConstraintLayout {
 
     LinearLayout[] calendarMonthRowLayout;
     public ImageView[][] checkImageView;
-    public CalendarDayTextView[][] calendarDayTextView;
+    public CalendarDayTextView[][] calendarDayTextViews;
     CalendarDayTextView todayTextView;
     CalendarTodayTextView todayView;
 
@@ -70,7 +70,7 @@ public class CalendarConstraintView extends ConstraintLayout {
         /** Clear View **/
         for (int row = 0; row < ROW; row++) {
             for (int col = 0; col < COL; col++) {
-                calendarDayTextView[row][col].clearView();
+                calendarDayTextViews[row][col].clearView();
                 removeView(checkImageView[row][col]);
             }
         }
@@ -103,16 +103,16 @@ public class CalendarConstraintView extends ConstraintLayout {
                 dayCalendar.setTimeInMillis(positionCalendar.getTimeInMillis());
                 dayCalendar.set(Calendar.DATE, total_day);
 
-                calendarDayTextView[row][day].PARENT_ID = getId();
-                calendarDayTextView[row][day].calendar = dayCalendar;
-                calendarDayTextView[row][day].setText(String.valueOf(dayCalendar.get(Calendar.DATE)));
-                calendarDayTextView[row][day].setOnClickListener((MainActivity) context);
+                calendarDayTextViews[row][day].PARENT_ID = getId(); //CalendarContraintView ID
+                calendarDayTextViews[row][day].calendar = dayCalendar;
+                calendarDayTextViews[row][day].setText(String.valueOf(dayCalendar.get(Calendar.DATE)));
+                calendarDayTextViews[row][day].setOnClickListener((MainActivity) context);
 
                 //Today!
                 if(positionCalendar.get(Calendar.YEAR) == CalendarUtils.getNowCalendar().get(Calendar.YEAR)
                         && positionCalendar.get(Calendar.MONTH) == CalendarUtils.getNowCalendar().get(Calendar.MONTH)
                         && Integer.valueOf(CalendarUtils.getNowCalendar().get(Calendar.DATE)) == total_day) {
-                    setTodayView(calendarDayTextView[row][day]);
+                    setTodayView(calendarDayTextViews[row][day]);
                 }
 
                 total_day++;
@@ -131,7 +131,7 @@ public class CalendarConstraintView extends ConstraintLayout {
 //        calendarMonthLayout.setId(generateViewId());
 
         calendarMonthRowLayout = new LinearLayout[ROW];
-        calendarDayTextView = new CalendarDayTextView[ROW][COL];
+        calendarDayTextViews = new CalendarDayTextView[ROW][COL];
 
         ViewGroup.LayoutParams rowLayoutParams = new ViewGroup.LayoutParams(
                 LayoutParams.MATCH_PARENT,
@@ -153,8 +153,8 @@ public class CalendarConstraintView extends ConstraintLayout {
 
             for (int day = 0; day < COL; day++) {
                 //in Text init
-                calendarDayTextView[row][day] = new CalendarDayTextView(context);
-                calendarMonthRowLayout[row].addView(calendarDayTextView[row][day]);
+                calendarDayTextViews[row][day] = new CalendarDayTextView(context);
+                calendarMonthRowLayout[row].addView(calendarDayTextViews[row][day]);
             }
 
             calendarMonthLayout.addView(calendarMonthRowLayout[row]);

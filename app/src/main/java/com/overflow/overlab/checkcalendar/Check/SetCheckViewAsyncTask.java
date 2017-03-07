@@ -3,31 +3,35 @@ package com.overflow.overlab.checkcalendar.Check;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.overflow.overlab.checkcalendar.CCUtils;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView;
 import com.overflow.overlab.checkcalendar.CalendarView.CalendarDayTextView;
 import com.overflow.overlab.checkcalendar.R;
 
+import java.io.File;
 import java.util.Calendar;
 
 /**
- * Created by over on 11/7/2016.
- * 체크를 했을 때 데이터를 저장
+ * Created by over on 3/2/2017.
+ * 체크표시
  */
 
-public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, CalendarDayTextView[][]> {
+public class SetCheckViewAsyncTask extends AsyncTask<Void, Void, CalendarDayTextView[][]> {
 
     private CalendarConstraintView calendarConstraintView;
 
-    public AddCheckViewAsyncTask(CalendarConstraintView calendarConstraintView) {
+    CCUtils ccUtils;
+
+    public SetCheckViewAsyncTask(CalendarConstraintView calendarConstraintView) {
         super();
         this.calendarConstraintView = calendarConstraintView;
     }
 
     @Override
-    protected CalendarDayTextView[][] doInBackground(Integer... params) {
+    protected CalendarDayTextView[][] doInBackground(Void... params) {
 
-        Calendar calendar;
-        calendar = calendarConstraintView.positionCalendar;
+        Calendar calendar = calendarConstraintView.positionCalendar;
+        File checkListFile = ccUtils.checkListFile(calendar);
 
         return calendarConstraintView.calendarDayTextViews;
     }
@@ -57,6 +61,5 @@ public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, CalendarDayT
 
             }
         }
-
     }
 }
