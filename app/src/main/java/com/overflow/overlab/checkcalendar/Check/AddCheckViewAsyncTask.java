@@ -1,12 +1,16 @@
 package com.overflow.overlab.checkcalendar.Check;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.ImageView;
+import android.util.Log;
 
-import com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView;
-import com.overflow.overlab.checkcalendar.CalendarView.CalendarDayTextView;
-import com.overflow.overlab.checkcalendar.R;
+import com.google.api.client.util.DateTime;
+import com.google.gson.Gson;
+import com.overflow.overlab.checkcalendar.CCUtils;
+import com.overflow.overlab.checkcalendar.Model.CalendarEventsItemsModel;
+import com.overflow.overlab.checkcalendar.Model.CalendarEventsModel;
 
+import java.io.File;
 import java.util.Calendar;
 
 /**
@@ -14,49 +18,42 @@ import java.util.Calendar;
  * 체크를 했을 때 데이터를 저장
  */
 
-public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, CalendarDayTextView[][]> {
+public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, Void> {
 
-    private CalendarConstraintView calendarConstraintView;
+    private CCUtils ccUtils;
+    private CheckUtils checkUtils;
+    private Calendar calendar;
 
-    public AddCheckViewAsyncTask(CalendarConstraintView calendarConstraintView) {
+    public AddCheckViewAsyncTask(Context context, Calendar calendar) {
         super();
-        this.calendarConstraintView = calendarConstraintView;
+        this.calendar = calendar;
+        ccUtils = new CCUtils(context);
+        checkUtils = new CheckUtils(context);
     }
 
     @Override
-    protected CalendarDayTextView[][] doInBackground(Integer... params) {
+    protected Void doInBackground(Integer... params) {
+        File checkListFile = ccUtils.checkListFile(calendar);
 
-        Calendar calendar;
-        calendar = calendarConstraintView.positionCalendar;
+        DateTime[] dateTimes = new DateTime[2];
+        dateTimes[0] = new DateTime(calendar.getTimeInMillis());
+        dateTimes[1] = new DateTime(calendar.getTimeInMillis());
 
-        return calendarConstraintView.calendarDayTextViews;
+        CalendarEventsItemsModel calendarEventsItemsModel =
+        checkUtils.setCheckCalendarEventsItemsModel(checkUtils.CONFIRMED, dateTimes, "MEMO");
+
+        CalendarEventsModel checkCalendarEventsModel =
+                checkUtils.loadCheckCalendarEventsModel(checkListFile);
+
+        checkUtils.saveCheckEvent(checkCalendarEventsModel, calendarEventsItemsModel);
+
+        Log.d("checklistfile", new Gson().toJson(checkCalendarEventsModel));
+
+        return null;
     }
 
     @Override
-    protected void onPostExecute(CalendarDayTextView[][] calendarDayTextViews) {
-        super.onPostExecute(calendarDayTextViews);
-
-        int[] posMain = new int[2];
-        int[] posText = new int[2];
-
-        calendarConstraintView.getLocationInWindow(posMain);
-
-        for(int i = 0; i < 6; i++) {
-            for(int j = 0; j < 7; j++) {
-
-                calendarDayTextViews[i][j].getLocationInWindow(posText);
-                if(posText[0]-posMain[0] == 0) {
-                    break;
-                }
-                ImageView checkImageView = new ImageView(calendarConstraintView.getContext());
-                checkImageView.setImageDrawable(calendarConstraintView.getContext().getResources().getDrawable(R.drawable.ic_check_black_24dp));
-                checkImageView.setX(posText[0] - posMain[0]);
-                checkImageView.setY(posText[1] - posMain[1]);
-                calendarConstraintView.checkImageView[i][j] = checkImageView;
-                calendarConstraintView.addView(calendarConstraintView.checkImageView[i][j]);
-
-            }
-        }
-
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
     }
 }

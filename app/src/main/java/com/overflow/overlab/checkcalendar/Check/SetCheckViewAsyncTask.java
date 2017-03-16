@@ -20,10 +20,11 @@ public class SetCheckViewAsyncTask extends AsyncTask<Void, Void, CalendarDayText
 
     private CalendarConstraintView calendarConstraintView;
 
-    CCUtils ccUtils;
+    private CCUtils ccUtils;
 
     public SetCheckViewAsyncTask(CalendarConstraintView calendarConstraintView) {
         super();
+        ccUtils = new CCUtils(calendarConstraintView.getContext());
         this.calendarConstraintView = calendarConstraintView;
     }
 
@@ -31,6 +32,7 @@ public class SetCheckViewAsyncTask extends AsyncTask<Void, Void, CalendarDayText
     protected CalendarDayTextView[][] doInBackground(Void... params) {
 
         Calendar calendar = calendarConstraintView.positionCalendar;
+
         File checkListFile = ccUtils.checkListFile(calendar);
 
         return calendarConstraintView.calendarDayTextViews;

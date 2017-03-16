@@ -6,14 +6,18 @@ import android.util.Log;
 import com.google.api.client.util.DateTime;
 import com.google.gson.Gson;
 import com.overflow.overlab.checkcalendar.CCUtils;
+import com.overflow.overlab.checkcalendar.Goal.GoalSetup;
 import com.overflow.overlab.checkcalendar.Model.CalendarEventsItemsModel;
+import com.overflow.overlab.checkcalendar.Model.CalendarEventsModel;
 import com.overflow.overlab.checkcalendar.Model.CalendarEventsTimeModel;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by over on 10/18/2016.
@@ -41,17 +45,18 @@ public class CheckUtils {
     /**
     *
     **/
-    public String loadCheckCalendarEventsItemsModel (File file) {
+    public CalendarEventsModel loadCheckCalendarEventsModel (File file) {
 
         try {
             FileInputStream fis = ccUtils.fileInputStream(file);
-            CalendarEventsItemsModel checkCalendarEventsItemsModel;
+            CalendarEventsModel calendarEventsModel;
             byte[] buffer = new byte[fis.available()];
             fis.read(buffer);
-            checkCalendarEventsItemsModel =
-                    new Gson().fromJson(new String(buffer), CalendarEventsItemsModel.class);
+            calendarEventsModel =
+                    new Gson().fromJson(new String(buffer), CalendarEventsModel.class);
             fis.close();
-            return new Gson().toJson(checkCalendarEventsItemsModel);
+            return calendarEventsModel;
+
         } catch (NullPointerException ne) {
             Log.d("Error checklistfile", ne.toString());
             return null;
@@ -62,12 +67,22 @@ public class CheckUtils {
 
     }
 
+    public CalendarEventsModel setCheckCalendarEventsModel (List<CalendarEventsItemsModel> calendarEventsItemsModels) {
+
+        CalendarEventsModel calendarEventsModel = new CalendarEventsModel();
+
+        calendarEventsModel.setSummary(GoalSetup.CALENDAR_NAME);
+        calendarEventsModel.setItems(calendarEventsItemsModels);
+
+        return calendarEventsModel;
+    }
+
     public CalendarEventsItemsModel setCheckCalendarEventsItemsModel
             (String status, DateTime[] dateTimes, String memo) {
 
         CalendarEventsItemsModel calendarEventsItemsModel = new CalendarEventsItemsModel();
 
-        calendarEventsItemsModel.setSummary(ccUtils.getCurrentGoal()[0]);
+        calendarEventsItemsModel.setSummary(ccUtils.getCurrentGoal()[1]);
         calendarEventsItemsModel.setDescription(memo);
         calendarEventsItemsModel.setStatus(status);
 
@@ -82,21 +97,27 @@ public class CheckUtils {
         return calendarEventsItemsModel;
     }
 
-    static public String convertEventsModelToGson (CalendarEventsItemsModel calendarEventsItemsModel) {
-        return new Gson().toJson(calendarEventsItemsModel);
+    public List<CalendarEventsItemsModel> addCheckCalendarEventsItemsModels
+            (List<CalendarEventsItemsModel> calendarEventsItemsModels,
+             CalendarEventsItemsModel calendarEventsItemsModel) {
+
+        calendarEventsItemsModels.add(calendarEventsItemsModel);
+
+        return calendarEventsItemsModels;
     }
 
-    public String saveCalendarEventsItemsModel (CalendarEventsItemsModel calendarEventsItemsModel) {
+    public String saveCheckCalendarEventsFile
+            (CalendarEventsModel calendarEventsModel) {
 
-        String gson = convertEventsModelToGson(calendarEventsItemsModel);
-        DateTime date = calendarEventsItemsModel.getStart().getDateTime();
+        DateTime date = calendarEventsModel.getItems().get(0).getStart().getDateTime();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date.getValue());
+
         FileOutputStream fos = ccUtils.fileOutputStream(
                 ccUtils.checkListFile(calendar)
         );
         try {
-            fos.write(gson.getBytes());
+            fos.write(new Gson().toJson(calendarEventsModel).getBytes());
             fos.close();
             return CONFIRM;
         } catch (IOException e) {
@@ -104,6 +125,26 @@ public class CheckUtils {
             Log.d("Error savechecklist", e.toString());
             return ERROR_STRING;
         }
+
+    }
+
+    public String saveCheckEvent
+            (CalendarEventsModel calendarEventsModel, CalendarEventsItemsModel calendarEventsItemsModel) {
+
+        List<CalendarEventsItemsModel> calendarEventsItemsModels;
+
+        if(calendarEventsModel.getItems() == null) {
+            calendarEventsItemsModels = new ArrayList<CalendarEventsItemsModel>();
+        } else {
+            calendarEventsItemsModels = calendarEventsModel.getItems();
+        }
+
+        calendarEventsItemsModels.add(calendarEventsItemsModel);
+        calendarEventsModel.setItems(calendarEventsItemsModels);
+
+        saveCheckCalendarEventsFile(calendarEventsModel);
+
+        return CONFIRM;
     }
 
 }

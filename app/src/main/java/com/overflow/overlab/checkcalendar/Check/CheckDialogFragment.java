@@ -1,12 +1,11 @@
 package com.overflow.overlab.checkcalendar.Check;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 
 import com.overflow.overlab.checkcalendar.Goal.GoalUtils;
@@ -31,6 +30,7 @@ implements DialogInterface.OnClickListener {
     public int parent_id;
 
     DialogListener dialogListener;
+    Calendar calendar; // 다이얼로그의 날짜
 
     public interface DialogListener {
         public void onDialogPositiveClick(DialogFragment dialog);
@@ -48,9 +48,8 @@ implements DialogInterface.OnClickListener {
 
         parent_id = args.getInt(PARENT_ID); // CalendarConstraintView ID
 
-        Calendar calendar = Calendar.getInstance();  // 다이얼로그에 표시되는 날짜
+        calendar = Calendar.getInstance();
         calendar.setTimeInMillis(args.getLong(CALENDAR_LONG));
-        Log.d("calendar_long", String.valueOf(calendar.get(Calendar.DATE)));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -71,8 +70,6 @@ implements DialogInterface.OnClickListener {
 
         String checkCalendarModel = new CheckSetup(getActivity()).initCheckCalendar(calendar);
 
-        Log.d("checkcalendarmodel", checkCalendarModel);
-
         builder.setView(checkDialogView)
                 .setPositiveButton("OK", this)
                 .setNegativeButton("CANCLE", this);
@@ -81,12 +78,12 @@ implements DialogInterface.OnClickListener {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            dialogListener = (DialogListener) activity;
+            dialogListener = (DialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString());
+            throw new ClassCastException(context.toString());
         }
     }
 
@@ -97,7 +94,8 @@ implements DialogInterface.OnClickListener {
         final int CANCLE = -2;
 
         switch (which) {
-            case OK :
+            case OK : // 체크 표시 버튼을 눌렀을 때
+                new AddCheckViewAsyncTask(getActivity(), calendar).execute();
                 dialogListener.onDialogPositiveClick(this);
                 break;
             case CANCLE :

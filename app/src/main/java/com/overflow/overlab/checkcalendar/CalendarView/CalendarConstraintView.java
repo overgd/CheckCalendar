@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.overflow.overlab.checkcalendar.Check.AddCheckViewAsyncTask;
+import com.overflow.overlab.checkcalendar.Check.SetCheckViewAsyncTask;
 import com.overflow.overlab.checkcalendar.MainActivity;
 import com.overflow.overlab.checkcalendar.R;
 
@@ -241,8 +241,11 @@ public class CalendarConstraintView extends ConstraintLayout {
     }
 
     public void setCheckActiveView() {
+        new SetCheckViewAsyncTask(this).execute();
+    }
 
-        new AddCheckViewAsyncTask(this).execute();
+    public void addCheckData() {
+
     }
 
     @Override

@@ -42,7 +42,7 @@ public class CheckSetup {
 
         try {
             if(checkListFile.isFile()) {
-                return checkUtils.loadCheckCalendarEventsItemsModel(checkListFile);
+                return new Gson().toJson(checkUtils.loadCheckCalendarEventsModel(checkListFile));
             } else {
                 checkListFile.createNewFile();
                 Log.d("checklist", "create new check list");
