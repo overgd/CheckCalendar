@@ -95,7 +95,7 @@ implements DialogInterface.OnClickListener {
 
         switch (which) {
             case OK : // 체크 표시 버튼을 눌렀을 때
-                new AddCheckViewAsyncTask(getActivity(), calendar).execute();
+                new AddCheckEventAsyncTask(getActivity(), calendar).execute();
                 dialogListener.onDialogPositiveClick(this);
                 break;
             case CANCLE :

@@ -18,13 +18,13 @@ import java.util.Calendar;
  * 체크를 했을 때 데이터를 저장
  */
 
-public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, Void> {
+public class AddCheckEventAsyncTask extends AsyncTask<Integer, Void, Void> {
 
     private CCUtils ccUtils;
     private CheckUtils checkUtils;
     private Calendar calendar;
 
-    public AddCheckViewAsyncTask(Context context, Calendar calendar) {
+    public AddCheckEventAsyncTask(Context context, Calendar calendar) {
         super();
         this.calendar = calendar;
         ccUtils = new CCUtils(context);
@@ -41,6 +41,7 @@ public class AddCheckViewAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         CalendarEventsItemsModel calendarEventsItemsModel =
         checkUtils.setCheckCalendarEventsItemsModel(checkUtils.CONFIRMED, dateTimes, "MEMO");
+
 
         CalendarEventsModel checkCalendarEventsModel =
                 checkUtils.loadCheckCalendarEventsModel(checkListFile);
