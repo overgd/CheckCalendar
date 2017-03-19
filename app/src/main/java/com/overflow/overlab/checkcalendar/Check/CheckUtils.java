@@ -109,9 +109,9 @@ public class CheckUtils {
     public String saveCheckCalendarEventsFile
             (CalendarEventsModel calendarEventsModel) {
 
-        DateTime datetime = calendarEventsModel.getItems().get(0).getStart().getDateTime();
+        DateTime date = calendarEventsModel.getItems().get(0).getStart().getDateTime();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(datetime.getValue());
+        calendar.setTimeInMillis(date.getValue());
 
         FileOutputStream fos = ccUtils.fileOutputStream(
                 ccUtils.checkListFile(calendar)
@@ -141,8 +141,6 @@ public class CheckUtils {
 
         calendarEventsItemsModels.add(calendarEventsItemsModel);
         calendarEventsModel.setItems(calendarEventsItemsModels);
-
-        Log.d("checklisttime", calendarEventsItemsModels.get(0).getStart().getDateTime().toString());
 
         saveCheckCalendarEventsFile(calendarEventsModel);
 
