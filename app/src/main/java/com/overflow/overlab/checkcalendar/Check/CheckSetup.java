@@ -6,14 +6,11 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.overflow.overlab.checkcalendar.CCUtils;
 import com.overflow.overlab.checkcalendar.Goal.GoalSetup;
-import com.overflow.overlab.checkcalendar.Model.CalendarEventsItemsModel;
 import com.overflow.overlab.checkcalendar.Model.CalendarEventsModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import static com.overflow.overlab.checkcalendar.Goal.GoalSetup.EMPTY;
 
@@ -64,13 +61,13 @@ public class CheckSetup {
 
         String gsonCheckListModel;
 
-        CalendarEventsItemsModel calendarEventsItemsModel = new CalendarEventsItemsModel();
-        List<CalendarEventsItemsModel> calendarEventsItemsModels = new ArrayList<CalendarEventsItemsModel>();
-        calendarEventsItemsModels.add(calendarEventsItemsModel);
+//        CalendarEventsItemsModel calendarEventsItemsModel = new CalendarEventsItemsModel();
+//        List<CalendarEventsItemsModel> calendarEventsItemsModels = new ArrayList<CalendarEventsItemsModel>();
+//        calendarEventsItemsModels.add(calendarEventsItemsModel);
 
         CalendarEventsModel calendarEventsModel = new CalendarEventsModel();
         calendarEventsModel.setSummary(GoalSetup.CALENDAR_NAME);
-        calendarEventsModel.setItems(calendarEventsItemsModels);
+//        calendarEventsModel.setItems(calendarEventsItemsModels);
 
         gsonCheckListModel = new Gson().toJson(calendarEventsModel);
 

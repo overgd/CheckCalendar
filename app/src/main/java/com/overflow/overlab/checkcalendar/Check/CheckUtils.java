@@ -77,14 +77,33 @@ public class CheckUtils {
         return calendarEventsModel;
     }
 
+    public CalendarEventsItemsModel initCheckCalendarEventsItemsModel
+            (CalendarEventsItemsModel calendarEventsItemsModel) {
+
+        Calendar calendar = Calendar.getInstance();
+        DateTime dateTime = new DateTime(calendar.getTimeInMillis());
+
+        calendarEventsItemsModel.setCreated(dateTime);
+
+        return calendarEventsItemsModel;
+    }
+
     public CalendarEventsItemsModel setCheckCalendarEventsItemsModel
             (String status, DateTime[] dateTimes, String memo) {
 
         CalendarEventsItemsModel calendarEventsItemsModel = new CalendarEventsItemsModel();
 
+        Calendar calendar = Calendar.getInstance();
+        DateTime dateTime = new DateTime(calendar.getTimeInMillis());
+
         calendarEventsItemsModel.setSummary(ccUtils.getCurrentGoal()[1]);
         calendarEventsItemsModel.setDescription(memo);
         calendarEventsItemsModel.setStatus(status);
+        calendarEventsItemsModel.setUpdated(dateTime);
+
+        if(calendarEventsItemsModel.getCreated() == null) {
+            calendarEventsItemsModel = initCheckCalendarEventsItemsModel(calendarEventsItemsModel);
+        }
 
         CalendarEventsTimeModel startTime = new CalendarEventsTimeModel();
         startTime.setDateTime(dateTimes[0]);
@@ -128,6 +147,43 @@ public class CheckUtils {
 
     }
 
+    public List<CalendarEventsItemsModel> validate (List<CalendarEventsItemsModel> calendarEventsItemsModels) {
+
+        List<CalendarEventsItemsModel> resultCalendarEventsItemsModels = calendarEventsItemsModels;
+
+        if(resultCalendarEventsItemsModels != null) {
+
+            for (int i = 0; i < resultCalendarEventsItemsModels.size(); i++) {
+                CalendarEventsItemsModel calendarEventsItemsModelI =
+                        resultCalendarEventsItemsModels.get(i);
+                DateTime dateTimeI = calendarEventsItemsModelI.getStart().getDateTime();
+                Calendar calendarI = Calendar.getInstance();
+                calendarI.setTimeInMillis(dateTimeI.getValue());
+
+                for (int j = i+1; j < resultCalendarEventsItemsModels.size(); j++) {
+                    CalendarEventsItemsModel calendarEventsItemsModelJ =
+                            resultCalendarEventsItemsModels.get(j);
+                    DateTime dateTimeJ = calendarEventsItemsModelJ.getStart().getDateTime();
+                    Calendar calendarJ = Calendar.getInstance();
+                    calendarJ.setTimeInMillis(dateTimeJ.getValue());
+
+                    if (dateTimeI.getValue() == dateTimeJ.getValue()) {
+                        if (calendarEventsItemsModelI.getUpdated().getValue()
+                                > calendarEventsItemsModelJ.getUpdated().getValue()) {
+                            resultCalendarEventsItemsModels.remove(j);
+                        } else if (calendarEventsItemsModelJ.getUpdated().getValue()
+                                > calendarEventsItemsModelI.getUpdated().getValue()) {
+                            resultCalendarEventsItemsModels.remove(i);
+                        }
+                    }
+
+                }
+            }
+        }
+        return resultCalendarEventsItemsModels;
+
+    }
+
     public String saveCheckEvent
             (CalendarEventsModel calendarEventsModel, CalendarEventsItemsModel calendarEventsItemsModel) {
 
@@ -140,6 +196,9 @@ public class CheckUtils {
         }
 
         calendarEventsItemsModels.add(calendarEventsItemsModel);
+
+        calendarEventsItemsModels = validate(calendarEventsItemsModels);
+
         calendarEventsModel.setItems(calendarEventsItemsModels);
 
         saveCheckCalendarEventsFile(calendarEventsModel);

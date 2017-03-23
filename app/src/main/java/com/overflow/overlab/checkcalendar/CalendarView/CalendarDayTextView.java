@@ -6,7 +6,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.overflow.overlab.checkcalendar.R;
 
@@ -16,9 +15,10 @@ import java.util.Calendar;
  * Created by over on 10/28/2016.
  */
 
-public class CalendarDayTextView extends TextView {
+public class CalendarDayTextView extends android.support.v7.widget.AppCompatTextView {
 
     public int PARENT_ID; //CalendarContraintView ID
+    public int DATE;
     Context context;
     public Calendar calendar;
 
@@ -61,6 +61,7 @@ public class CalendarDayTextView extends TextView {
                 getResources().getDimension(R.dimen.calendarmonth_column_fontsize)
         );
         setText("init");
+        DATE = 0;
         if (Build.VERSION.SDK_INT >= 23) {
             setTextColor(context.getColor(R.color.fontColorPrimary));
         } else {
@@ -76,6 +77,7 @@ public class CalendarDayTextView extends TextView {
 
     public void clearView() {
         setText("");
+        DATE = 0;
         setOnClickListener(null);
     }
 

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/calendar_vertical.recyclerview.calendarview"
-    android:background="@null"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
     android:layout_marginLeft="@dimen/calendarview_sidepadding"
     android:layout_marginRight="@dimen/calendarview_sidepadding"
     android:layout_marginTop="@dimen/calendarview_sidepadding"
-    android:layout_marginBottom="4dp">
+    android:background="@null">
 
 </com.overflow.overlab.checkcalendar.CalendarView.CalendarConstraintView>

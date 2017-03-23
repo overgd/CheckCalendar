@@ -55,8 +55,20 @@ public class CalendarConstraintView extends ConstraintLayout {
     }
 
     public void init() {
+
         checkImageView = new ImageView[ROW][COL];
-        addView(linearLayoutCalendarMonthUI(context));
+
+        LayoutParams layoutParams = new LayoutParams(
+                LayoutParams.MATCH_CONSTRAINT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.topToTop = this.getTop();
+        layoutParams.leftToLeft = this.getLeft();
+        layoutParams.rightToRight = this.getRight();
+        layoutParams.validate();
+
+        addView(linearLayoutCalendarMonthUI(context), 0, layoutParams);
+
     }
 
     public void setCalendar(int positionMonth) {
@@ -106,6 +118,7 @@ public class CalendarConstraintView extends ConstraintLayout {
                 calendarDayTextViews[row][day].PARENT_ID = getId(); //CalendarContraintView ID
                 calendarDayTextViews[row][day].calendar = dayCalendar;
                 calendarDayTextViews[row][day].setText(String.valueOf(dayCalendar.get(Calendar.DATE)));
+                calendarDayTextViews[row][day].DATE = dayCalendar.get(Calendar.DATE);
                 calendarDayTextViews[row][day].setOnClickListener((MainActivity) context);
 
                 //Today!

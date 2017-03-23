@@ -1,5 +1,6 @@
 package com.overflow.overlab.checkcalendar.Model;
 
+import com.google.api.client.util.DateTime;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +12,12 @@ public class CalendarEventsItemsModel {
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("created")
+    @Expose
+    private DateTime created;
+    @SerializedName("updated")
+    @Expose
+    private DateTime updated;
     @SerializedName("summary")
     @Expose
     private String summary;
@@ -67,6 +74,22 @@ public class CalendarEventsItemsModel {
      */
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public DateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(DateTime created) {
+        this.created = created;
+    }
+
+    public DateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(DateTime updated) {
+        this.updated = updated;
     }
 
     public String getDescription() {
