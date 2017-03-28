@@ -5,13 +5,14 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.overflow.overlab.checkcalendar.Check.SetCheckViewAsyncTask;
+import com.overflow.overlab.checkcalendar.Check.AddCheckViewAsyncTask;
+import com.overflow.overlab.checkcalendar.Check.CheckImageView;
 import com.overflow.overlab.checkcalendar.MainActivity;
 import com.overflow.overlab.checkcalendar.R;
 
@@ -31,7 +32,7 @@ public class CalendarConstraintView extends ConstraintLayout {
     public Calendar positionCalendar;
 
     LinearLayout[] calendarMonthRowLayout;
-    public ImageView[][] checkImageView;
+    public CheckImageView[][] checkImageView;
     public CalendarDayTextView[][] calendarDayTextViews;
     CalendarDayTextView todayTextView;
     CalendarTodayTextView todayView;
@@ -56,7 +57,7 @@ public class CalendarConstraintView extends ConstraintLayout {
 
     public void init() {
 
-        checkImageView = new ImageView[ROW][COL];
+        checkImageView = new CheckImageView[ROW][COL];
 
         LayoutParams layoutParams = new LayoutParams(
                 LayoutParams.MATCH_CONSTRAINT,
@@ -83,7 +84,10 @@ public class CalendarConstraintView extends ConstraintLayout {
         for (int row = 0; row < ROW; row++) {
             for (int col = 0; col < COL; col++) {
                 calendarDayTextViews[row][col].clearView();
-                removeView(checkImageView[row][col]);
+                if(checkImageView[row][col] != null) {
+                    checkImageView[row][col].setVisibility(GONE);
+                    Log.d("checkimageview clear", "clear");
+                }
             }
         }
         removeView(todayView);
@@ -254,7 +258,7 @@ public class CalendarConstraintView extends ConstraintLayout {
     }
 
     public void setCheckActiveView() {
-        new SetCheckViewAsyncTask(this).execute();
+        new AddCheckViewAsyncTask(this).execute();
     }
 
     public void addCheckData() {

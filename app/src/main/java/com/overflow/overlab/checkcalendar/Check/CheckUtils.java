@@ -154,6 +154,7 @@ public class CheckUtils {
         if(resultCalendarEventsItemsModels != null) {
 
             for (int i = 0; i < resultCalendarEventsItemsModels.size(); i++) {
+
                 CalendarEventsItemsModel calendarEventsItemsModelI =
                         resultCalendarEventsItemsModels.get(i);
                 DateTime dateTimeI = calendarEventsItemsModelI.getStart().getDateTime();
@@ -161,13 +162,17 @@ public class CheckUtils {
                 calendarI.setTimeInMillis(dateTimeI.getValue());
 
                 for (int j = i+1; j < resultCalendarEventsItemsModels.size(); j++) {
+
                     CalendarEventsItemsModel calendarEventsItemsModelJ =
                             resultCalendarEventsItemsModels.get(j);
                     DateTime dateTimeJ = calendarEventsItemsModelJ.getStart().getDateTime();
                     Calendar calendarJ = Calendar.getInstance();
                     calendarJ.setTimeInMillis(dateTimeJ.getValue());
 
-                    if (dateTimeI.getValue() == dateTimeJ.getValue()) {
+                    if (calendarI.get(Calendar.DATE) == calendarJ.get(Calendar.DATE) &&
+                            calendarI.get(Calendar.MONTH) == calendarJ.get(Calendar.MONTH) &&
+                            calendarI.get(Calendar.YEAR) == calendarJ.get(Calendar.YEAR)) {
+
                         if (calendarEventsItemsModelI.getUpdated().getValue()
                                 > calendarEventsItemsModelJ.getUpdated().getValue()) {
                             resultCalendarEventsItemsModels.remove(j);
@@ -184,7 +189,7 @@ public class CheckUtils {
 
     }
 
-    public String saveCheckEvent
+    public CalendarEventsModel saveCheckEvent
             (CalendarEventsModel calendarEventsModel, CalendarEventsItemsModel calendarEventsItemsModel) {
 
         List<CalendarEventsItemsModel> calendarEventsItemsModels;
@@ -203,7 +208,7 @@ public class CheckUtils {
 
         saveCheckCalendarEventsFile(calendarEventsModel);
 
-        return CONFIRM;
+        return calendarEventsModel;
     }
 
 }
